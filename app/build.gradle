@@ -1,0 +1,55 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        applicationId "com.timemachine.toci"
+        minSdkVersion 16
+        targetSdkVersion 21
+        versionCode 1
+        versionName "1.1"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    //compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
+    //compile 'org.apache.httpcomponents:httpclient:4.3.5'
+    //compile 'org.apache.httpcomponents:httpcore:4.2.4'
+
+    //Core card library
+
+    //Optional for built-in cards
+
+    //Optional for RecyclerView
+
+    //Optional for staggered grid view support
+
+    //Optional for drag and drop support
+
+    // Used in the header view of the profile picture
+    compile 'com.android.support:appcompat-v7:21.0.0'
+    compile 'com.android.support:support-v4:21.0.0'
+    compile 'com.android.support:recyclerview-v7:21.0.0'
+    compile 'org.apache.httpcomponents:httpmime:4.3.5'
+    compile 'com.github.markushi:circlebutton:1.1'
+    compile 'fr.avianey.com.viewpagerindicator:library:2.4.1@aar'
+    compile 'com.github.gabrielemariotti.cards:cardslib-core:2.1.0'
+    compile 'com.github.gabrielemariotti.cards:cardslib-cards:2.1.0'
+    compile 'com.github.gabrielemariotti.cards:cardslib-recyclerview:2.1.0'
+    compile 'com.github.gabrielemariotti.cards:cardslib-extra-staggeredgrid:2.1.0'
+    compile 'com.github.gabrielemariotti.cards:cardslib-extra-dragdrop:2.1.0'
+    compile 'de.hdodenhof:circleimageview:1.2.1'
+    compile 'com.google.android.gms:play-services:8.1.0'
+
+    //Picasso for web image handling
+    compile 'com.squareup.picasso:picasso:2.5.2'
+}

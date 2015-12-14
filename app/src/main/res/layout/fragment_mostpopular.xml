@@ -1,0 +1,64 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.timemachine.toci.MostPopularFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/PrimaryColor">
+
+        <ScrollView
+            android:id="@+id/crowdCard_scrollview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <it.gmariotti.cardslib.library.view.CardView
+                    android:id="@+id/crowdCard1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/card_external"
+                    card:card_layout_resourceID="@layout/card_thumbnail_layout" />
+
+                <it.gmariotti.cardslib.library.view.CardView
+                    android:id="@+id/crowdCard2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/card_external"
+                    card:card_layout_resourceID="@layout/card_thumbnail_layout" />
+
+                <it.gmariotti.cardslib.library.view.CardView
+                    android:id="@+id/crowdCard3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/card_external"
+                    card:card_layout_resourceID="@layout/card_thumbnail_layout" />
+
+                <it.gmariotti.cardslib.library.view.CardView
+                    android:id="@+id/crowdCard4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/card_external"
+                    card:card_layout_resourceID="@layout/card_thumbnail_layout" />
+
+                <it.gmariotti.cardslib.library.view.CardView
+                    android:id="@+id/crowdCard5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/card_external"
+                    card:card_layout_resourceID="@layout/card_thumbnail_layout" />
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+</FrameLayout>

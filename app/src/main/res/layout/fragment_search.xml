@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/rootLO"
+    android:background="@drawable/city_3"
+    tools:context="com.timemachine.toci.HomeMaterialActivity.SearchFragment">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:id="@+id/linearLayout">
+
+        <EditText
+            android:id="@+id/enter_city"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginBottom="1dp"
+            android:paddingRight="25dp"
+            android:paddingLeft="25dp"
+            android:background="@color/azure"
+            android:textColorHint="@color/light_grey"
+            android:textColor="@color/PrimaryTextPrimaryColor"
+            android:hint="@string/city_hint"
+            android:inputType="textCapWords"
+            android:imeOptions="actionDone"
+            android:maxLength="25" />
+
+        <RelativeLayout
+            android:layout_width="130dp"
+            android:layout_height="130dp">
+
+            <at.markushi.ui.CircleButton
+                android:id="@+id/main_btn"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                app:cb_color="@color/PrimaryAccentColor"
+                app:cb_pressedRingWidth="30dip" />
+
+            <TextView
+                android:id="@+id/myImageViewText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/main_btn"
+                android:layout_alignTop="@+id/main_btn"
+                android:layout_alignRight="@+id/main_btn"
+                android:layout_alignBottom="@+id/main_btn"
+                android:layout_margin="1dp"
+                android:gravity="center"
+                android:text="Go"
+                android:textColor="@color/white" />
+
+        </RelativeLayout>
+
+
+        <!--
+        <Button
+            android:id="@+id/main_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginBottom="10dp"
+            android:text="Go"
+            android:background="@color/orange"
+            android:textColor="@color/white"/>
+            -->
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/main_TextView"
+        android:text="@string/company_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:textColor="@color/white" />
+
+</RelativeLayout>

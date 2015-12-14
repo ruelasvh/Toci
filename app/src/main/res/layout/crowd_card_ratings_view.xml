@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/PrimaryColor">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginLeft="3dp"
+        android:layout_marginTop="5dp">
+
+        <ImageView
+            android:id="@+id/userPic"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="3dp"
+            android:layout_alignParentLeft="true"
+            android:adjustViewBounds="true" />
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="42dp"
+            android:text="CrowdZeeker#1"
+            android:textColor="@color/white"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/timeStamp"
+            android:layout_below="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="15 min ago"
+            android:textColor="@color/PrimaryAccentColor"
+            android:textSize="10sp"
+            android:layout_marginLeft="42dp" />
+
+        <TextView
+            android:id="@+id/userComment"
+            android:layout_below="@+id/timeStamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:textColor="@color/white"
+            android:layout_marginTop="7dp"
+            android:layout_marginBottom="7dp"
+            android:layout_marginLeft="42dp" />
+
+    </RelativeLayout>
+
+</LinearLayout>

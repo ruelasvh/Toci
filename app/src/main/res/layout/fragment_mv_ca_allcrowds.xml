@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/PrimaryDarkColor"
+    tools:context="com.timemachine.toci.MVCAAllCrowdsFragment">
+
+    <it.gmariotti.cardslib.library.view.CardListView
+        android:id="@+id/myList"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        card:list_card_layout_resourceID="@layout/list_card_thumbnail_layout"
+        style="@style/list_card.thumbnail" />
+
+</LinearLayout>

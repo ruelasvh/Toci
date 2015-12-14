@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/crowd_Card_inner_simple_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="3dp"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_marginLeft="3dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp">
+
+        <RatingBar
+            android:id="@+id/crowd_Card_inner_ratingbar"
+            style="@style/main_style_inner_ratingbar"
+            android:numStars="5"
+            android:stepSize="1.0"
+            android:layout_alignParentLeft="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/crowd_Card_inner_cover_charge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@android:color/holo_green_light"
+            android:layout_marginRight="5dp"
+            android:layout_alignParentRight="true" />
+
+        <TextView
+            android:id="@+id/crowd_Card_inner_rating_comment"
+            android:layout_below="@+id/crowd_Card_inner_ratingbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:textColor="#BBB"
+            android:layout_marginTop="7dp"
+            android:layout_marginLeft="3dp"
+            android:layout_alignParentLeft="true" />
+    </RelativeLayout>
+
+
+</LinearLayout>

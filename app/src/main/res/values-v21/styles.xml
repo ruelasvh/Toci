@@ -1,0 +1,148 @@
+<resources>
+
+    <!-- Base application theme starts here -->
+    <style name="AppThemeMain" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/PrimaryColor</item>
+        <item name="colorPrimaryDark">@color/PrimaryDarkColor</item>
+        <item name="colorAccent">@color/PrimaryAccentColor</item>
+        <item name="android:colorControlNormal">@color/white</item>
+        <item name="android:colorControlActivated">@color/PrimaryAccentColor</item>
+        <item name="android:colorControlHighlight">@color/white</item>
+        <item name="android:textViewStyle">@style/TextViewStyle</item>
+        <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewStyle</item>
+        <item name="android:editTextStyle">@style/EditTextStyle</item>
+        <item name="android:textColorPrimary">@color/PrimaryTextPrimaryColor</item>
+        <item name="android:navigationBarColor">@color/PrimaryNavigationColor</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+
+        <item name="android:windowBackground">@color/PrimaryWindowBackground</item>
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@android:color/white</item>
+    </style>
+
+    <style name="ToolBarStyle" parent="">
+        <item name="android:elevation">@dimen/toolbar_elevation</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+    </style>
+
+    <style name="TextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <style name="AutoCompleteTextViewStyle" parent="android:Widget.AutoCompleteTextView">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <style name="EditTextStyle" parent="android:Widget.EditText">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <!-- Base application theme starts here -->
+
+
+    <!-- Secondary ActionBar theme starts here -->
+    <style name="AppThemeSecondary" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/SecondaryActionBar</item>
+        <item name="android:actionBarTabStyle">@style/ActionBartTabBar</item>
+        <item name="android:actionBarTabTextStyle">@style/ActionBartTabBarText</item>
+        <item name="colorPrimary">@color/PrimaryColor</item>
+        <item name="colorPrimaryDark">@color/PrimaryDarkColor</item>
+
+        <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/SecondaryActionBar</item>
+        <item name="actionBarTabStyle">@style/ActionBartTabBar</item>
+        <item name="actionBarTabTextStyle">@style/ActionBartTabBarText</item>
+
+    </style>
+
+    <!-- ActionBar style -->
+    <style name="SecondaryActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">
+
+        <!-- Support library compatibility -->
+
+    </style>
+
+    <!-- ActionBar tabs styles -->
+    <style name="ActionBartTabBar" parent="@style/Widget.AppCompat.ActionBar.TabView">
+        <item name="android:background">@drawable/tab_bar_background</item>
+
+        <!-- Support library compatibility -->
+        <item name="background">@drawable/tab_bar_background</item>
+    </style>
+
+    <!-- ActionBar tabs text styles -->
+    <style name="ActionBartTabBarText" parent="@style/Widget.AppCompat.ActionBar.TabText">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">center_horizontal</item>
+
+        <!-- The textColor property is backward compatible with the Support Library -->
+    </style>
+    <!-- Secondary ActionBar theme ends here -->
+
+
+    <!-- Transparent ActionBar theme starts here -->
+    <!-- the theme applied to the application or activity for v<v21 -->
+    <style name="AppThemeTransparentActionBar" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/TransparentActionBar</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="colorPrimary">@android:color/transparent</item>
+
+        <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/TransparentActionBar</item>
+        <item name="windowActionBarOverlay">true</item>
+    </style>
+
+    <!-- ActionBar styles -->
+    <style name="TransparentActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">
+        <item name="android:background">@color/black_transparent</item>
+
+        <!-- Support library compatibility -->
+        <item name="background">@color/black_transparent</item>
+    </style>
+    <!-- Transparent ActionBar theme ends here -->
+
+    <style name="ImageTitleBottom">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:background">#99000000</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:textColor">#fff</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="ImageTitleTop">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:textColor">#fff</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="main_style_inner_ratingbar">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:progressDrawable">@drawable/ratingbar_extras_small_holo_dark</item>
+        <item name="android:indeterminateDrawable">@drawable/ratingbar_extras_small_holo_dark</item>
+        <item name="android:minHeight">12dip</item>
+        <item name="android:maxHeight">12dip</item>
+        <item name="android:thumb">@null</item>
+        <item name="android:isIndicator">true</item>
+    </style>
+
+</resources>
