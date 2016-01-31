@@ -24,6 +24,13 @@ public class crowdCard extends Card {
     private static String Crowd_RatingComment = "";
     private static String Crowd_CoverCharge = "";
     private static float Crowd_Rating = 0f;
+    private static String Crowd_Specials_Header = "";
+    private static int Crowd_Specials_Header_color;
+    private static String Crowd_Specials_text1 = "";
+    private static int Crowd_Specials_text1_color;
+    private static String Crowd_Specials_text2 = "";
+    private static int Crowd_Specials_text2_color;
+
 
     /*
     public crowdCard(Context context) {
@@ -64,6 +71,21 @@ public class crowdCard extends Card {
 
     public void setCrowdRating(float mRating) {
         Crowd_Rating = mRating;
+    }
+
+    public void setSpecialsHeader(String mSpecialsHeader, int mSpecialHeaderColor) {
+        Crowd_Specials_Header = mSpecialsHeader;
+        Crowd_Specials_Header_color = mSpecialHeaderColor;
+    }
+
+    public void setSpecials1(String mSpecials1, int mSpecials1Color) {
+        Crowd_Specials_text1 = mSpecials1;
+        Crowd_Specials_text1_color = mSpecials1Color;
+    }
+
+    public void setSpecials2(String mSpecials2, int mSpecials2Color) {
+        Crowd_Specials_text2 = mSpecials2;
+        Crowd_Specials_text2_color = mSpecials2Color;
     }
 
     public void setCrowdExpand(int layout, int view, int img) {
@@ -115,6 +137,18 @@ public class crowdCard extends Card {
         mRatingBar.setMax(5);
         mRatingBar.setStepSize(0.5f);
         mRatingBar.setRating(Crowd_Rating);
+
+        TextView specialsHeader = (TextView) view.findViewById(R.id.crowd_Card_specials_header);
+        specialsHeader.setText(Crowd_Specials_Header);
+        specialsHeader.setTextColor(Crowd_Specials_Header_color);
+
+        TextView specialsText1 = (TextView) view.findViewById(R.id.crowd_Card_special1);
+        specialsText1.setText(Crowd_Specials_text1);
+        specialsText1.setTextColor(Crowd_Specials_text1_color);
+
+        TextView specialsText2 = (TextView) view.findViewById(R.id.crowd_Card_special2);
+        specialsText2.setText(Crowd_Specials_text2);
+        specialsText2.setTextColor(Crowd_Specials_text2_color);
     }
 
     class CustomCardThumbnail extends CardThumbnail {

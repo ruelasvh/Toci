@@ -38,4 +38,13 @@
     <drawable name="pressed_gray">#0c000000</drawable>
     <drawable name="selected_gray">#2c000000</drawable>
 
+    <!--
+        Colors for "Specials" section
+    -->
+
+    <color name="violetSpecials">#8635ac</color>
+    <color name="redSpecials">#d73232</color>
+    <color name="yellowSpecials">#ffbf00</color>
+    <color name="blueSpecials">#0401cc</color>
+
 </resources>

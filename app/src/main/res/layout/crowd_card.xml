@@ -58,11 +58,32 @@
     <TextView
         android:id="@+id/crowd_Card_specials_header"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:text="Specials"
-        android:textColor="#8635ac"
+        android:textColor="#0401cc"
         android:textSize="20dp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:typeface="sans" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="\u2022 Special 1"
+        android:textStyle="bold"
+        android:textColor="#d73232"
+        android:textSize="17dp"
+        android:id="@+id/crowd_Card_special1"
+        android:typeface="sans" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="\u2022 Special 2"
+        android:textStyle="bold"
+        android:textColor="#ffbf00"
+        android:textSize="17dp"
+        android:id="@+id/crowd_Card_special2"
+        android:typeface="sans" />
 
 
 </LinearLayout>

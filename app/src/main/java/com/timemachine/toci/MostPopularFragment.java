@@ -2,6 +2,7 @@ package com.timemachine.toci;
 
 import android.app.Activity;
 //import android.app.FragmentTransaction;
+import android.graphics.Color;
 import android.support.v4.app.FragmentManager;
 //import android.app.FragmentManager;
 import android.net.Uri;
@@ -103,6 +104,9 @@ public class MostPopularFragment extends Fragment {
         card.setCrowdCoverCharge("$$");
         card.setCrowdRating(4.7f);
         card.setCrowdLogo(R.drawable.mollys_inside_3);
+        card.setSpecialsHeader("Specials", getResources().getColor(R.color.violetSpecials));
+        card.setSpecials1("\u2022 $2 BudLight", getResources().getColor(R.color.redSpecials));
+        card.setSpecials2("\u2022 $3 Shots", getResources().getColor(R.color.redSpecials));
         //card.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.photo_user);
         card.setCrowdMapExpand(R.layout.crowd_info_expand);
         card.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
@@ -137,6 +141,9 @@ public class MostPopularFragment extends Fragment {
         card.setCrowdCoverCharge("$$");
         card.setCrowdRating(4.7f);
         card.setCrowdLogo(R.drawable.mollys_front_main);
+        card.setSpecialsHeader("Karaoke!", getResources().getColor(R.color.blueSpecials));
+        card.setSpecials1("\u2022 Free 'til 12am", getResources().getColor(R.color.yellowSpecials));
+        card.setSpecials2("\u2022 $4 Shots", getResources().getColor(R.color.yellowSpecials));
         //card.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.photo_user);
         card.setCrowdMapExpand(R.layout.crowd_info_expand);
         card.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
