@@ -76,7 +76,7 @@ public class MVCAFeaturedFragment extends Fragment {
         crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
         card.setCrowdTitle("Crowd Title");
         card.setCrowdSubtitle("This is the subtitle");
-        card.setCrowdRatingComment("This is a user rating comment!!!!");
+        card.setCrowdRatingComment("5 min away");
         card.setCrowdCoverCharge("Price");
         card.setCrowdRating(4f);
         card.setCrowdLogo(R.drawable.stephensgreenlive2);
@@ -110,7 +110,7 @@ public class MVCAFeaturedFragment extends Fragment {
         crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
         card.setCrowdTitle("Crowd Title");
         card.setCrowdSubtitle("This is the subtitle");
-        card.setCrowdRatingComment("This is a user rating comment!!!!");
+        card.setCrowdRatingComment("10 min away");
         card.setCrowdCoverCharge("Price");
         card.setCrowdRating(4f);
         card.setCrowdLogo(R.drawable.stephensgreenlive2);
@@ -144,7 +144,7 @@ public class MVCAFeaturedFragment extends Fragment {
         crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
         card.setCrowdTitle("Crowd Title");
         card.setCrowdSubtitle("This is the subtitle");
-        card.setCrowdRatingComment("This is a user rating comment!!!!");
+        card.setCrowdRatingComment("11 min away");
         card.setCrowdCoverCharge("Price");
         card.setCrowdRating(4f);
         card.setCrowdLogo(R.drawable.stephensgreenlive2);
@@ -178,7 +178,7 @@ public class MVCAFeaturedFragment extends Fragment {
         crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
         card.setCrowdTitle("Crowd Title");
         card.setCrowdSubtitle("This is the subtitle");
-        card.setCrowdRatingComment("This is a user rating comment!!!!");
+        card.setCrowdRatingComment("8 min away");
         card.setCrowdCoverCharge("Price");
         card.setCrowdRating(4f);
         card.setCrowdLogo(R.drawable.stephensgreenlive2);
@@ -212,7 +212,7 @@ public class MVCAFeaturedFragment extends Fragment {
         crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
         card.setCrowdTitle("Crowd Title");
         card.setCrowdSubtitle("This is the subtitle");
-        card.setCrowdRatingComment("This is a user rating comment!!!!");
+        card.setCrowdRatingComment("9 min away");
         card.setCrowdCoverCharge("Price");
         card.setCrowdRating(4f);
         card.setCrowdLogo(R.drawable.stephensgreenlive2);
@@ -431,7 +431,7 @@ public class MVCAFeaturedFragment extends Fragment {
 
     /**
      * Custom expand with picture
-     */
+
 
     public class CustomExpandCard extends CardExpand {
         public CustomExpandCard(Context context) {
@@ -448,4 +448,6 @@ public class MVCAFeaturedFragment extends Fragment {
             }
         }
     }
+
+     */
 }

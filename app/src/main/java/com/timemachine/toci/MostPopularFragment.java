@@ -99,7 +99,7 @@ public class MostPopularFragment extends Fragment {
         crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
         card.setCrowdTitle("Molly Magees");
         card.setCrowdSubtitle("Famous Irish Pub");
-        card.setCrowdRatingComment("Lively Irish Pub Style Bar");
+        card.setCrowdRatingComment("2 min away");
         card.setCrowdCoverCharge("$$");
         card.setCrowdRating(4.7f);
         card.setCrowdLogo(R.drawable.mollys_inside_3);
@@ -133,7 +133,7 @@ public class MostPopularFragment extends Fragment {
         crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
         card.setCrowdTitle("Molly Magees");
         card.setCrowdSubtitle("Famous Irish Pub");
-        card.setCrowdRatingComment("Lively Irish Pub Style Bar");
+        card.setCrowdRatingComment("2 min away");
         card.setCrowdCoverCharge("$$");
         card.setCrowdRating(4.7f);
         card.setCrowdLogo(R.drawable.mollys_front_main);
@@ -167,7 +167,7 @@ public class MostPopularFragment extends Fragment {
         crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
         card.setCrowdTitle("Molly Magees");
         card.setCrowdSubtitle("Famous Irish Pub");
-        card.setCrowdRatingComment("Lively Irish Pub Style Bar");
+        card.setCrowdRatingComment("3 min away");
         card.setCrowdCoverCharge("$$");
         card.setCrowdRating(4.7f);
         card.setCrowdLogo(R.drawable.mollys_inside_2);
@@ -201,7 +201,7 @@ public class MostPopularFragment extends Fragment {
         crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
         card.setCrowdTitle("Molly Magees");
         card.setCrowdSubtitle("Famous Irish Pub");
-        card.setCrowdRatingComment("Lively Irish Pub Style Bar");
+        card.setCrowdRatingComment("4 min away");
         card.setCrowdCoverCharge("$$");
         card.setCrowdRating(4.7f);
         card.setCrowdLogo(R.drawable.mollys_inside_1);
@@ -235,7 +235,7 @@ public class MostPopularFragment extends Fragment {
         crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
         card.setCrowdTitle("Molly Magees");
         card.setCrowdSubtitle("Famous Irish Pub");
-        card.setCrowdRatingComment("Lively Irish Pub Style Bar");
+        card.setCrowdRatingComment("5 min away");
         card.setCrowdCoverCharge("$$");
         card.setCrowdRating(4.7f);
         card.setCrowdLogo(R.drawable.mollys_front_main);

@@ -2,12 +2,9 @@ package com.timemachine.toci;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -106,7 +103,7 @@ public class crowdCard extends Card {
         TextView subTitle = (TextView) view.findViewById(R.id.crowd_Card_inner_simple_title);
         subTitle.setText(Crowd_Subtitle);
 
-        TextView ratingComment = (TextView) view.findViewById(R.id.crowd_Card_inner_rating_comment);
+        TextView ratingComment = (TextView) view.findViewById(R.id.crowd_Card_distance);
         ratingComment.setText(Crowd_RatingComment);
 
         TextView coverPrice = (TextView) view.findViewById(R.id.crowd_Card_inner_cover_charge);
@@ -130,8 +127,6 @@ public class crowdCard extends Card {
         public void setupInnerViewElements(ViewGroup parent, View viewImage) {
 
 
-            viewImage.getLayoutParams().width = 156;
-            viewImage.getLayoutParams().height = 156;
 
             if (viewImage != null) {
                 if (parent != null && parent.getResources() != null) {
@@ -148,7 +143,10 @@ public class crowdCard extends Card {
                     }
                 }
             }
-
+            /**
+            viewImage.getLayoutParams().width = 156;
+            viewImage.getLayoutParams().height = 156;
+            */
         }
     }
 
