@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardExpand;
@@ -45,8 +48,19 @@ public class crowdCard extends Card {
     }
 
     public void setCrowdLogo(int logo) {
-        CustomCardThumbnail thumbnail = new CustomCardThumbnail(getContext());
+        LocalThumbnail thumbnail = new LocalThumbnail(getContext());
         thumbnail.setDrawableResource(logo);
+        addCardThumbnail(thumbnail);
+    }
+
+    public void setCrowdLogoUrl(String myUrl) {
+        // Add Thumbnail
+        UrlThumbnail thumbnail = new UrlThumbnail(getContext());
+        // Set true to use external library
+        thumbnail.setExternalUsage(true);
+        // Set the url
+        thumbnail.setUrl(myUrl);
+        // Add thumbnail to card
         addCardThumbnail(thumbnail);
     }
 
@@ -151,9 +165,9 @@ public class crowdCard extends Card {
         specialsText2.setTextColor(Crowd_Specials_text2_color);
     }
 
-    class CustomCardThumbnail extends CardThumbnail {
+    class LocalThumbnail extends CardThumbnail {
 
-        public CustomCardThumbnail(Context context) {
+        public LocalThumbnail(Context context) {
             super(context);
         }
 
@@ -184,4 +198,53 @@ public class crowdCard extends Card {
         }
     }
 
+    class UrlThumbnail extends CardThumbnail {
+
+        // Variables to use in methods for passing url and ImageView
+        private String myUrl = "";
+
+        // Method to get Url
+        public void setUrl(String url) {
+            myUrl = url;
+        }
+
+
+        public UrlThumbnail(Context context) {
+            super(context);
+        }
+
+        @Override
+        public void setupInnerViewElements(ViewGroup parent, View viewImage) {
+
+            Picasso.with(getContext())
+                    .load(myUrl)
+                    .placeholder(R.drawable.crowdzeeker_logo)
+                    .error(R.drawable.thumbsdown)
+                    .resizeDimen(R.dimen.list_detail_image_size_high_res, R.dimen.list_detail_image_size_high_res)
+                    .centerInside()
+                    .into((ImageView) viewImage);
+
+
+            if (viewImage != null) {
+                if (parent != null && parent.getResources() != null) {
+                    DisplayMetrics metrics = parent.getResources().getDisplayMetrics();
+
+                    int base = 198;
+
+                    if (metrics != null) {
+                        viewImage.getLayoutParams().width = (int) (base * metrics.density);
+                        viewImage.getLayoutParams().height = (int) (base * metrics.density);
+                    } else {
+                        viewImage.getLayoutParams().width = 396;
+                        viewImage.getLayoutParams().height = 396;
+                    }
+                }
+            }
+
+            /*
+            viewImage.getLayoutParams().width = 350;
+            viewImage.getLayoutParams().height = 370;
+            */
+        }
+    }
 }
