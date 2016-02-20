@@ -2,14 +2,27 @@ package com.timemachine.toci;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardExpand;
@@ -23,16 +36,16 @@ import it.gmariotti.cardslib.library.view.CardView;
  */
 public class crowdCard extends Card {
 
-    private static String Crowd_Subtitle = "";
-    private static String Crowd_RatingComment = "";
-    private static String Crowd_CoverCharge = "";
-    private static float Crowd_Rating = 0f;
-    private static String Crowd_Specials_Header = "";
-    private static int Crowd_Specials_Header_color;
-    private static String Crowd_Specials_text1 = "";
-    private static int Crowd_Specials_text1_color;
-    private static String Crowd_Specials_text2 = "";
-    private static int Crowd_Specials_text2_color;
+    private String Crowd_Subtitle;
+    private String Crowd_RatingComment;
+    private String Crowd_CoverCharge;
+    private float Crowd_Rating;
+    private String Crowd_Specials_Header;
+    private int Crowd_Specials_Header_color;
+    private String Crowd_Specials_text1;
+    private int Crowd_Specials_text1_color;
+    private String Crowd_Specials_text2;
+    private int Crowd_Specials_text2_color;
 
 
     /*
@@ -64,6 +77,11 @@ public class crowdCard extends Card {
         addCardThumbnail(thumbnail);
     }
 
+    public void setCrowdPicUrl(String webService) {
+
+        new HttpAsyncTask().execute(webService);
+    }
+
     public void setCrowdTitle(String cTitle) {
         CardHeader header = new CardHeader(getContext());
         header.setTitle(cTitle);
@@ -71,35 +89,42 @@ public class crowdCard extends Card {
         addCardHeader(header);
     }
 
+    public void setCrowdTitle(String cTitle, Boolean isExpandable) {
+        CardHeader header = new CardHeader(getContext());
+        header.setTitle(cTitle);
+        header.setButtonExpandVisible(isExpandable);
+        addCardHeader(header);
+    }
+
     public void setCrowdSubtitle(String mSubtitle) {
-        Crowd_Subtitle = mSubtitle;
+        this.Crowd_Subtitle = mSubtitle;
     }
 
     public void setCrowdRatingComment(String mRatingComment) {
-        Crowd_RatingComment = mRatingComment;
+        this.Crowd_RatingComment = mRatingComment;
     }
 
     public void setCrowdCoverCharge(String mCoverCharge) {
-        Crowd_CoverCharge = mCoverCharge;
+        this.Crowd_CoverCharge = mCoverCharge;
     }
 
     public void setCrowdRating(float mRating) {
-        Crowd_Rating = mRating;
+        this.Crowd_Rating = mRating;
     }
 
     public void setSpecialsHeader(String mSpecialsHeader, int mSpecialHeaderColor) {
-        Crowd_Specials_Header = mSpecialsHeader;
-        Crowd_Specials_Header_color = mSpecialHeaderColor;
+        this.Crowd_Specials_Header = mSpecialsHeader;
+        this.Crowd_Specials_Header_color = mSpecialHeaderColor;
     }
 
     public void setSpecials1(String mSpecials1, int mSpecials1Color) {
-        Crowd_Specials_text1 = mSpecials1;
-        Crowd_Specials_text1_color = mSpecials1Color;
+        this.Crowd_Specials_text1 = mSpecials1;
+        this.Crowd_Specials_text1_color = mSpecials1Color;
     }
 
     public void setSpecials2(String mSpecials2, int mSpecials2Color) {
-        Crowd_Specials_text2 = mSpecials2;
-        Crowd_Specials_text2_color = mSpecials2Color;
+        this.Crowd_Specials_text2 = mSpecials2;
+        this.Crowd_Specials_text2_color = mSpecials2Color;
     }
 
     public void setCrowdExpand(int layout, int view, int img) {
@@ -218,8 +243,8 @@ public class crowdCard extends Card {
 
             Picasso.with(getContext())
                     .load(myUrl)
-                    .placeholder(R.drawable.crowdzeeker_logo)
-                    .error(R.drawable.thumbsdown)
+                    //.placeholder(R.drawable.crowdzeeker_logo)
+                    .error(R.drawable.crowdzeeker_logo)
                     .resizeDimen(R.dimen.list_detail_image_size_high_res, R.dimen.list_detail_image_size_high_res)
                     .centerInside()
                     .into((ImageView) viewImage);
@@ -245,6 +270,67 @@ public class crowdCard extends Card {
             viewImage.getLayoutParams().width = 350;
             viewImage.getLayoutParams().height = 370;
             */
+        }
+    }
+
+    /*
+     * Helper function to convert php stream result to string
+     */
+
+    public static String GET(String url) {
+        InputStream inputStream;
+        String result = "";
+
+        try {
+            // create HttpClient
+            HttpClient httpClient = new DefaultHttpClient();
+
+            // make GET request to the given URL
+            HttpResponse httpResponse = httpClient.execute(new HttpGet(url));
+
+            // receive response as inputStream
+            inputStream = httpResponse.getEntity().getContent();
+
+            // convert inputStream to string
+            if (inputStream != null)
+                result = convertInputStreamToString(inputStream);
+            else
+                result = "GET method to get php response was not successful";
+
+        } catch (Exception e) {
+            Log.d("InputStream", e.getLocalizedMessage());
+        }
+
+        return result;
+    }
+
+    // convert inputStream to String
+    private static String convertInputStreamToString(InputStream inputStream) throws IOException {
+
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        String line;
+        String result = "";
+
+        while ((line = bufferedReader.readLine()) != null)
+            result += line;
+
+        inputStream.close();
+
+        return result;
+    }
+
+    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... urls) {
+
+            return GET(urls[0]);
+        }
+
+        // onPostExecute displays the results of the AsyncTask
+        @Override
+        protected void onPostExecute(String result) {
+            Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
         }
     }
 }

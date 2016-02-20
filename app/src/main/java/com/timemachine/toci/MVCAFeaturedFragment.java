@@ -79,7 +79,10 @@ public class MVCAFeaturedFragment extends Fragment {
         card.setCrowdRatingComment("5 min away");
         card.setCrowdCoverCharge("Price");
         card.setCrowdRating(4f);
-        card.setCrowdLogo(R.drawable.stephensgreenlive2);
+        card.setCrowdLogoUrl("http://www.mollysmtview.com/images/gal-9.jpg");
+        //card.setBackgroundResource(getResources().getDrawable(R.drawable.mollys_inside_cropped));
+        //card.setShadow(true);
+        //card.setCrowdLogo(R.drawable.stephensgreenlive2);
         //card.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.livePic, R.drawable.stephensgreenlive2);
         card.setCrowdMapExpand(R.layout.crowd_info_expand);
         card.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
@@ -113,7 +116,8 @@ public class MVCAFeaturedFragment extends Fragment {
         card.setCrowdRatingComment("10 min away");
         card.setCrowdCoverCharge("Price");
         card.setCrowdRating(4f);
-        card.setCrowdLogo(R.drawable.stephensgreenlive2);
+        //card.setCrowdLogo(R.drawable.stephensgreenlive2);
+        card.setCrowdLogoUrl("http://www.mollysmtview.com/images/img_1680.jpg");
         //card.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.photo_user);
         card.setCrowdMapExpand(R.layout.crowd_info_expand);
         card.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
@@ -147,7 +151,8 @@ public class MVCAFeaturedFragment extends Fragment {
         card.setCrowdRatingComment("11 min away");
         card.setCrowdCoverCharge("Price");
         card.setCrowdRating(4f);
-        card.setCrowdLogo(R.drawable.stephensgreenlive2);
+        //card.setCrowdLogo(R.drawable.stephensgreenlive2);
+        card.setCrowdLogoUrl("http://www.mollysmtview.com/images/img_1694.jpg");
         //card.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.photo_user);
         card.setCrowdMapExpand(R.layout.crowd_info_expand);
         card.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
@@ -181,7 +186,8 @@ public class MVCAFeaturedFragment extends Fragment {
         card.setCrowdRatingComment("8 min away");
         card.setCrowdCoverCharge("Price");
         card.setCrowdRating(4f);
-        card.setCrowdLogo(R.drawable.stephensgreenlive2);
+        //card.setCrowdLogo(R.drawable.stephensgreenlive2);
+        card.setCrowdLogoUrl("http://www.mollysmtview.com/images/img_1684.jpg");
         //card.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.photo_user);
         card.setCrowdMapExpand(R.layout.crowd_info_expand);
         card.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
@@ -215,30 +221,21 @@ public class MVCAFeaturedFragment extends Fragment {
         card.setCrowdRatingComment("9 min away");
         card.setCrowdCoverCharge("Price");
         card.setCrowdRating(4f);
-        card.setCrowdLogo(R.drawable.stephensgreenlive2);
+        //card.setCrowdLogo(R.drawable.stephensgreenlive2);
+        card.setCrowdLogoUrl("http://www.mollysmtview.com/images/img_1727.jpg");
         //card.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.photo_user);
         card.setCrowdMapExpand(R.layout.crowd_info_expand);
+
         card.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
             @Override
             public void onExpandEnd(Card card) {
 
 
-                TextView address = (TextView) getActivity().findViewById(R.id.address);
-                address.setText(getResources().getString(R.string.mtnview_street));
-                TextView zipcode = (TextView) getActivity().findViewById(R.id.zipcode);
-                zipcode.setText(getResources().getString(R.string.mtnview_zip));
-
-                MapsFragment mymap = new MapsFragment();
-                LatLng mtnview = new LatLng(37.3894, -122.0819);
-                mymap.setLocation(mtnview);
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.mapLayout, mymap).commit();
-
-                //Toast.makeText(getActivity(),"Expand "+card.getCardHeader().getTitle(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),"Expand "+card.getCardHeader().getTitle(), Toast.LENGTH_SHORT).show();
             }
         });
-        //card.setCrowdLivePics(GetCurrImageActivity.class);
-        card.setCrowdLivePics(LivePicsGalleryActivity.class);
+        card.setCrowdLivePics(GetCurrImageActivity.class);
+        //card.setCrowdLivePics(LivePicsGalleryActivity.class);
         card.setCardinView(rootView, R.id.carddemo5);
     }
 

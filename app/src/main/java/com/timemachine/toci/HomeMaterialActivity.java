@@ -48,9 +48,6 @@ public class HomeMaterialActivity extends ActionBarActivity
         //Toast.makeText(this, "Menu item selected -> " + position, Toast.LENGTH_SHORT).show();
         Fragment fragment;
         switch (position) {
-            default:
-                fragment = new SearchFragment();
-                break;
             case 0:
                 fragment = new SearchFragment();
                 break;
@@ -58,18 +55,23 @@ public class HomeMaterialActivity extends ActionBarActivity
                 fragment = new MostPopularFragment();
                 break;
             case 2:
-                fragment = new MVCAFeaturedFragment();
-                //fragment = new LoginFragment();;
+                //fragment = new PACAFeaturedFragment();
+                //fragment = new MVCAFeaturedFragment();
+                fragment = new MVCAFeaturedRecyclerViewFragment();
+                //fragment = new LoginFragment();
                 break;
             case 3:
                 fragment = new AboutUsFragment();
+                break;
+            default:
+                fragment = new SearchFragment();
                 break;
         }
 
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, fragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.container, fragment)
+                    .addToBackStack(null).commit();
         }
     }
 

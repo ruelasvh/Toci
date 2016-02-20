@@ -13,7 +13,8 @@
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
         android:id="@+id/carddemo_extra_list_viewanimations"
-        card:list_card_layout_resourceID="@layout/native_list_card_thumbnail_layout"/>
+        card:list_card_layout_resourceID="@layout/native_list_card_thumbnail_layout">
+    </it.gmariotti.cardslib.library.view.CardListView>
 
 </LinearLayout>
 

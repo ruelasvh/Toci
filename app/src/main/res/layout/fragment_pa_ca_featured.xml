@@ -1,34 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:card="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingTop="?attr/actionBarSize"
     android:orientation="vertical"
-    android:background="@color/material_blue_grey_800"
-    tools:context="com.timemachine.toci.MVCAFeaturedFragment">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <ScrollView
-        android:id="@+id/card_scrollview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="50dp">
+    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
+        android:id="@+id/carddemo_extra_ptr_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <!-- You can customize this layout.
+         You need to have in your layout a `CardView` with the ID `list_cardId` -->
+        <it.gmariotti.cardslib.library.view.CardListView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:id="@+id/carddemo_extra_list_actionbarpulltorefresh"
+            card:list_card_layout_resourceID="@layout/list_card_thumbnail_layout"/>
 
-            <it.gmariotti.cardslib.library.view.CardView
-                android:id="@+id/cardSlidersBarPACA"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/card_external"
-                card:card_layout_resourceID="@layout/card_thumbnail_layout" />
-
-        </LinearLayout>
-
-    </ScrollView>
+    </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
 
 </LinearLayout>

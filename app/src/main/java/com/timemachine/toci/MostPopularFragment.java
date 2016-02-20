@@ -51,6 +51,9 @@ public class MostPopularFragment extends Fragment {
 
     private GoogleMap map;
 
+    String sortScript = "http://crowdzeeker.com/AppCrowdZeeker/fetchlatestcrowd.php";
+
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -287,7 +290,7 @@ public class MostPopularFragment extends Fragment {
         ArrayList<Card> cards = new ArrayList<>();
 
         // Crowd #1
-        crowdCard card1 = new crowdCard(this.getActivity(), R.layout.crowd_card);
+        final crowdCard card1 = new crowdCard(this.getActivity(), R.layout.crowd_card);
         card1.setCrowdTitle("Molly Magees");
         card1.setCrowdSubtitle("Famous Irish Pub");
         card1.setCrowdRatingComment("1 min away");
@@ -298,14 +301,15 @@ public class MostPopularFragment extends Fragment {
         card1.setSpecialsHeader("Specials", getResources().getColor(R.color.violetSpecials));
         card1.setSpecials1("\u2022 $2 BudLight", getResources().getColor(R.color.redSpecials));
         card1.setSpecials2("\u2022 $3 Shots", getResources().getColor(R.color.redSpecials));
-        //card1.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.team_member_victor);
-        /*
-        card1.setCrowdMapExpand(R.layout.crowd_info_expand);
+        card1.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.team_member_victor);
+        //card1.setCrowdMapExpand(R.layout.crowd_info_expand);
         card1.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
             @Override
             public void onExpandEnd(Card card) {
 
+                card1.setCrowdPicUrl(sortScript);
 
+                /*
                 TextView address = (TextView) getActivity().findViewById(R.id.address);
                 address.setText(getResources().getString(R.string.mtnview_street));
                 TextView zipcode = (TextView) getActivity().findViewById(R.id.zipcode);
@@ -316,11 +320,11 @@ public class MostPopularFragment extends Fragment {
                 mymap.setLocation(mtnview);
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.mapLayout, mymap).commit();
-
+                */
                 //Toast.makeText(getActivity(),"Expand "+card.getCardHeader().getTitle(), Toast.LENGTH_SHORT).show();
             }
         });
-        */
+
         card1.setCrowdLivePics(LivePicsGalleryActivity.class);
         cards.add(card1);
 
@@ -392,9 +396,12 @@ public class MostPopularFragment extends Fragment {
         mCardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
 
         mListView = (CardListView) getActivity().findViewById(R.id.carddemo_extra_list_viewanimations);
-        if (mListView != null) {
+        mListView.setAdapter(mCardArrayAdapter);
+        // set animation
+        if (mListView == null) {
             setBottomAdapter();
         }
+
     }
 
     // Bottom animation

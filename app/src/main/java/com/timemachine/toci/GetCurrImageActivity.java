@@ -62,7 +62,7 @@ public class GetCurrImageActivity extends Activity {
     }
 
     public static String GET(String url) {
-        InputStream inputStream = null;
+        InputStream inputStream;
         String result = "";
 
         try {
@@ -91,7 +91,7 @@ public class GetCurrImageActivity extends Activity {
     // convert inputstream to String
     private static String convertInputStreamToString(InputStream inputStream) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        String line = "";
+        String line;
         String result = "";
         while ((line = bufferedReader.readLine()) != null)
             result += line;
@@ -112,14 +112,20 @@ public class GetCurrImageActivity extends Activity {
         @Override
         protected void onPostExecute(String result) {
             //Toast.makeText(getBaseContext(), "Received!", Toast.LENGTH_LONG).show();
-            textView.setText("Venue ID1: " + result);
+            textView.setText("Venue ID: " + result);
             new DisplayImageFromURL((ImageView) findViewById(R.id.curr_barImage))
                     .execute(imageBaseDirectory + result);
         }
     }
 
     private class DisplayImageFromURL extends AsyncTask<String, Void, Bitmap> {
+
         ImageView bmImage;
+
+        // constructor
+        public DisplayImageFromURL(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -127,10 +133,6 @@ public class GetCurrImageActivity extends Activity {
             pd = new ProgressDialog(GetCurrImageActivity.this);
             pd.setMessage("Seeking awsome crowds...");
             pd.show();
-        }
-
-        public DisplayImageFromURL(ImageView bmImage) {
-            this.bmImage = bmImage;
         }
 
         protected Bitmap doInBackground(String... urls) {
