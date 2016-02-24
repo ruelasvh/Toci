@@ -11,13 +11,15 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 
-public class CaptureImageActivity extends ActionBarActivity {
+public class CaptureImageActivity extends AppCompatActivity {
 
     // LogCat tag
     private static final String TAG = SearchActivity.class.getSimpleName();
@@ -38,6 +40,9 @@ public class CaptureImageActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_capture);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         btnTakePicture = (Button) findViewById(R.id.btnTakePicture);
         btnRecordVideo = (Button) findViewById(R.id.btnRecordVideo);
@@ -89,6 +94,16 @@ public class CaptureImageActivity extends ActionBarActivity {
     /*
     Launching camera app for capturing image
      */
+
+    // Return to last fragment rather than the first fragment in the previous activity
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     private void captureImage() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

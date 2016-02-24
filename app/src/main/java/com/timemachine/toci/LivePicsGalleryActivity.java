@@ -2,29 +2,24 @@ package com.timemachine.toci;
 
 import java.util.Locale;
 
-import android.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.Scroller;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 
-public class LivePicsGalleryActivity extends ActionBarActivity {
+public class LivePicsGalleryActivity extends AppCompatActivity {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -45,7 +40,9 @@ public class LivePicsGalleryActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mvca_mollyspicsninfo);
+        setContentView(R.layout.livepics_gallery);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         // Create the adapter that will return a fragment for each of the five

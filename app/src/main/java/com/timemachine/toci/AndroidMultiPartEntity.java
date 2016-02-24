@@ -13,23 +13,23 @@ import org.apache.http.entity.mime.MultipartEntity;
  */
 
 @SuppressWarnings("deprecation")
-public class MultiPartEntity extends MultipartEntity {
+public class AndroidMultiPartEntity extends MultipartEntity {
 
     private final ProgressListener listener;
 
-    public MultiPartEntity(final ProgressListener listener) {
+    public AndroidMultiPartEntity(final ProgressListener listener) {
         super();
         this.listener = listener;
     }
 
-    public MultiPartEntity(final HttpMultipartMode mode,
-                           final ProgressListener listener) {
+    public AndroidMultiPartEntity(final HttpMultipartMode mode,
+                                  final ProgressListener listener) {
         super(mode);
         this.listener = listener;
     }
 
-    public MultiPartEntity(HttpMultipartMode mode, final String boundary,
-                           final Charset charset, final ProgressListener listener) {
+    public AndroidMultiPartEntity(HttpMultipartMode mode, final String boundary,
+                                  final Charset charset, final ProgressListener listener) {
         super(mode, boundary, charset);
         this.listener = listener;
     }
@@ -39,7 +39,7 @@ public class MultiPartEntity extends MultipartEntity {
         super.writeTo(new CountingOutputStream(outstream, this.listener));
     }
 
-    public static interface ProgressListener {
+    public interface ProgressListener {
         void transferred(long num);
     }
 

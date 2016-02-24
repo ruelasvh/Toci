@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:background="@color/blue"
+            android:background="@color/PrimaryAccentColor"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:textColor="@color/white" />
@@ -39,7 +39,7 @@
             android:text="@string/btnRecordVideo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/blue"
+            android:background="@color/PrimaryAccentColor"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:textColor="@color/white" />

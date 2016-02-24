@@ -4,10 +4,9 @@ package com.timemachine.toci;
  * Created by victorhugo on 1/30/15.
  */
 
-import com.timemachine.toci.MultiPartEntity.ProgressListener;
+import com.timemachine.toci.AndroidMultiPartEntity.ProgressListener;
 
-import android.support.v7.app.ActionBarActivity;
-
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -28,6 +27,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,7 +39,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-public class UploadActivity extends ActionBarActivity {
+public class UploadActivity extends AppCompatActivity {
     // LogCat tag
     private static final String TAG = SearchActivity.class.getSimpleName();
 
@@ -165,13 +165,14 @@ public class UploadActivity extends ActionBarActivity {
 
         @SuppressWarnings("deprecation")
         private String uploadFile() {
-            String responseString = null;
+
+            String responseString;
 
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(Config.FILE_UPLOAD_URL);
 
             try {
-                MultiPartEntity entity = new MultiPartEntity(
+                AndroidMultiPartEntity entity = new AndroidMultiPartEntity(
                         new ProgressListener() {
 
                             @Override
@@ -187,11 +188,12 @@ public class UploadActivity extends ActionBarActivity {
 
                 // Extra parameters if you want to pass to server
                 entity.addPart("website",
-                        new StringBody("www.androidhive.info"));
-                entity.addPart("email", new StringBody("abc@gmail.com"));
+                        new StringBody("www.crowdzeeker.com"));
+                entity.addPart("email", new StringBody("ruelasvh@gmail.com"));
 
                 totalSize = entity.getContentLength();
                 httppost.setEntity(entity);
+
 
                 // Making server call
                 HttpResponse response = httpclient.execute(httppost);

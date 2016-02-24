@@ -62,7 +62,12 @@
         <activity
             android:name=".LivePicsGalleryActivity"
             android:label="@string/title_activity_livepicgallery"
-            android:theme="@style/AppThemeTransparentActionBar"></activity>
+            android:parentActivityName=".HomeMaterialActivity"
+            android:theme="@style/AppThemeTransparentActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HomeMaterialActivity" />
+        </activity>
 
         <activity
             android:name=".PaloAltoCATabbedActivity"
@@ -124,27 +129,30 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MountainViewCAActivity" />
         </activity>
-
+        -->
 
         <activity
             android:name=".CaptureImageActivity"
             android:label="@string/title_activity_capture_image"
-            android:parentActivityName=".MountainViewCAActivity" >
+            android:parentActivityName=".HomeMaterialActivity"
+            android:theme="@style/AppThemeSecondary">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MountainViewCAActivity" />
+                android:value=".HomeMaterialActivity" />
         </activity>
 
         <activity
             android:name=".UploadActivity"
             android:label="@string/btnUploadToServer"
             android:parentActivityName=".CaptureImageActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeSecondary">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.timemachine.toci.CaptureImageActivity" />
+                android:value=".CaptureImageActivity" />
         </activity>
 
+        <!--
         <activity
             android:name=".SearchActivity"
             android:parentActivityName=".ViewFlipperHomeActivity"

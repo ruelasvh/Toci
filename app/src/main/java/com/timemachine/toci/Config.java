@@ -5,8 +5,8 @@ package com.timemachine.toci;
  */
 public class Config {
     // File upload url (replace the ip with your server address)
-    public static final String FILE_UPLOAD_URL = "http://crowdzeeker.com/fileUpload.php";
+    public static final String FILE_UPLOAD_URL = "http://crowdzeeker.com/AndroidFileUpload/fileUpload.php";
 
-    // Directory name to store caputre images and videos
-    public static final String IMAGE_DIRECTORY_NAME = "AndroidCZ File Uploader";
+    // Directory name to store capture images and videos
+    public static final String IMAGE_DIRECTORY_NAME = "Android File Upload";
 }

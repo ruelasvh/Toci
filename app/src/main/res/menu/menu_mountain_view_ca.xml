@@ -3,11 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.timemachine.toci.MountainViewCAActivity">
 
-    <item
-        android:id="@+id/action_camera"
-        android:icon="@drawable/ic_action_camera"
-        android:title="@string/action_capture_data"
-        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_settings"
