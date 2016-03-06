@@ -66,8 +66,8 @@ public class LoginFragment extends android.support.v4.app.Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_login, container, false);
 
-        signUpTextView = (TextView) rootView.findViewById(R.id.signUpTextView);
-        signUpTextView.setPaintFlags(signUpTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        //signUpTextView = (TextView) rootView.findViewById(R.id.signUpTextView);
+        //signUpTextView.setPaintFlags(signUpTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
         return rootView;
     }

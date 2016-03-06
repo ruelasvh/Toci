@@ -4,92 +4,100 @@
     android:layout_height="match_parent"
     tools:context="com.timemachine.toci.AboutUsFragment">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <ScrollView
+        android:id="@+id/about_us_scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
         android:background="@color/PrimaryColor"
-        android:layout_gravity="center_horizontal|bottom">
+        android:fillViewport="true">
 
-        <LinearLayout
-            android:id="@+id/textInfo"
-            android:orientation="vertical"
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_marginTop="10dp"
-            android:weightSum="1"
-            android:background="@color/PrimaryColor"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
 
-            <TextView
-                android:id="@+id/about_us_title"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:text="About Us"
-                android:textColor="@color/PrimaryAccentColor"
-                style="?android:textAppearanceLarge" />
+            <LinearLayout
+                android:id="@+id/textInfo"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:weightSum="1"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true">
 
-            <TextView
-                android:id="@+id/about_us_desctiption"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:text="Our ZeekerCams will serve as the gateway connecting your web or mobile browser windows to all of your local hangouts, essentially giving you a panoramic perspective of the ambiance or 'crowd' currently posted at that particular location. An image is worth a thousand words. No longer will any special,fun plans be made based on subjective reviews, outdated recollections, or vague descriptions. You will now be able to see for yourself a quick glance of the current ambiance or environment of your potential destination, without having to cross your fingers in hopes that the atmosphere will be worth your invested time, money and drive. Crowdzeeker will facilitate planning and save users time that would otherwise be wasted driving around looking for their ideal hangout spot, while at the same time helping people find new friends with similar interests or taste. Let us worry about the hassle, just sit back, browse, and find your crowds. "
-                android:textColor="@color/white"
-                android:layout_marginTop="25dp" />
+                <TextView
+                    android:id="@+id/about_us_title"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:text="About Us"
+                    android:textColor="@color/PrimaryAccentColor"
+                    style="?android:textAppearanceLarge" />
 
-            <TextView
-                android:id="@+id/about_us_contact"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:text="Contact us: ruelasvh@gmail.com"
-                android:textColor="@color/white"
-                style="?android:textAppearanceSmall"
-                android:layout_marginTop="15dp" />
+                <TextView
+                    android:id="@+id/about_us_desctiption"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:text="Our ZeekerCams will serve as the gateway connecting your web or mobile browser windows to all of your local hangouts, essentially giving you a panoramic perspective of the ambiance or 'crowd' currently posted at that particular location. An image is worth a thousand words. No longer will any special,fun plans be made based on subjective reviews, outdated recollections, or vague descriptions. You will now be able to see for yourself a quick glance of the current ambiance or environment of your potential destination, without having to cross your fingers in hopes that the atmosphere will be worth your invested time, money and drive. Crowdzeeker will facilitate planning and save users time that would otherwise be wasted driving around looking for their ideal hangout spot, while at the same time helping people find new friends with similar interests or taste. Let us worry about the hassle, just sit back, browse, and find your crowds. "
+                    android:textColor="@color/white"
+                    android:layout_marginTop="25dp" />
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/about_us_contact"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:text="Contact us: ruelasvh@gmail.com"
+                    android:textColor="@color/white"
+                    style="?android:textAppearanceSmall"
+                    android:layout_marginTop="15dp" />
 
-        <ImageView
-            android:src="@android:drawable/title_bar"
-            android:id="@+id/vicPic"
-            android:layout_width="90dp"
-            android:layout_height="75dp"
-            android:adjustViewBounds="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="10dp" />
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:text="The Team"
+                    android:textColor="@color/white"
+                    style="?android:textAppearanceSmall"
+                    android:layout_marginTop="15dp"
+                    android:textStyle="italic"/>
+            </LinearLayout>
+
+            <ImageView
+                android:src="@android:drawable/title_bar"
+                android:id="@+id/vicPic"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:adjustViewBounds="true"
+                android:layout_below="@+id/textInfo" />
 
 
-        <ImageView
-            android:src="@android:drawable/title_bar"
-            android:id="@+id/gesemPic"
-            android:layout_width="90dp"
-            android:layout_height="75dp"
-            android:adjustViewBounds="true"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@+id/vicPic"
-            android:layout_toEndOf="@+id/vicPic"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="40dp" />
+            <ImageView
+                android:src="@android:drawable/title_bar"
+                android:id="@+id/gesemPic"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:adjustViewBounds="true"
+                android:layout_alignTop="@+id/vicPic"
+                android:layout_centerHorizontal="true" />
 
-        <ImageView
-            android:src="@android:drawable/title_bar"
-            android:id="@+id/royPic"
-            android:layout_width="90dp"
-            android:layout_height="75dp"
-            android:adjustViewBounds="true"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@+id/gesemPic"
-            android:layout_toEndOf="@+id/gesemPic"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="40dp" />
+            <ImageView
+                android:src="@android:drawable/title_bar"
+                android:id="@+id/royPic"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:adjustViewBounds="true"
+                android:layout_alignTop="@+id/gesemPic"
+                android:layout_alignRight="@+id/textInfo"
+                android:layout_alignEnd="@+id/textInfo" />
 
-    </RelativeLayout>
+        </RelativeLayout>
 
+    </ScrollView>
 
 </FrameLayout>

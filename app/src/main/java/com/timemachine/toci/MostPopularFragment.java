@@ -35,6 +35,13 @@ import it.gmariotti.cardslib.library.view.CardListView;
  * create an instance of this fragment.
  */
 public class MostPopularFragment extends Fragment {
+    // Strings to call the webservice and root directory of pictures
+    String sortScript = "http://crowdzeeker.com/AppCrowdZeeker/fetchlatestcrowd.php";
+    String imageBaseDirectory = "http://crowdzeeker.com/AppCrowdZeeker/AndroidFileUpload/uploads/";
+
+    private View rootView;
+
+    private CardArrayAdapter mCardArrayAdapter;
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_SECTION_NUMBER = "sectionNumber";
@@ -43,15 +50,12 @@ public class MostPopularFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private View rootView;
+
     protected ScrollView mScrollView;
 
     private CardListView mListView;
-    private CardArrayAdapter mCardArrayAdapter;
 
     private GoogleMap map;
-
-    String sortScript = "http://crowdzeeker.com/AppCrowdZeeker/fetchlatestcrowd.php";
 
 
     /**
@@ -97,12 +101,23 @@ public class MostPopularFragment extends Fragment {
 
         //mScrollView = (ScrollView) getActivity().findViewById(R.id.crowdCard_scrollview);
 
+        ArrayList<Card> cards = new ArrayList<>();
+
+        mCardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
+        mListView = (CardListView) getActivity().findViewById(R.id.crowd_card_list_view);
+        mCardArrayAdapter.addAll(initCrowdList());
+
+        // Set the empty view
+        if (mListView != null) {
+            mListView.setAdapter(mCardArrayAdapter);
+        }
+
+
         //initCrowd1();
         //initCrowd2();
         //initCrowd3();
         //initCrowd4();
         //initCrowd5();
-        initCrowdList();
     }
 
     /**
@@ -285,131 +300,153 @@ public class MostPopularFragment extends Fragment {
         card.setCardinView(rootView, R.id.crowdCard5);
     }
 **/
-    private void initCrowdList() {
+    private ArrayList<Card> initCrowdList() {
 
         ArrayList<Card> cards = new ArrayList<>();
 
         // Crowd #1
         final crowdCard card1 = new crowdCard(this.getActivity(), R.layout.crowd_card);
-        card1.setCrowdTitle("Molly Magees");
-        card1.setCrowdSubtitle("Famous Irish Pub");
+        card1.setCrowdTitle("Molly Magees",false);
+        card1.setCrowdSubtitle("Irish Style Pub");
         card1.setCrowdRatingComment("1 min away");
         card1.setCrowdCoverCharge("$$");
         card1.setCrowdRating(4.7f);
-        //card1.setCrowdLogo(R.drawable.mollys_front_main);
-        card1.setCrowdLogoUrl("http://www.mollysmtview.com/images/gal-9.jpg");
+        card1.new HttpAsyncTask() {
+            @Override
+            public void onPostExecute(String picName) {
+                card1.setCrowdLogoUrl(imageBaseDirectory+picName);
+            }
+        }.execute(sortScript);
         card1.setSpecialsHeader("Specials", getResources().getColor(R.color.violetSpecials));
         card1.setSpecials1("\u2022 $2 BudLight", getResources().getColor(R.color.redSpecials));
         card1.setSpecials2("\u2022 $3 Shots", getResources().getColor(R.color.redSpecials));
-        card1.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.team_member_victor);
-        //card1.setCrowdMapExpand(R.layout.crowd_info_expand);
-        card1.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
-            @Override
-            public void onExpandEnd(Card card) {
-
-                card1.setCrowdPicUrl(sortScript);
-
-                /*
-                TextView address = (TextView) getActivity().findViewById(R.id.address);
-                address.setText(getResources().getString(R.string.mtnview_street));
-                TextView zipcode = (TextView) getActivity().findViewById(R.id.zipcode);
-                zipcode.setText(getResources().getString(R.string.mtnview_zip));
-
-                MapsFragment mymap = new MapsFragment();
-                LatLng mtnview = new LatLng(37.3894, -122.0819);
-                mymap.setLocation(mtnview);
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.mapLayout, mymap).commit();
-                */
-                //Toast.makeText(getActivity(),"Expand "+card.getCardHeader().getTitle(), Toast.LENGTH_SHORT).show();
-            }
-        });
+//        card1.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.team_member_victor);
+//        //card1.setCrowdMapExpand(R.layout.crowd_info_expand);
+//        card1.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
+//            @Override
+//            public void onExpandEnd(Card card) {
+//
+//                card1.setCrowdPicUrl(sortScript);
+//
+//                /*
+//                TextView address = (TextView) getActivity().findViewById(R.id.address);
+//                address.setText(getResources().getString(R.string.mtnview_street));
+//                TextView zipcode = (TextView) getActivity().findViewById(R.id.zipcode);
+//                zipcode.setText(getResources().getString(R.string.mtnview_zip));
+//
+//                MapsFragment mymap = new MapsFragment();
+//                LatLng mtnview = new LatLng(37.3894, -122.0819);
+//                mymap.setLocation(mtnview);
+//                FragmentManager fragmentManager = getFragmentManager();
+//                fragmentManager.beginTransaction().replace(R.id.mapLayout, mymap).commit();
+//                */
+//                //Toast.makeText(getActivity(),"Expand "+card.getCardHeader().getTitle(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         card1.setCrowdLivePics(LivePicsGalleryActivity.class);
         cards.add(card1);
 
         // Crowd #2
-        crowdCard card2 = new crowdCard(this.getActivity(), R.layout.crowd_card);
-        card2.setCrowdTitle("Stephens Green");
-        card2.setCrowdSubtitle("Irish-style Pub");
+        final crowdCard card2 = new crowdCard(this.getActivity(), R.layout.crowd_card);
+        card2.setCrowdTitle("Stephens Green", false);
+        card2.setCrowdSubtitle("Irish Bar");
         card2.setCrowdRatingComment("1 min away");
         card2.setCrowdCoverCharge("$$");
         card2.setCrowdRating(4.0f);
-        //card2.setCrowdLogo(R.drawable.mollys_inside_1);
-        card2.setCrowdLogoUrl("http://www.mollysmtview.com/images/gal-9.jpg");
-        card2.setSpecialsHeader("Specials", getResources().getColor(R.color.blueSpecials));
+        card2.new HttpAsyncTask() {
+            @Override
+            public void onPostExecute(String picName) {
+                card2.setCrowdLogoUrl(imageBaseDirectory+picName);
+            }
+        }.execute(sortScript);        card2.setSpecialsHeader("Specials", getResources().getColor(R.color.blueSpecials));
         card2.setSpecials1("\u2022 $2 BudLight", getResources().getColor(R.color.yellowSpecials));
         card2.setSpecials2("\u2022 $3 Shots", getResources().getColor(R.color.yellowSpecials));
-        card2.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.team_member_victor);
+//        card2.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.team_member_victor);
         card2.setCrowdLivePics(LivePicsGalleryActivity.class);
         cards.add(card2);
 
         // Crowd #3
-        crowdCard card3 = new crowdCard(this.getActivity(), R.layout.crowd_card);
-        card3.setCrowdTitle("Opal");
+        final crowdCard card3 = new crowdCard(this.getActivity(), R.layout.crowd_card);
+        card3.setCrowdTitle("Opal", false);
         card3.setCrowdSubtitle("Hip-hop Club");
         card3.setCrowdRatingComment("1 min away");
         card3.setCrowdCoverCharge("$$");
         card3.setCrowdRating(4.0f);
-        //card3.setCrowdLogo(R.drawable.mollys_inside_2);
-        card3.setCrowdLogoUrl("http://www.mollysmtview.com/images/gal-9.jpg");
+        card3.new HttpAsyncTask() {
+            @Override
+            public void onPostExecute(String picName) {
+                card3.setCrowdLogoUrl(imageBaseDirectory+picName);
+            }
+        }.execute(sortScript);
         card3.setSpecialsHeader("Specials", getResources().getColor(R.color.yellowSpecials));
         card3.setSpecials1("\u2022 $2 BudLight", getResources().getColor(R.color.redSpecials));
         card3.setSpecials2("\u2022 $3 Shots", getResources().getColor(R.color.redSpecials));
-        card3.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.team_member_roy);
+//        card3.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.team_member_roy);
         card3.setCrowdLivePics(LivePicsGalleryActivity.class);
         cards.add(card3);
 
         // Crowd #4
-        crowdCard card4 = new crowdCard(this.getActivity(), R.layout.crowd_card);
-        card4.setCrowdTitle("Monte Carlo");
+        final crowdCard card4 = new crowdCard(this.getActivity(), R.layout.crowd_card);
+        card4.setCrowdTitle("Monte Carlo", false);
         card4.setCrowdSubtitle("Latin Club");
         card4.setCrowdRatingComment("1 min away");
         card4.setCrowdCoverCharge("$$");
         card4.setCrowdRating(4.8f);
-        //card4.setCrowdLogo(R.drawable.mollys_inside_3);
-        card4.setCrowdLogoUrl("http://www.mollysmtview.com/images/gal-9.jpg");
+        card4.new HttpAsyncTask() {
+            @Override
+            public void onPostExecute(String picName) {
+                card4.setCrowdLogoUrl(imageBaseDirectory+picName);
+            }
+        }.execute(sortScript);
         card4.setSpecialsHeader("Specials", getResources().getColor(R.color.blueSpecials));
         card4.setSpecials1("\u2022 $2 BudLight", getResources().getColor(R.color.yellowSpecials));
         card4.setSpecials2("\u2022 $3 Shots", getResources().getColor(R.color.yellowSpecials));
-        card4.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.team_member_gesem);
+//        card4.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.team_member_gesem);
         card4.setCrowdLivePics(LivePicsGalleryActivity.class);
         cards.add(card4);
 
         // Crowd #5
-        crowdCard card5 = new crowdCard(this.getActivity(), R.layout.crowd_card);
-        card5.setCrowdTitle("Mervs");
+        final crowdCard card5 = new crowdCard(this.getActivity(), R.layout.crowd_card);
+        card5.setCrowdTitle("Mervs", false);
         card5.setCrowdSubtitle("Dive Bar");
         card5.setCrowdRatingComment("1 min away");
         card5.setCrowdCoverCharge("$");
         card5.setCrowdRating(4.0f);
         //card5.setCrowdLogo(R.drawable.mollys_inside_1);
-        card5.setCrowdLogoUrl("http://www.mollysmtview.com/images/gal-9.jpg");
+        card5.new HttpAsyncTask() {
+            @Override
+            public void onPostExecute(String picName) {
+                card5.setCrowdLogoUrl(imageBaseDirectory+picName);
+            }
+        }.execute(sortScript);
         card5.setSpecialsHeader("Specials", getResources().getColor(R.color.blueSpecials));
         card5.setSpecials1("\u2022 $2 BudLight", getResources().getColor(R.color.yellowSpecials));
         card5.setSpecials2("\u2022 $3 Shots", getResources().getColor(R.color.yellowSpecials));
-        card5.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.team_member_victor);
+//        card5.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.team_member_victor);
         card5.setCrowdLivePics(LivePicsGalleryActivity.class);
         cards.add(card5);
 
-        // Set the adapter
-        mCardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
+        return cards;
 
-        mListView = (CardListView) getActivity().findViewById(R.id.carddemo_extra_list_viewanimations);
-        mListView.setAdapter(mCardArrayAdapter);
-        // set animation
-        if (mListView == null) {
-            setBottomAdapter();
-        }
-
-    }
-
-    // Bottom animation
-    private void setBottomAdapter() {
-        AnimationAdapter animCardArrayAdapter = new SwingBottomInAnimationAdapter(mCardArrayAdapter);
-        animCardArrayAdapter.setAbsListView(mListView);
-        mListView.setExternalAdapter(animCardArrayAdapter,mCardArrayAdapter);
-    }
+//        // Set the adapter
+//        mCardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
+//
+//        mListView = (CardListView) getActivity().findViewById(R.id.carddemo_extra_list_viewanimations);
+//        mListView.setAdapter(mCardArrayAdapter);
+//        // set animation
+//        if (mListView != null) {
+//            setBottomAdapter();
+//        }
+//
+   }
+//
+//    // Bottom animation
+//    private void setBottomAdapter() {
+//        AnimationAdapter animCardArrayAdapter = new SwingBottomInAnimationAdapter(mCardArrayAdapter);
+//        animCardArrayAdapter.setAbsListView(mListView);
+//        mListView.setExternalAdapter(animCardArrayAdapter,mCardArrayAdapter);
+//    }
 
 
     @Override
@@ -421,6 +458,9 @@ public class MostPopularFragment extends Fragment {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+
+//        ((HomeMaterialActivity) activity).onSectionAttached(getArguments()
+//        .getInt(ARG_SECTION_NUMBER));
     }
 
     @Override

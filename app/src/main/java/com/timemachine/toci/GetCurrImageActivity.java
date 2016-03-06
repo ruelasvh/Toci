@@ -28,7 +28,7 @@ import java.io.InputStreamReader;
 public class GetCurrImageActivity extends Activity {
 
     ProgressDialog pd;
-    String imageBaseDirectory = "http://crowdzeeker.com/AppCrowdZeeker/testcrowdpics/";
+    String imageBaseDirectory = "http://crowdzeeker.com/AppCrowdZeeker/AndroidFileUpload/uploads/";
     String sortScript = "http://crowdzeeker.com/AppCrowdZeeker/fetchlatestcrowd.php";
     TextView textView;
     Button updateImg;
@@ -132,6 +132,7 @@ public class GetCurrImageActivity extends Activity {
             super.onPreExecute();
             pd = new ProgressDialog(GetCurrImageActivity.this);
             pd.setMessage("Seeking awsome crowds...");
+
             pd.show();
         }
 

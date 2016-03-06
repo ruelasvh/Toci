@@ -22,10 +22,12 @@ import it.gmariotti.cardslib.library.recyclerview.view.CardRecyclerView;
 public class MVCAFeaturedRecyclerViewFragment extends BaseListFragment {
 
     String sortScript = "http://crowdzeeker.com/AppCrowdZeeker/fetchlatestcrowd.php";
+    String imageBaseDirectory = "http://crowdzeeker.com/AppCrowdZeeker/testcrowdpics/";
+
 
     private View rootView;
 
-    CardArrayRecyclerViewAdapter mCardArrayRecyclerViewAdapter;
+    private CardArrayRecyclerViewAdapter mCardArrayRecyclerViewAdapter;
 
     /**
      * The {@link android.support.v4.widget.SwipeRefreshLayout} that detects swipe gestures and
@@ -73,23 +75,72 @@ public class MVCAFeaturedRecyclerViewFragment extends BaseListFragment {
 
         mCardArrayRecyclerViewAdapter = new CardArrayRecyclerViewAdapter(getActivity(), cards);
         CardRecyclerView mRecyclerView = (CardRecyclerView) getActivity().findViewById(R.id.crowdCard_recyclerview);
-        mRecyclerView.setHasFixedSize(false);
+        mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         // Set the empty view
         if (mRecyclerView != null) {
             mRecyclerView.setAdapter(mCardArrayRecyclerViewAdapter);
         }
+        // populate empty view
+        initiateRefresh();
 
-        //Load cards
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // repopulate empty view
+                initiateRefresh();
+            }
+        });
+
+
+    }
+
+    /**
+     * By abstracting the refresh process to a single method, the app
+     * allows both the SwipeGestureLayout onRefresh() method and the
+     * Refresh action item to refresh the content.
+     */
+
+    private void initiateRefresh() {
+        /**
+         * Execute the background task of loading crowdCards, which uses
+         * {@link android.os.AsyncTask} to load the data
+         */
         new LoaderAsyncTask().execute();
+    }
+
+    /**
+     * When the AsyncTask finishes, it calls onRefreshComplete(), which
+     * updates the data in the CardArrayRecyclerViewAdapter and turns off
+     * the refreshing indicator.
+     */
+
+    private void onRefreshComplete(ArrayList<Card> result) {
+
+        // Clear the adapter to prevent duplicate entries
+        mCardArrayRecyclerViewAdapter.clear();
+        // Update the list with cards
+        updateAdapter(result);
+        // Stop the refreshing indicator
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    /**
+     * Method to update the CardArrayRecyclerViewAdapter
+     */
+    private void updateAdapter(ArrayList<Card> cards) {
+        if (cards != null) {
+            mCardArrayRecyclerViewAdapter.addAll(cards);
+            displayList();
+        }
     }
 
 
     /**
-     * Async Task to elaborate crowdCards
+     * Task {@link AsyncTask} which fetches updated crowdCards.
      */
-    class LoaderAsyncTask extends AsyncTask<Void, Void, ArrayList<Card>> {
+    private class LoaderAsyncTask extends AsyncTask<Void, Void, ArrayList<Card>> {
 
         LoaderAsyncTask() {
             // Empty constructor
@@ -99,7 +150,7 @@ public class MVCAFeaturedRecyclerViewFragment extends BaseListFragment {
         protected ArrayList<Card> doInBackground(Void... params) {
             // Elaborate crowdCards
             if (isAdded()) {
-                ArrayList<Card> cards = initcrowdCard();
+                ArrayList<Card> cards = initCrowdList();
                 return cards;
             } else
                 return null;
@@ -107,30 +158,53 @@ public class MVCAFeaturedRecyclerViewFragment extends BaseListFragment {
 
         @Override
         protected void onPostExecute(ArrayList<Card> cards) {
-            // Update the adapter
-            updateAdapter(cards);
+
+            // Tell the Fragment that the refresh has completed
+            onRefreshComplete(cards);
+
         }
     }
+
 
     /**
      * Method builds a simple list of crowdCards
      */
-    private ArrayList<Card> initcrowdCard() {
+    private ArrayList<Card> initCrowdList() {
 
         // Initialize an array of crowdCards
         ArrayList<Card> cards = new ArrayList<>();
         // Crowd #1
         final crowdCard card1 = new crowdCard(this.getActivity(), R.layout.crowd_card);
         card1.setCrowdTitle("Molly Magees", false);
-        card1.setCrowdSubtitle("Popular Bar");
+        //card1.setCrowdSubtitle("Popular Bar");
         card1.setCrowdRatingComment("1 min away");
         card1.setCrowdCoverCharge("$$");
         card1.setCrowdRating(4.7f);
-        card1.setCrowdLogoUrl("http://www.mollysmtview.com/images/gal-9.jpg");
+        //card1.setCrowdLogoUrl("http://www.mollysmtview.com/images/gal-9.jpg");
+        // Add thumbnail to card from php script on server
+        // Set true to use external library
+        // Set the url
+        card1.new HttpAsyncTask() {
+            @Override
+            public void onPostExecute(String picUrl) {
+                card1.setCrowdSubtitle(picUrl);
+            }
+        }.execute(sortScript);
+/*
+        try {
+            final crowdCard.UrlThumbnail thumbnail1 = new crowdCard.UrlThumbnail(getActivity());
+            thumbnail1.setExternalUsage(true);
+            String filename = new crowdCard.HttpAsyncTask().execute(sortScript).get().toString();
+            thumbnail1.setUrl(imageBaseDirectory + filename);
+            card1.addCardThumbnail(thumbnail1);
+        } catch (ExecutionException | InterruptedException ei) {
+            ei.printStackTrace();
+        }*/
+
         card1.setSpecialsHeader("Specials", getResources().getColor(R.color.violetSpecials));
         card1.setSpecials1("\u2022 $2 BudLight", getResources().getColor(R.color.redSpecials));
         card1.setSpecials2("\u2022 $3 Shots", getResources().getColor(R.color.redSpecials));
-        card1.setCrowdLivePics(LivePicsGalleryActivity.class);
+        card1.setCrowdLivePics(GetCurrImageActivity.class);
         cards.add(card1);
 
         // Crowd #2
@@ -182,7 +256,7 @@ public class MVCAFeaturedRecyclerViewFragment extends BaseListFragment {
         card5.setCrowdRatingComment("1 min away");
         card5.setCrowdCoverCharge("$");
         card5.setCrowdRating(4.0f);
-        card5.setCrowdLogoUrl("http://www.mollysmtview.com/images/img_1727.jpg");
+        card5.setCrowdLogoUrl("http://crowdzeeker.com/AppCrowdZeeker/AndroidFileUpload/uploads/IMG_20160224_142750.jpg");
         card5.setSpecialsHeader("Specials", getResources().getColor(R.color.blueSpecials));
         card5.setSpecials1("\u2022 $2 BudLight", getResources().getColor(R.color.yellowSpecials));
         card5.setSpecials2("\u2022 $3 Shots", getResources().getColor(R.color.yellowSpecials));
@@ -191,17 +265,4 @@ public class MVCAFeaturedRecyclerViewFragment extends BaseListFragment {
 
         return cards;
     }
-
-    /**
-     * Method to update the adapter
-     */
-    private void updateAdapter(ArrayList<Card> cards) {
-        if (cards != null) {
-            mCardArrayRecyclerViewAdapter.addAll(cards);
-            displayList();
-        }
-    }
-
-
-
 }

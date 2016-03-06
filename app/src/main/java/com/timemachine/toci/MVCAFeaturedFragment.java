@@ -34,6 +34,11 @@ public class MVCAFeaturedFragment extends Fragment {
     public MVCAFeaturedFragment() {
     }
 
+    // Strings to call the webservice and root directory of pictures
+    String sortScript = "http://crowdzeeker.com/AppCrowdZeeker/fetchlatestcrowd.php";
+    String imageBaseDirectory = "http://crowdzeeker.com/AppCrowdZeeker/AndroidFileUpload/uploads/";
+
+
     private View rootView;
     protected ScrollView mScrollView;
 
@@ -73,16 +78,15 @@ public class MVCAFeaturedFragment extends Fragment {
 
     private void initcrowdCard1() {
 
-        crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
+        final crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
         card.setCrowdTitle("Crowd Title");
-        card.setCrowdSubtitle("This is the subtitle");
+        card.setCrowdSubtitle("The subtitle");
         card.setCrowdRatingComment("5 min away");
         card.setCrowdCoverCharge("Price");
         card.setCrowdRating(4f);
-        card.setCrowdLogoUrl("http://www.mollysmtview.com/images/gal-9.jpg");
+        card.setCrowdPicUrl(sortScript);
         //card.setBackgroundResource(getResources().getDrawable(R.drawable.mollys_inside_cropped));
         //card.setShadow(true);
-        //card.setCrowdLogo(R.drawable.stephensgreenlive2);
         //card.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.livePic, R.drawable.stephensgreenlive2);
         card.setCrowdMapExpand(R.layout.crowd_info_expand);
         card.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
@@ -111,7 +115,7 @@ public class MVCAFeaturedFragment extends Fragment {
 
     private void initcrowdCard2() {
         crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
-        card.setCrowdTitle("Crowd Title");
+        card.setCrowdTitle("Crowd Title",false);
         card.setCrowdSubtitle("This is the subtitle");
         card.setCrowdRatingComment("10 min away");
         card.setCrowdCoverCharge("Price");

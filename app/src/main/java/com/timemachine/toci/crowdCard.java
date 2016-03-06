@@ -23,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.concurrent.ExecutionException;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardExpand;
@@ -46,6 +47,7 @@ public class crowdCard extends Card {
     private int Crowd_Specials_text1_color;
     private String Crowd_Specials_text2;
     private int Crowd_Specials_text2_color;
+    private String imageBaseDirectory = "http://crowdzeeker.com/AppCrowdZeeker/AndroidFileUpload/uploads/";
 
 
     /*
@@ -223,7 +225,7 @@ public class crowdCard extends Card {
         }
     }
 
-    class UrlThumbnail extends CardThumbnail {
+    public static class UrlThumbnail extends CardThumbnail {
 
         // Variables to use in methods for passing url and ImageView
         private String myUrl = "";
@@ -244,7 +246,7 @@ public class crowdCard extends Card {
             Picasso.with(getContext())
                     .load(myUrl)
                     //.placeholder(R.drawable.crowdzeeker_logo)
-                    .error(R.drawable.crowdzeeker_logo)
+                    .error(R.drawable.crowdzeeker_logo_noletters)
                     .resizeDimen(R.dimen.list_detail_image_size_high_res, R.dimen.list_detail_image_size_high_res)
                     .centerInside()
                     .into((ImageView) viewImage);
@@ -319,7 +321,17 @@ public class crowdCard extends Card {
         return result;
     }
 
-    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
+    /**
+     * Task {@link AsyncTask} to fetch file name of the latest picture.
+     * Returns String of file name.
+     */
+
+    public class HttpAsyncTask extends AsyncTask<String, Void, String> {
+
+
+        HttpAsyncTask() {
+
+        }
 
         @Override
         protected String doInBackground(String... urls) {
@@ -330,7 +342,9 @@ public class crowdCard extends Card {
         // onPostExecute displays the results of the AsyncTask
         @Override
         protected void onPostExecute(String result) {
-            Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
+            setCrowdLogoUrl(imageBaseDirectory+result);
+            //Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
         }
     }
+
 }

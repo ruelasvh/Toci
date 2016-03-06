@@ -8,12 +8,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class HomeMaterialActivity extends ActionBarActivity
+public class HomeMaterialActivity extends AppCompatActivity
         implements SearchFragment.OnFragmentInteractionListener, MostPopularFragment.OnFragmentInteractionListener,
         LoginFragment.OnFragmentInteractionListener, AboutUsFragment.OnFragmentInteractionListener, NavigationDrawerCallbacks {
 
@@ -37,10 +38,10 @@ public class HomeMaterialActivity extends ActionBarActivity
 
         // Set up the drawer.
         mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mToolbar);
-        // populate the navigation drawer
-        mNavigationDrawerFragment.setUserData(getResources().getString(R.string.app_name),
-                getResources().getString(R.string.cz_moto),
-                BitmapFactory.decodeResource(getResources(), R.drawable.cz_logo));
+         //populate the navigation drawer
+        mNavigationDrawerFragment.setUserData(getResources().getString(R.string.cz_moto));
+//        mNavigationDrawerFragment.setUserData(getResources().getString(R.string.cz_moto),
+//                BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_pink));
     }
 
     @Override
@@ -49,23 +50,30 @@ public class HomeMaterialActivity extends ActionBarActivity
         //Toast.makeText(this, "Menu item selected -> " + position, Toast.LENGTH_SHORT).show();
         Fragment fragment;
         switch (position) {
+            default:
+                fragment = new LoginFragment();
+                break;
             case 0:
                 fragment = new SearchFragment();
                 break;
             case 1:
-                fragment = new MostPopularFragment();
+                fragment = new MVCAFeaturedFragment();
+                //fragment = new MVCAFeaturedRecyclerViewFragment();
                 break;
             case 2:
-                //fragment = new PACAFeaturedFragment();
-                //fragment = new MVCAFeaturedFragment();
-                fragment = new MVCAFeaturedRecyclerViewFragment();
-                //fragment = new LoginFragment();
+                fragment = new MostPopularFragment();
                 break;
             case 3:
-                fragment = new AboutUsFragment();
+                fragment = new MostPopularFragment();
                 break;
-            default:
-                fragment = new SearchFragment();
+            case 4:
+                fragment = new LoginFragment();
+                break;
+            case 5:
+                fragment = new LoginFragment();
+                break;
+            case 6:
+                fragment = new AboutUsFragment();
                 break;
         }
 

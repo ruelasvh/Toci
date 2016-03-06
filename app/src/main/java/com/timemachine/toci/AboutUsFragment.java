@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 
 
 /**
@@ -27,6 +28,11 @@ public class AboutUsFragment extends android.support.v4.app.Fragment {
     private String mParam1;
 
     private OnFragmentInteractionListener mListener;
+
+    protected ScrollView mScrollView;
+    private ImageView vicBubble;
+    private ImageView gesemBubble;
+    private ImageView royBubble;
 
     /**
      * Use this factory method to create a new instance of
@@ -61,20 +67,25 @@ public class AboutUsFragment extends android.support.v4.app.Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_about_us, container, false);
 
-        ImageView vicBubble = (ImageView) rootView.findViewById(R.id.vicPic);
-        ImageView gesemBubble = (ImageView) rootView.findViewById(R.id.gesemPic);
-        ImageView royBubble = (ImageView) rootView.findViewById(R.id.royPic);
-        vicBubble.setImageDrawable(new NavigationDrawerFragment.RoundImage(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.team_member_victor)));
-        gesemBubble.setImageDrawable(new NavigationDrawerFragment.RoundImage(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.team_member_gesem)));
-        royBubble.setImageDrawable(new NavigationDrawerFragment.RoundImage(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.team_member_roy)));
+        // Setup the empty views
+        vicBubble = (ImageView) rootView.findViewById(R.id.vicPic);
+        gesemBubble = (ImageView) rootView.findViewById(R.id.gesemPic);
+        royBubble = (ImageView) rootView.findViewById(R.id.royPic);
+
         return rootView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mScrollView = (ScrollView) getActivity().findViewById(R.id.about_us_scrollview);
+
+        // Set pictures into empty views
+        vicBubble.setImageDrawable(new NavigationDrawerFragment.RoundImage(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.team_member_victor)));
+        gesemBubble.setImageDrawable(new NavigationDrawerFragment.RoundImage(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.team_member_gesem)));
+        royBubble.setImageDrawable(new NavigationDrawerFragment.RoundImage(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.team_member_roy)));
+
     }
 
     /*

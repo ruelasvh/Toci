@@ -12,7 +12,8 @@
     <ScrollView
         android:id="@+id/card_scrollview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <LinearLayout
             android:orientation="vertical"
@@ -26,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 style="@style/card_external"
-                card:card_layout_resourceID="@layout/native_card_thumbnail_layout" />
+                card:card_layout_resourceID="@layout/card_thumbnail_layout" />
 
             <it.gmariotti.cardslib.library.view.CardView
                 android:id="@+id/carddemo2"

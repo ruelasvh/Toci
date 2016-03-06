@@ -2,6 +2,7 @@ package com.timemachine.toci;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -49,6 +50,10 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
 
     /**
+     * Spacing to add in RecyclerView list
+     */
+    private static final int VERTICAL_ITEM_SPACE = 48;
+    /**
      * A pointer to the current callbacks instance (the Activity).
      */
     private NavigationDrawerCallbacks mCallbacks;
@@ -60,6 +65,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
 
     private DrawerLayout mDrawerLayout;
     private RecyclerView mDrawerList;
+    private LinearLayoutManager mLayoutManager;
     private View mFragmentContainerView;
 
     private int mCurrentSelectedPosition = 0;
@@ -86,10 +92,11 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_navigation_material_drawer, container, false);
         mDrawerList = (RecyclerView) view.findViewById(R.id.drawerList);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mDrawerList.setLayoutManager(layoutManager);
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mDrawerList.setLayoutManager(mLayoutManager);
         mDrawerList.setHasFixedSize(true);
+        mDrawerList.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
 
         final List<NavigationItem> navigationItems = getMenu();
         NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(navigationItems);
@@ -118,14 +125,20 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
 
     public List<NavigationItem> getMenu() {
         List<NavigationItem> items = new ArrayList<NavigationItem>();
-        items.add(new NavigationItem(getResources().getString(R.string.drawer_section_2),
-                getResources().getDrawable(R.drawable.ic_action_ic_action_find_crowds)));
-        items.add(new NavigationItem(getResources().getString(R.string.drawer_section_1),
-                getResources().getDrawable(R.drawable.ic_action_whatshot)));
-        items.add(new NavigationItem(getResources().getString(R.string.drawer_section_3),
-                getResources().getDrawable(R.drawable.ic_action_ic_action_user2)));
-        items.add(new NavigationItem(getResources().getString(R.string.drawer_section_4),
-                getResources().getDrawable(R.drawable.ic_action_ic_action_cz_about_us)));
+        items.add(new NavigationItem("Find Crowds",
+                getResources().getDrawable(R.drawable.ic_chevron_right_grey600_24dp)));
+        items.add(new NavigationItem("Mountain View",
+                getResources().getDrawable(R.drawable.beer_icon)));
+        items.add(new NavigationItem("Palo Alto",
+                getResources().getDrawable(R.drawable.wine_icon)));
+        items.add(new NavigationItem("San Francisco",
+                getResources().getDrawable(R.drawable.drink_icon)));
+        items.add(new NavigationItem("Sign In".toUpperCase(),
+                getResources().getDrawable(R.drawable.navigation_drawer_item_empty)));
+        items.add(new NavigationItem("Settings".toUpperCase(),
+                getResources().getDrawable(R.drawable.navigation_drawer_item_empty)));
+        items.add(new NavigationItem("About Us".toUpperCase(),
+                getResources().getDrawable(R.drawable.navigation_drawer_item_empty)));
         return items;
     }
 
@@ -230,11 +243,19 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
         mActionBarDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    public void setUserData(String user, String email, Bitmap avatar) {
-        ImageView avatarContainer = (ImageView) mFragmentContainerView.findViewById(R.id.czLogo);
-        ((TextView) mFragmentContainerView.findViewById(R.id.czMoto)).setText(email);
-        ((TextView) mFragmentContainerView.findViewById(R.id.czName)).setText(user);
-        avatarContainer.setImageDrawable(new RoundImage(avatar));
+//    public void setUserData(String header, Bitmap avatar) {
+//        ImageView avatarContainer = (ImageView) mFragmentContainerView.findViewById(R.id.czLogo);
+//        ((TextView) mFragmentContainerView.findViewById(R.id.czMoto)).setText(header);
+//        avatarContainer.setImageDrawable(new RoundImage(avatar));
+//    }
+//
+//        public void setUserData(Bitmap avatar) {
+//        ImageView avatarContainer = (ImageView) mFragmentContainerView.findViewById(R.id.czLogo);
+//        avatarContainer.setImageDrawable(new RoundImage(avatar));
+//    }
+
+    public void setUserData(String header) {
+        ((TextView) mFragmentContainerView.findViewById(R.id.czMoto)).setText(header);
     }
 
     public View getGoogleDrawer() {
@@ -321,5 +342,33 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
             return mBitmap;
         }
 
+    }
+
+    public class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
+        private Drawable mDivider;
+
+        public SimpleDividerItemDecoration(Context context) {
+            mDivider = context.getResources().getDrawable(R.drawable.navigation_drawer_line_divider);
+        }
+
+        @Override
+        public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
+            int left = parent.getPaddingLeft();
+            int right = parent.getWidth() - parent.getPaddingRight();
+
+            //int childCount = parent.getChildCount();
+            //for (int i = 0; i < childCount; i++) {
+                // Add separator only after 4th element in the list
+                View child = parent.getChildAt(3);
+
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
+
+                int top = child.getBottom() + params.bottomMargin;
+                int bottom = top + mDivider.getIntrinsicHeight();
+
+                mDivider.setBounds(left, top, right, bottom);
+                mDivider.draw(c);
+            //}
+        }
     }
 }

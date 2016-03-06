@@ -18,9 +18,13 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:padding="10dp"
-            android:weightSum="1">
+            android:weightSum="1"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="88dp"
+            android:id="@+id/linearLayout2">
             <!--
                         <EditText
                             android:id="@+id/userEmail"
@@ -83,18 +87,31 @@
                 android:textColor="@color/white"
                 android:background="@drawable/custom_button_selector" />
 
-            <TextView
-                android:id="@+id/signUpTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="Sign Up"
-                style="?android:textAppearanceSmall"
-                android:textColor="@color/white"
-                android:layout_marginTop="165dp" />
+            <!--<TextView-->
+                <!--android:id="@+id/signUpTextView"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:gravity="center_horizontal"-->
+                <!--android:text="Sign Up"-->
+                <!--style="?android:textAppearanceMedium"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:layout_marginTop="65dp" />-->
 
 
         </LinearLayout>
+
+        <Button
+            android:id="@+id/btnRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="10dp"
+            android:text="Register"
+            style="?android:textAppearanceMedium"                android:textColor="@color/white"
+            android:background="@color/transparent"
+            android:layout_marginTop="42dp"
+            android:layout_below="@+id/linearLayout2"
+            android:layout_centerHorizontal="true" />
 
     </RelativeLayout>
 
