@@ -9,6 +9,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
@@ -43,15 +46,15 @@ public class MostPopularFragment extends Fragment {
 
     private CardArrayAdapter mCardArrayAdapter;
 
+    // Empty list of crowdCards
+    private ArrayList<Card> cards = new ArrayList<>();
+
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_SECTION_NUMBER = "sectionNumber";
 
     private String mSectionNumber;
 
     private OnFragmentInteractionListener mListener;
-
-
-    protected ScrollView mScrollView;
 
     private CardListView mListView;
 
@@ -92,6 +95,13 @@ public class MostPopularFragment extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_mostpopular, container, false);
 
+        // Allows fragment to inflate its own menu defined below in onCreateOptionsMenu method
+        setHasOptionsMenu(true);
+
+        // Initialize the crowdCard list with crowdCard objects
+        cards = initCrowdList();
+
+        // Set the main view
         return rootView;
     }
 
@@ -99,214 +109,27 @@ public class MostPopularFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //mScrollView = (ScrollView) getActivity().findViewById(R.id.crowdCard_scrollview);
-
-        ArrayList<Card> cards = new ArrayList<>();
-
+        // Put list of crowdCards in ArrayAdapter
         mCardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
+        // Set up the ListView
         mListView = (CardListView) getActivity().findViewById(R.id.crowd_card_list_view);
-        mCardArrayAdapter.addAll(initCrowdList());
+
+        // Use to re-add cards after refreshing
+        //mCardArrayAdapter.addAll(cards);
 
         // Set the empty view
         if (mListView != null) {
             mListView.setAdapter(mCardArrayAdapter);
         }
-
-
-        //initCrowd1();
-        //initCrowd2();
-        //initCrowd3();
-        //initCrowd4();
-        //initCrowd5();
     }
 
-    /**
-     * Build crowdcards
-     **/
-/**
-    private void initCrowd1() {
-        crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
-        card.setCrowdTitle("Molly Magees");
-        card.setCrowdSubtitle("Famous Irish Pub");
-        card.setCrowdRatingComment("2 min away");
-        card.setCrowdCoverCharge("$$");
-        card.setCrowdRating(4.7f);
-        card.setCrowdLogo(R.drawable.mollys_inside_3);
-        card.setSpecialsHeader("Specials", getResources().getColor(R.color.violetSpecials));
-        card.setSpecials1("\u2022 $2 BudLight", getResources().getColor(R.color.redSpecials));
-        card.setSpecials2("\u2022 $3 Shots", getResources().getColor(R.color.redSpecials));
-        //card.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.photo_user);
-        card.setCrowdMapExpand(R.layout.crowd_info_expand);
-        card.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
-            @Override
-            public void onExpandEnd(Card card) {
-
-
-                TextView address = (TextView) getActivity().findViewById(R.id.address);
-                address.setText(getResources().getString(R.string.mtnview_street));
-                TextView zipcode = (TextView) getActivity().findViewById(R.id.zipcode);
-                zipcode.setText(getResources().getString(R.string.mtnview_zip));
-
-                MapsFragment mymap = new MapsFragment();
-                LatLng mtnview = new LatLng(37.3894, -122.0819);
-                mymap.setLocation(mtnview);
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.mapLayout, mymap).commit();
-
-                //Toast.makeText(getActivity(),"Expand "+card.getCardHeader().getTitle(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        //card.setCrowdLivePics(GetCurrImageActivity.class);
-        card.setCrowdLivePics(LivePicsGalleryActivity.class);
-        card.setCardinView(rootView, R.id.crowdCard1);
-    }
-/**
-    private void initCrowd2() {
-        crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
-        card.setCrowdTitle("Molly Magees");
-        card.setCrowdSubtitle("Famous Irish Pub");
-        card.setCrowdRatingComment("2 min away");
-        card.setCrowdCoverCharge("$$");
-        card.setCrowdRating(4.7f);
-        card.setCrowdLogo(R.drawable.mollys_front_main);
-        card.setSpecialsHeader("Karaoke!", getResources().getColor(R.color.blueSpecials));
-        card.setSpecials1("\u2022 Free 'til 12am", getResources().getColor(R.color.yellowSpecials));
-        card.setSpecials2("\u2022 $4 Shots", getResources().getColor(R.color.yellowSpecials));
-        //card.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.photo_user);
-        card.setCrowdMapExpand(R.layout.crowd_info_expand);
-        card.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
-            @Override
-            public void onExpandEnd(Card card) {
-
-
-                TextView address = (TextView) getActivity().findViewById(R.id.address);
-                address.setText(getResources().getString(R.string.mtnview_street));
-                TextView zipcode = (TextView) getActivity().findViewById(R.id.zipcode);
-                zipcode.setText(getResources().getString(R.string.mtnview_zip));
-
-                MapsFragment mymap = new MapsFragment();
-                LatLng mtnview = new LatLng(37.3894, -122.0819);
-                mymap.setLocation(mtnview);
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.mapLayout, mymap).commit();
-
-                //Toast.makeText(getActivity(),"Expand "+card.getCardHeader().getTitle(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        //card.setCrowdLivePics(GetCurrImageActivity.class);
-        card.setCrowdLivePics(LivePicsGalleryActivity.class);
-        card.setCardinView(rootView, R.id.crowdCard2);
-    }
-
-    private void initCrowd3() {
-        crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
-        card.setCrowdTitle("Molly Magees");
-        card.setCrowdSubtitle("Famous Irish Pub");
-        card.setCrowdRatingComment("3 min away");
-        card.setCrowdCoverCharge("$$");
-        card.setCrowdRating(4.7f);
-        card.setCrowdLogo(R.drawable.mollys_inside_2);
-        //card.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.photo_user);
-        card.setCrowdMapExpand(R.layout.crowd_info_expand);
-        card.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
-            @Override
-            public void onExpandEnd(Card card) {
-
-
-                TextView address = (TextView) getActivity().findViewById(R.id.address);
-                address.setText(getResources().getString(R.string.mtnview_street));
-                TextView zipcode = (TextView) getActivity().findViewById(R.id.zipcode);
-                zipcode.setText(getResources().getString(R.string.mtnview_zip));
-
-                MapsFragment mymap = new MapsFragment();
-                LatLng mtnview = new LatLng(37.3894, -122.0819);
-                mymap.setLocation(mtnview);
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.mapLayout, mymap).commit();
-
-                //Toast.makeText(getActivity(),"Expand "+card.getCardHeader().getTitle(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        //card.setCrowdLivePics(GetCurrImageActivity.class);
-        card.setCrowdLivePics(LivePicsGalleryActivity.class);
-        card.setCardinView(rootView, R.id.crowdCard3);
-    }
-
-    private void initCrowd4() {
-        crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
-        card.setCrowdTitle("Molly Magees");
-        card.setCrowdSubtitle("Famous Irish Pub");
-        card.setCrowdRatingComment("4 min away");
-        card.setCrowdCoverCharge("$$");
-        card.setCrowdRating(4.7f);
-        card.setCrowdLogo(R.drawable.mollys_inside_1);
-        //card.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.photo_user);
-        card.setCrowdMapExpand(R.layout.crowd_info_expand);
-        card.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
-            @Override
-            public void onExpandEnd(Card card) {
-
-
-                TextView address = (TextView) getActivity().findViewById(R.id.address);
-                address.setText(getResources().getString(R.string.mtnview_street));
-                TextView zipcode = (TextView) getActivity().findViewById(R.id.zipcode);
-                zipcode.setText(getResources().getString(R.string.mtnview_zip));
-
-                MapsFragment mymap = new MapsFragment();
-                LatLng mtnview = new LatLng(37.3894, -122.0819);
-                mymap.setLocation(mtnview);
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.mapLayout, mymap).commit();
-
-                //Toast.makeText(getActivity(),"Expand "+card.getCardHeader().getTitle(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        //card.setCrowdLivePics(GetCurrImageActivity.class);
-        card.setCrowdLivePics(LivePicsGalleryActivity.class);
-        card.setCardinView(rootView, R.id.crowdCard4);
-    }
-
-    private void initCrowd5() {
-        crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
-        card.setCrowdTitle("Molly Magees");
-        card.setCrowdSubtitle("Famous Irish Pub");
-        card.setCrowdRatingComment("5 min away");
-        card.setCrowdCoverCharge("$$");
-        card.setCrowdRating(4.7f);
-        card.setCrowdLogo(R.drawable.mollys_front_main);
-        //card.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.photo_user);
-        card.setCrowdMapExpand(R.layout.crowd_info_expand);
-        card.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
-            @Override
-            public void onExpandEnd(Card card) {
-
-
-                TextView address = (TextView) getActivity().findViewById(R.id.address);
-                address.setText(getResources().getString(R.string.mtnview_street));
-                TextView zipcode = (TextView) getActivity().findViewById(R.id.zipcode);
-                zipcode.setText(getResources().getString(R.string.mtnview_zip));
-
-                MapsFragment mymap = new MapsFragment();
-                LatLng mtnview = new LatLng(37.3894, -122.0819);
-                mymap.setLocation(mtnview);
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.mapLayout, mymap).commit();
-
-                //Toast.makeText(getActivity(),"Expand "+card.getCardHeader().getTitle(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        //card.setCrowdLivePics(GetCurrImageActivity.class);
-        card.setCrowdLivePics(LivePicsGalleryActivity.class);
-        card.setCardinView(rootView, R.id.crowdCard5);
-    }
-**/
     private ArrayList<Card> initCrowdList() {
 
         ArrayList<Card> cards = new ArrayList<>();
 
         // Crowd #1
         final crowdCard card1 = new crowdCard(this.getActivity(), R.layout.crowd_card);
-        card1.setCrowdTitle("Molly Magees",false);
+        card1.setCrowdTitle("Molly Magees", false);
         card1.setCrowdSubtitle("Irish Style Pub");
         card1.setCrowdRatingComment("1 min away");
         card1.setCrowdCoverCharge("$$");
@@ -345,6 +168,7 @@ public class MostPopularFragment extends Fragment {
 //        });
 
         card1.setCrowdLivePics(LivePicsGalleryActivity.class);
+        card1.setCardinView(rootView, R.id.list_cardId);
         cards.add(card1);
 
         // Crowd #2
@@ -427,6 +251,27 @@ public class MostPopularFragment extends Fragment {
         card5.setCrowdLivePics(LivePicsGalleryActivity.class);
         cards.add(card5);
 
+        // Crowd #6
+        final crowdCard card6 = new crowdCard(this.getActivity(), R.layout.crowd_card);
+        card6.setCrowdTitle("Cascal", false);
+        card6.setCrowdSubtitle("Pan-Latin Restaurant");
+        card6.setCrowdRatingComment("3 min away");
+        card6.setCrowdCoverCharge("$");
+        card6.setCrowdRating(4.5f);
+        //card6.setCrowdLogo(R.drawable.mollys_inside_1);
+        card6.new HttpAsyncTask() {
+            @Override
+            public void onPostExecute(String picName) {
+                card6.setCrowdLogoUrl(imageBaseDirectory+picName);
+            }
+        }.execute(sortScript);
+        card6.setSpecialsHeader("Specials", getResources().getColor(R.color.blueSpecials));
+        card6.setSpecials1("\u2022 $5 Tapas", getResources().getColor(R.color.yellowSpecials));
+        card6.setSpecials2("\u2022 $10 Sangria", getResources().getColor(R.color.yellowSpecials));
+//        card6.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.team_member_victor);
+        card6.setCrowdLivePics(LivePicsGalleryActivity.class);
+        cards.add(card6);
+
         return cards;
 
 //        // Set the adapter
@@ -447,6 +292,35 @@ public class MostPopularFragment extends Fragment {
 //        animCardArrayAdapter.setAbsListView(mListView);
 //        mListView.setExternalAdapter(animCardArrayAdapter,mCardArrayAdapter);
 //    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_refresh, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                // Can do something when user presses "Settings"
+                return true;
+
+            case R.id.action_refresh:
+//                Intent intent = new Intent(this, CaptureImageActivity.class);
+//                startActivity(intent);
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
 
 
     @Override

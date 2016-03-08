@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.timemachine.toci">
+    package="com.timemachine.toci" >
 
     <!-- New permissions for Toci (access camera) -->
     <uses-feature
@@ -23,7 +23,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher_circle_pink"
         android:label="@string/app_name"
-        android:theme="@style/AppThemeMain">
+        android:theme="@style/AppThemeMain" >
 
         <!--
         <activity
@@ -41,51 +41,38 @@
         <activity
             android:name=".HomeMaterialActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".MountainViewCATabbedActivity"
             android:label="Mountain View (CA)"
             android:parentActivityName=".HomeMaterialActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppThemeSecondary">
+            android:theme="@style/AppThemeSecondary" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeMaterialActivity" />
         </activity>
-
-        <activity
-            android:name=".LivePicsGalleryActivity"
-            android:label="@string/title_activity_livepicgallery"
-            android:parentActivityName=".HomeMaterialActivity"
-            android:theme="@style/AppThemeTransparentActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeMaterialActivity" />
-        </activity>
-
         <activity
             android:name=".PaloAltoCATabbedActivity"
             android:label="Palo Alto (CA)"
             android:parentActivityName=".HomeMaterialActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppThemeTransparentActionBar">
+            android:theme="@style/AppThemeTransparentActionBar" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeMaterialActivity" />
         </activity>
-
         <activity
             android:name=".GetCurrImageActivity"
             android:label="Display Current Image"
             android:parentActivityName=".HomeMaterialActivity"
-            android:theme="@style/AppThemeSecondary">
+            android:theme="@style/AppThemeSecondary" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeMaterialActivity" />
@@ -133,24 +120,32 @@
         -->
 
         <activity
-            android:name=".CaptureImageActivity"
-            android:label="@string/title_activity_capture_image"
+            android:name=".LivePicsGalleryActivity"
+            android:label="@string/livepics_gallery"
             android:parentActivityName=".HomeMaterialActivity"
-            android:theme="@style/AppThemeSecondary">
+            android:theme="@style/AppThemeTransparentActionBar" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeMaterialActivity" />
         </activity>
-
+        <activity
+            android:name=".CaptureImageActivity"
+            android:label="@string/title_activity_capture_image"
+            android:parentActivityName=".LivePicsGalleryActivity"
+            android:theme="@style/AppThemeSecondary" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".LivePicsGalleryActivity" />
+        </activity>
         <activity
             android:name=".UploadActivity"
             android:label="@string/btnUploadToServer"
-            android:parentActivityName=".CaptureImageActivity"
+            android:parentActivityName=".LivePicsGalleryActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppThemeSecondary">
+            android:theme="@style/AppThemeSecondary" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".CaptureImageActivity" />
+                android:value=".LivePicsGalleryActivity" />
         </activity>
 
         <!--
@@ -178,11 +173,13 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
-        <!-- DEBUG KEY
+        <!--
+        DEBUG KEY
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
         -->
+
 
         <!-- GOOGLE MAPS API KEY -->
         <meta-data
@@ -191,7 +188,7 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps" />
     </application>
 
 </manifest>

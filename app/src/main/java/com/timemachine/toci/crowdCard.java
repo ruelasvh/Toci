@@ -70,11 +70,11 @@ public class crowdCard extends Card {
 
     public void setCrowdLogoUrl(String myUrl) {
         // Add Thumbnail
-        UrlThumbnail thumbnail = new UrlThumbnail(getContext());
+        UrlThumbnail thumbnail = new UrlThumbnail(getContext(), myUrl);
         // Set true to use external library
         thumbnail.setExternalUsage(true);
         // Set the url
-        thumbnail.setUrl(myUrl);
+        //thumbnail.setUrl(myUrl);
         // Add thumbnail to card
         addCardThumbnail(thumbnail);
     }
@@ -235,6 +235,11 @@ public class crowdCard extends Card {
             myUrl = url;
         }
 
+
+        public UrlThumbnail(Context context, String url) {
+            super(context);
+            myUrl = url;
+        }
 
         public UrlThumbnail(Context context) {
             super(context);

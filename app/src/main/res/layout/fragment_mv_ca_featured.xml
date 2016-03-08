@@ -9,72 +9,78 @@
     android:background="@color/view_background"
     tools:context="com.timemachine.toci.MVCAFeaturedFragment">
 
-    <ScrollView
-        android:id="@+id/card_scrollview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+    <ListView
+        android:id="@+id/crowds_listview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+    </ListView>
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/PrimaryDarkColor">
+    <!--<ScrollView-->
+        <!--android:id="@+id/card_scrollview"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:fillViewport="true">-->
 
-            <it.gmariotti.cardslib.library.view.CardView
-                android:id="@+id/carddemo1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                style="@style/card_external"
-                card:card_layout_resourceID="@layout/card_thumbnail_layout" />
+        <!--<LinearLayout-->
+            <!--android:orientation="vertical"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@color/PrimaryDarkColor">-->
 
-            <it.gmariotti.cardslib.library.view.CardView
-                android:id="@+id/carddemo2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/card_external"
-                card:card_layout_resourceID="@layout/card_thumbnail_layout" />
+            <!--<it.gmariotti.cardslib.library.view.CardView-->
+                <!--android:id="@+id/carddemo1"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@color/white"-->
+                <!--style="@style/card_external"-->
+                <!--card:card_layout_resourceID="@layout/card_thumbnail_layout" />-->
 
-            <it.gmariotti.cardslib.library.view.CardView
-                android:id="@+id/carddemo3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/card_external"
-                card:card_layout_resourceID="@layout/card_thumbnail_layout" />
+            <!--<it.gmariotti.cardslib.library.view.CardView-->
+                <!--android:id="@+id/carddemo2"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--style="@style/card_external"-->
+                <!--card:card_layout_resourceID="@layout/card_thumbnail_layout" />-->
 
-            <it.gmariotti.cardslib.library.view.CardView
-                android:id="@+id/carddemo4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/card_external"
-                card:card_layout_resourceID="@layout/card_thumbnail_layout" />
+            <!--<it.gmariotti.cardslib.library.view.CardView-->
+                <!--android:id="@+id/carddemo3"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--style="@style/card_external"-->
+                <!--card:card_layout_resourceID="@layout/card_thumbnail_layout" />-->
 
-            <it.gmariotti.cardslib.library.view.CardView
-                android:id="@+id/carddemo5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/card_external"
-                card:card_layout_resourceID="@layout/card_thumbnail_layout" />
+            <!--<it.gmariotti.cardslib.library.view.CardView-->
+                <!--android:id="@+id/carddemo4"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--style="@style/card_external"-->
+                <!--card:card_layout_resourceID="@layout/card_thumbnail_layout" />-->
+
+            <!--<it.gmariotti.cardslib.library.view.CardView-->
+                <!--android:id="@+id/carddemo5"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--style="@style/card_external"-->
+                <!--card:card_layout_resourceID="@layout/card_thumbnail_layout" />-->
 
 
-            <!--
-            <it.gmariotti.cardslib.library.view.CardViewNative
-                android:id="@+id/demo_customcard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/card_external"
-                card:card_layout_resourceID="@layout/native_card_thumbnail_layout"/>
+            <!--&lt;!&ndash;-->
+            <!--<it.gmariotti.cardslib.library.view.CardViewNative-->
+                <!--android:id="@+id/demo_customcard"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--style="@style/card_external"-->
+                <!--card:card_layout_resourceID="@layout/native_card_thumbnail_layout"/>-->
 
-            <it.gmariotti.cardslib.library.view.CardViewNative
-                android:id="@+id/live_crowdcard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/card_external"
-                card:card_layout_resourceID="@layout/native_card_thumbnail_layout"/>
-            -->
-        </LinearLayout>
+            <!--<it.gmariotti.cardslib.library.view.CardViewNative-->
+                <!--android:id="@+id/live_crowdcard"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--style="@style/card_external"-->
+                <!--card:card_layout_resourceID="@layout/native_card_thumbnail_layout"/>-->
+            <!--&ndash;&gt;-->
+        <!--</LinearLayout>-->
 
-    </ScrollView>
+    <!--</ScrollView>-->
 
 </LinearLayout>

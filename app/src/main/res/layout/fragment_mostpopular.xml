@@ -13,8 +13,15 @@
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
         android:id="@+id/crowd_card_list_view"
-        card:list_card_layout_resourceID="@layout/native_list_card_thumbnail_layout">
+        card:list_card_layout_resourceID="@layout/list_card_thumbnail_layout">
     </it.gmariotti.cardslib.library.view.CardListView>
+
+    <it.gmariotti.cardslib.library.view.CardView
+        android:id="@+id/list_cardId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        card:card_layout_resourceID="@layout/card_thumbnail_layout" />
 
 </LinearLayout>
 

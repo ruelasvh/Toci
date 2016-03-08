@@ -1,31 +1,36 @@
 package com.timemachine.toci;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.ScrollView;
+import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
-import com.google.android.gms.maps.model.LatLng;
+import com.squareup.picasso.Picasso;
 
-import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardExpand;
-import it.gmariotti.cardslib.library.internal.CardHeader;
-import it.gmariotti.cardslib.library.internal.CardThumbnail;
-import it.gmariotti.cardslib.library.internal.ViewToClickToExpand;
-import it.gmariotti.cardslib.library.internal.base.BaseCard;
-import it.gmariotti.cardslib.library.view.CardView;
-import it.gmariotti.cardslib.library.view.CardViewNative;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 /**
  * Created by victorhugo on 5/24/15.
@@ -37,20 +42,57 @@ public class MVCAFeaturedFragment extends Fragment {
     // Strings to call the webservice and root directory of pictures
     String sortScript = "http://crowdzeeker.com/AppCrowdZeeker/fetchlatestcrowd.php";
     String imageBaseDirectory = "http://crowdzeeker.com/AppCrowdZeeker/AndroidFileUpload/uploads/";
+    String picUrl1 = "http://crowdzeeker.com/AppCrowdZeeker/AndroidFileUpload/uploads/IMG_20160224_142750.jpg";
+    String picUrl2 = "http://www.mollysmtview.com/images/img_1680.jpg";
+    String picUrl3 = "http://www.mollysmtview.com/images/img_1680.jpg";
+
 
 
     private View rootView;
-    protected ScrollView mScrollView;
+    private ListView listView1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        this.getActivity().setContentView(R.layout.fragment_mv_ca_featured);
+
+
+        //new HttpAsyncTask().execute(sortScript);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_mv_ca_featured, container, false);
+
+        liveCrowdRow crowds[] = new liveCrowdRow[] {
+                new liveCrowdRow(sortScript,"Crowd_1", "Subtitle_1", "Distance_1"),
+                new liveCrowdRow(sortScript,"Crowd_2", "Subtitle_2", "Distance_2"),
+                new liveCrowdRow(sortScript,"Crowd_3", "Subtitle_3", "Distance_3"),
+                new liveCrowdRow(sortScript,"Crowd_4", "Subtitle_4", "Distance_4"),
+                new liveCrowdRow(sortScript,"Crowd_5", "Subtitle_5", "Distance_5"),
+        };
+
+        liveCrowdRowAdapter adapter = new liveCrowdRowAdapter(getActivity(),
+                R.layout.row, crowds);
+
+        listView1 = (ListView) rootView.findViewById(R.id.crowds_listview);
+        listView1.setAdapter(adapter);
+
+//        ListView listView = (ListView) rootView.findViewById(R.id.crowds_listview);
+//        ArrayList<liveCrowdRow> list = new ArrayList<>();
+//
+//
+//        liveCrowdRow row1 = new liveCrowdRow();
+//        liveCrowdRow row2 = new liveCrowdRow();
+//        list.add(row1);
+//        list.add(row2);
+
+
+//        CrowdArrayAdapter adapter = new CrowdArrayAdapter(this.getActivity(), list);
+//        listView.setAdapter(adapter);
+
         return rootView;
 
     }
@@ -59,189 +101,180 @@ public class MVCAFeaturedFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mScrollView = (ScrollView) getActivity().findViewById(R.id.card_scrollview);
 
-
-        initcrowdCard1();
-        initcrowdCard2();
-        initcrowdCard3();
-        initcrowdCard4();
-        initcrowdCard5();
-        //initCard();
-        //initCardGooglePlay();
-        //initLiveCrowdCard();
     }
 
     /**
      * Build crowdcards
      */
 
-    private void initcrowdCard1() {
-
-        final crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
-        card.setCrowdTitle("Crowd Title");
-        card.setCrowdSubtitle("The subtitle");
-        card.setCrowdRatingComment("5 min away");
-        card.setCrowdCoverCharge("Price");
-        card.setCrowdRating(4f);
-        card.setCrowdPicUrl(sortScript);
-        //card.setBackgroundResource(getResources().getDrawable(R.drawable.mollys_inside_cropped));
-        //card.setShadow(true);
-        //card.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.livePic, R.drawable.stephensgreenlive2);
-        card.setCrowdMapExpand(R.layout.crowd_info_expand);
-        card.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
-            @Override
-            public void onExpandEnd(Card card) {
-
-
-                TextView address = (TextView) getActivity().findViewById(R.id.address);
-                address.setText(getResources().getString(R.string.mtnview_street));
-                TextView zipcode = (TextView) getActivity().findViewById(R.id.zipcode);
-                zipcode.setText(getResources().getString(R.string.mtnview_zip));
-
-                MapsFragment mymap = new MapsFragment();
-                LatLng mtnview = new LatLng(37.3894, -122.0819);
-                mymap.setLocation(mtnview);
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.mapLayout, mymap).commit();
-
-                //Toast.makeText(getActivity(),"Expand "+card.getCardHeader().getTitle(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        //card.setCrowdLivePics(GetCurrImageActivity.class);
-        card.setCrowdLivePics(LivePicsGalleryActivity.class);
-        card.setCardinView(rootView, R.id.carddemo1);
-    }
-
-    private void initcrowdCard2() {
-        crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
-        card.setCrowdTitle("Crowd Title",false);
-        card.setCrowdSubtitle("This is the subtitle");
-        card.setCrowdRatingComment("10 min away");
-        card.setCrowdCoverCharge("Price");
-        card.setCrowdRating(4f);
-        //card.setCrowdLogo(R.drawable.stephensgreenlive2);
-        card.setCrowdLogoUrl("http://www.mollysmtview.com/images/img_1680.jpg");
-        //card.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.photo_user);
-        card.setCrowdMapExpand(R.layout.crowd_info_expand);
-        card.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
-            @Override
-            public void onExpandEnd(Card card) {
-
-
-                TextView address = (TextView) getActivity().findViewById(R.id.address);
-                address.setText(getResources().getString(R.string.mtnview_street));
-                TextView zipcode = (TextView) getActivity().findViewById(R.id.zipcode);
-                zipcode.setText(getResources().getString(R.string.mtnview_zip));
-
-                MapsFragment mymap = new MapsFragment();
-                LatLng mtnview = new LatLng(37.3894, -122.0819);
-                mymap.setLocation(mtnview);
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.mapLayout, mymap).commit();
-
-                //Toast.makeText(getActivity(),"Expand "+card.getCardHeader().getTitle(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        //card.setCrowdLivePics(GetCurrImageActivity.class);
-        card.setCrowdLivePics(LivePicsGalleryActivity.class);
-        card.setCardinView(rootView, R.id.carddemo2);
-    }
-
-    private void initcrowdCard3() {
-        crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
-        card.setCrowdTitle("Crowd Title");
-        card.setCrowdSubtitle("This is the subtitle");
-        card.setCrowdRatingComment("11 min away");
-        card.setCrowdCoverCharge("Price");
-        card.setCrowdRating(4f);
-        //card.setCrowdLogo(R.drawable.stephensgreenlive2);
-        card.setCrowdLogoUrl("http://www.mollysmtview.com/images/img_1694.jpg");
-        //card.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.photo_user);
-        card.setCrowdMapExpand(R.layout.crowd_info_expand);
-        card.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
-            @Override
-            public void onExpandEnd(Card card) {
-
-
-                TextView address = (TextView) getActivity().findViewById(R.id.address);
-                address.setText(getResources().getString(R.string.mtnview_street));
-                TextView zipcode = (TextView) getActivity().findViewById(R.id.zipcode);
-                zipcode.setText(getResources().getString(R.string.mtnview_zip));
-
-                MapsFragment mymap = new MapsFragment();
-                LatLng mtnview = new LatLng(37.3894, -122.0819);
-                mymap.setLocation(mtnview);
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.mapLayout, mymap).commit();
-
-                //Toast.makeText(getActivity(),"Expand "+card.getCardHeader().getTitle(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        //card.setCrowdLivePics(GetCurrImageActivity.class);
-        card.setCrowdLivePics(LivePicsGalleryActivity.class);
-        card.setCardinView(rootView, R.id.carddemo3);
-    }
-
-    private void initcrowdCard4() {
-        crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
-        card.setCrowdTitle("Crowd Title");
-        card.setCrowdSubtitle("This is the subtitle");
-        card.setCrowdRatingComment("8 min away");
-        card.setCrowdCoverCharge("Price");
-        card.setCrowdRating(4f);
-        //card.setCrowdLogo(R.drawable.stephensgreenlive2);
-        card.setCrowdLogoUrl("http://www.mollysmtview.com/images/img_1684.jpg");
-        //card.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.photo_user);
-        card.setCrowdMapExpand(R.layout.crowd_info_expand);
-        card.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
-            @Override
-            public void onExpandEnd(Card card) {
-
-
-                TextView address = (TextView) getActivity().findViewById(R.id.address);
-                address.setText(getResources().getString(R.string.mtnview_street));
-                TextView zipcode = (TextView) getActivity().findViewById(R.id.zipcode);
-                zipcode.setText(getResources().getString(R.string.mtnview_zip));
-
-                MapsFragment mymap = new MapsFragment();
-                LatLng mtnview = new LatLng(37.3894, -122.0819);
-                mymap.setLocation(mtnview);
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.mapLayout, mymap).commit();
-
-                //Toast.makeText(getActivity(),"Expand "+card.getCardHeader().getTitle(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        //card.setCrowdLivePics(GetCurrImageActivity.class);
-        card.setCrowdLivePics(LivePicsGalleryActivity.class);
-        card.setCardinView(rootView, R.id.carddemo4);
-    }
-
-    private void initcrowdCard5() {
-        crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
-        card.setCrowdTitle("Crowd Title");
-        card.setCrowdSubtitle("This is the subtitle");
-        card.setCrowdRatingComment("9 min away");
-        card.setCrowdCoverCharge("Price");
-        card.setCrowdRating(4f);
-        //card.setCrowdLogo(R.drawable.stephensgreenlive2);
-        card.setCrowdLogoUrl("http://www.mollysmtview.com/images/img_1727.jpg");
-        //card.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.photo_user);
-        card.setCrowdMapExpand(R.layout.crowd_info_expand);
-
-        card.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
-            @Override
-            public void onExpandEnd(Card card) {
-
-
-                Toast.makeText(getActivity(),"Expand "+card.getCardHeader().getTitle(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        card.setCrowdLivePics(GetCurrImageActivity.class);
-        //card.setCrowdLivePics(LivePicsGalleryActivity.class);
-        card.setCardinView(rootView, R.id.carddemo5);
-    }
+//    private void initcrowdCard1() {
+//
+//        final crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
+//        card.setCrowdTitle("Crowd Title");
+//        card.setCrowdSubtitle("The subtitle");
+//        card.setCrowdRatingComment("5 min away");
+//        card.setCrowdCoverCharge("Price");
+//        card.setCrowdRating(4f);
+//        //card.setBackgroundResource(getResources().getDrawable(R.drawable.mollys_front_main));
+//        card.setCrowdPicUrl(sortScript);
+//        //card.setBackgroundResource(getResources().getDrawable(R.drawable.mollys_inside_cropped));
+//        //card.setShadow(true);
+//        //card.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.livePic, R.drawable.stephensgreenlive2);
+//        card.setCrowdMapExpand(R.layout.crowd_info_expand);
+//        card.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
+//            @Override
+//            public void onExpandEnd(Card card) {
+//
+//
+//                TextView address = (TextView) getActivity().findViewById(R.id.address);
+//                address.setText(getResources().getString(R.string.mtnview_street));
+//                TextView zipcode = (TextView) getActivity().findViewById(R.id.zipcode);
+//                zipcode.setText(getResources().getString(R.string.mtnview_zip));
+//
+//                MapsFragment mymap = new MapsFragment();
+//                LatLng mtnview = new LatLng(37.3894, -122.0819);
+//                mymap.setLocation(mtnview);
+//                FragmentManager fragmentManager = getFragmentManager();
+//                fragmentManager.beginTransaction().replace(R.id.mapLayout, mymap).commit();
+//
+//                //Toast.makeText(getActivity(),"Expand "+card.getCardHeader().getTitle(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        //card.setCrowdLivePics(GetCurrImageActivity.class);
+//        card.setCrowdLivePics(LivePicsGalleryActivity.class);
+//        card.setCardinView(rootView, R.id.carddemo1);
+//    }
+//
+//    private void initcrowdCard2() {
+//        crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
+//        card.setCrowdTitle("Crowd Title",false);
+//        card.setCrowdSubtitle("This is the subtitle");
+//        card.setCrowdRatingComment("10 min away");
+//        card.setCrowdCoverCharge("Price");
+//        card.setCrowdRating(4f);
+//        //card.setCrowdLogo(R.drawable.stephensgreenlive2);
+//        card.setCrowdLogoUrl("http://www.mollysmtview.com/images/img_1680.jpg");
+//        //card.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.photo_user);
+//        card.setCrowdMapExpand(R.layout.crowd_info_expand);
+//        card.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
+//            @Override
+//            public void onExpandEnd(Card card) {
+//
+//
+//                TextView address = (TextView) getActivity().findViewById(R.id.address);
+//                address.setText(getResources().getString(R.string.mtnview_street));
+//                TextView zipcode = (TextView) getActivity().findViewById(R.id.zipcode);
+//                zipcode.setText(getResources().getString(R.string.mtnview_zip));
+//
+//                MapsFragment mymap = new MapsFragment();
+//                LatLng mtnview = new LatLng(37.3894, -122.0819);
+//                mymap.setLocation(mtnview);
+//                FragmentManager fragmentManager = getFragmentManager();
+//                fragmentManager.beginTransaction().replace(R.id.mapLayout, mymap).commit();
+//
+//                //Toast.makeText(getActivity(),"Expand "+card.getCardHeader().getTitle(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        //card.setCrowdLivePics(GetCurrImageActivity.class);
+//        card.setCrowdLivePics(LivePicsGalleryActivity.class);
+//        card.setCardinView(rootView, R.id.carddemo2);
+//    }
+//
+//    private void initcrowdCard3() {
+//        crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
+//        card.setCrowdTitle("Crowd Title");
+//        card.setCrowdSubtitle("This is the subtitle");
+//        card.setCrowdRatingComment("11 min away");
+//        card.setCrowdCoverCharge("Price");
+//        card.setCrowdRating(4f);
+//        //card.setCrowdLogo(R.drawable.stephensgreenlive2);
+//        card.setCrowdLogoUrl("http://www.mollysmtview.com/images/img_1694.jpg");
+//        //card.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.photo_user);
+//        card.setCrowdMapExpand(R.layout.crowd_info_expand);
+//        card.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
+//            @Override
+//            public void onExpandEnd(Card card) {
+//
+//
+//                TextView address = (TextView) getActivity().findViewById(R.id.address);
+//                address.setText(getResources().getString(R.string.mtnview_street));
+//                TextView zipcode = (TextView) getActivity().findViewById(R.id.zipcode);
+//                zipcode.setText(getResources().getString(R.string.mtnview_zip));
+//
+//                MapsFragment mymap = new MapsFragment();
+//                LatLng mtnview = new LatLng(37.3894, -122.0819);
+//                mymap.setLocation(mtnview);
+//                FragmentManager fragmentManager = getFragmentManager();
+//                fragmentManager.beginTransaction().replace(R.id.mapLayout, mymap).commit();
+//
+//                //Toast.makeText(getActivity(),"Expand "+card.getCardHeader().getTitle(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        //card.setCrowdLivePics(GetCurrImageActivity.class);
+//        card.setCrowdLivePics(LivePicsGalleryActivity.class);
+//        card.setCardinView(rootView, R.id.carddemo3);
+//    }
+//
+//    private void initcrowdCard4() {
+//        crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
+//        card.setCrowdTitle("Crowd Title");
+//        card.setCrowdSubtitle("This is the subtitle");
+//        card.setCrowdRatingComment("8 min away");
+//        card.setCrowdCoverCharge("Price");
+//        card.setCrowdRating(4f);
+//        //card.setCrowdLogo(R.drawable.stephensgreenlive2);
+//        card.setCrowdLogoUrl("http://www.mollysmtview.com/images/img_1684.jpg");
+//        //card.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.photo_user);
+//        card.setCrowdMapExpand(R.layout.crowd_info_expand);
+//        card.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
+//            @Override
+//            public void onExpandEnd(Card card) {
+//
+//
+//                TextView address = (TextView) getActivity().findViewById(R.id.address);
+//                address.setText(getResources().getString(R.string.mtnview_street));
+//                TextView zipcode = (TextView) getActivity().findViewById(R.id.zipcode);
+//                zipcode.setText(getResources().getString(R.string.mtnview_zip));
+//
+//                MapsFragment mymap = new MapsFragment();
+//                LatLng mtnview = new LatLng(37.3894, -122.0819);
+//                mymap.setLocation(mtnview);
+//                FragmentManager fragmentManager = getFragmentManager();
+//                fragmentManager.beginTransaction().replace(R.id.mapLayout, mymap).commit();
+//
+//                //Toast.makeText(getActivity(),"Expand "+card.getCardHeader().getTitle(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        //card.setCrowdLivePics(GetCurrImageActivity.class);
+//        card.setCrowdLivePics(LivePicsGalleryActivity.class);
+//        card.setCardinView(rootView, R.id.carddemo4);
+//    }
+//
+//    private void initcrowdCard5() {
+//        crowdCard card = new crowdCard(getActivity(), R.layout.crowd_card);
+//        card.setCrowdTitle("Crowd Title");
+//        card.setCrowdSubtitle("This is the subtitle");
+//        card.setCrowdRatingComment("9 min away");
+//        card.setCrowdCoverCharge("Price");
+//        card.setCrowdRating(4f);
+//        //card.setCrowdLogo(R.drawable.stephensgreenlive2);
+//        card.setCrowdLogoUrl("http://www.mollysmtview.com/images/img_1727.jpg");
+//        //card.setCrowdExpand(R.layout.crowd_card_ratings_view, R.id.userPic, R.drawable.photo_user);
+//        card.setCrowdMapExpand(R.layout.crowd_info_expand);
+//
+//        card.setOnExpandAnimatorEndListener(new Card.OnExpandAnimatorEndListener() {
+//            @Override
+//            public void onExpandEnd(Card card) {
+//
+//
+//                Toast.makeText(getActivity(),"Expand "+card.getCardHeader().getTitle(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        card.setCrowdLivePics(GetCurrImageActivity.class);
+//        //card.setCrowdLivePics(LivePicsGalleryActivity.class);
+//        card.setCardinView(rootView, R.id.carddemo5);
+//    }
 
     /**
      * Build venue card
@@ -302,7 +335,7 @@ public class MVCAFeaturedFragment extends Fragment {
      * Build Live CrowdCard
 
      private void initLiveCrowdCard() {
-     LiveCrowdCard card = new LiveCrowdCard(getActivity());
+     liveCrowdRow card = new liveCrowdRow(getActivity());
 
      card.setHeaderTitle("I did something");
 
@@ -451,4 +484,129 @@ public class MVCAFeaturedFragment extends Fragment {
     }
 
      */
+
+
+
+    public class CrowdArrayAdapter extends ArrayAdapter<FrameLayout> {
+
+        LayoutInflater inflater;
+
+        public CrowdArrayAdapter(Context context, ArrayList<FrameLayout> list) {
+            super(context, R.layout.row, list);
+
+            inflater = getActivity().getLayoutInflater();
+            //inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup container) {
+            liveCrowdRowViewHolder holder = null;
+
+            if (convertView == null) {
+                // inflate if not recycled
+                convertView = inflater.inflate(R.layout.row, container, false);
+
+                holder = new liveCrowdRowViewHolder(convertView);
+                convertView.setTag(holder);
+            }
+            else {
+                holder = (liveCrowdRowViewHolder) convertView.getTag();
+            }
+
+//            Picasso.with(getActivity()).load("http://www.mollysmtview.com/images/img_1694.jpg").into(viewHolder.livepic);
+
+            return convertView;
+        }
+    }
+
+
+    public static String GET(String url) {
+        InputStream inputStream;
+        String result = "";
+
+        try {
+            // create HttpClient
+            HttpClient httpclient = new DefaultHttpClient();
+
+            // make GET request to the given URL
+            HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
+
+            // receive response as inputStream
+            inputStream = httpResponse.getEntity().getContent();
+
+            // convert inputstream to string
+            if (inputStream != null)
+                result = convertInputStreamToString(inputStream);
+            else
+                result = "Did not work!";
+
+        } catch (Exception e) {
+            Log.d("InputStream", e.getLocalizedMessage());
+        }
+
+        return result;
+    }
+
+    // convert inputstream to String
+    private static String convertInputStreamToString(InputStream inputStream) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        String line;
+        String result = "";
+        while ((line = bufferedReader.readLine()) != null)
+            result += line;
+
+        inputStream.close();
+        return result;
+
+    }
+
+    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+
+            return GET(urls[0]);
+        }
+
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+            //Toast.makeText(getBaseContext(), "Received!", Toast.LENGTH_LONG).show();
+            new DisplayImageFromURL((ImageView) getActivity().findViewById(R.id.livepic))
+                    .execute(imageBaseDirectory + result);
+        }
+    }
+
+    private class DisplayImageFromURL extends AsyncTask<String, Void, Bitmap> {
+
+        ImageView bmImage;
+
+        // constructor
+        public DisplayImageFromURL(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
+    }
+
 }

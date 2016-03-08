@@ -47,7 +47,7 @@
     <!-- Example Swipe with Tabs -->
 
     <string name="dummy_section_text">Section %1d is just a dummy section.</string>
-    <string name="title_activity_livepicgallery">Live Feed (Refreshes each 5 min)</string>
+    <string name="livepics_gallery">Live Feed</string>
 
     <!-- String from Material Navigation Drawer -->
 

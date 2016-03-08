@@ -1,13 +1,10 @@
 package com.timemachine.toci;
 
-import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -85,6 +82,7 @@ public class HomeMaterialActivity extends AppCompatActivity
     }
 
 
+
     public void onSectionAttached(int number) {
         switch (number) {
             default:
@@ -124,7 +122,7 @@ public class HomeMaterialActivity extends AppCompatActivity
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.home_material, menu);
+            getMenuInflater().inflate(R.menu.menu_main, menu);
             return true;
         }
         return super.onCreateOptionsMenu(menu);
@@ -139,11 +137,6 @@ public class HomeMaterialActivity extends AppCompatActivity
         switch (item.getItemId()) {
             case R.id.action_settings:
                 // Can do something when user presses "Settings"
-                return true;
-
-            case R.id.action_camera:
-                Intent intent = new Intent(this, CaptureImageActivity.class);
-                startActivity(intent);
                 return true;
 
             default:
