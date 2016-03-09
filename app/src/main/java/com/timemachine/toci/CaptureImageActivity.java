@@ -35,6 +35,7 @@ public class CaptureImageActivity extends AppCompatActivity {
     // File url to store image/video
     private Uri fileUri;
 
+
     private Button btnTakePicture, btnRecordVideo;
 
     @Override

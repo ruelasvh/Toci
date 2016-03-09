@@ -3,14 +3,21 @@ package com.timemachine.toci;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +40,7 @@ import java.io.InputStreamReader;
  */
 public class liveCrowdRowAdapter extends ArrayAdapter<liveCrowdRow> {
 
+    int FADE_IN_DURATION = 500;
     String imageBaseDirectory = "http://crowdzeeker.com/AppCrowdZeeker/AndroidFileUpload/uploads/";
 
     Context context;
@@ -56,7 +64,7 @@ public class liveCrowdRowAdapter extends ArrayAdapter<liveCrowdRow> {
             row = inflater.inflate(layoutResourceId, parent, false);
 
             holder = new liveCrowdRowHolder();
-            holder.livepic = (ImageView) row.findViewById(R.id.livepic);
+            holder.livepic = (ImageButton) row.findViewById(R.id.livepic);
             holder.title = (TextView) row.findViewById(R.id.title);
             holder.subtitle = (TextView) row.findViewById(R.id.subtitle);
             holder.distance = (TextView) row.findViewById(R.id.distance);
@@ -68,27 +76,31 @@ public class liveCrowdRowAdapter extends ArrayAdapter<liveCrowdRow> {
         }
 
         final liveCrowdRow crowdRow = crowds[position];
-        //new HttpAsyncTask().execute(sortScript);
         holder.title.setText(crowdRow.title);
         holder.subtitle.setText(crowdRow.subtitle);
         holder.distance.setText(crowdRow.distance);
-//        new DisplayImageFromURL(holder.livepic).execute(crowdRow.picUrl);
-
-        //Picasso.with(context).load(crowdRow.picUrl).into(holder.livepic);
-
+        holder.livepic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, crowdRow.detailedCrowd);
+                context.startActivity(intent);
+            }
+        });
         new HttpAsyncTask() {
             @Override
                     public void onPostExecute(String picName) {
-                        Picasso.with(context).load(imageBaseDirectory+picName).into(holder.livepic);
+                        new DisplayImageFromURL(holder.livepic).execute(imageBaseDirectory + picName);
+                        //Picasso.with(context).load(imageBaseDirectory+picName).into(holder.livepic);
             }
         }.execute(crowdRow.picUrl);
 
         return row;
     }
 
+    // Holder which prevents UI to find objects every time list is loaded
     static class liveCrowdRowHolder {
 
-        ImageView livepic;
+        ImageButton livepic;
         TextView title;
         TextView subtitle;
         TextView distance;
@@ -96,7 +108,7 @@ public class liveCrowdRowAdapter extends ArrayAdapter<liveCrowdRow> {
 
     }
 
-        /*
+    /*
      * Helper function to convert php stream result to string
      */
 
@@ -127,7 +139,9 @@ public class liveCrowdRowAdapter extends ArrayAdapter<liveCrowdRow> {
         return result;
     }
 
-    // convert inputStream to String
+    /*
+     * Helper function to convert inputStream to String
+     */
     private static String convertInputStreamToString(InputStream inputStream) throws IOException {
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -167,9 +181,14 @@ public class liveCrowdRowAdapter extends ArrayAdapter<liveCrowdRow> {
         }
     }
 
+    /**
+     * Taks {@link AsyncTask} to put image into view.
+     * @return bitmap
+     */
     private class DisplayImageFromURL extends AsyncTask<String, Void, Bitmap> {
 
         ImageView bmImage;
+
 
         // constructor
         public DisplayImageFromURL(ImageView bmImage) {
@@ -192,7 +211,20 @@ public class liveCrowdRowAdapter extends ArrayAdapter<liveCrowdRow> {
         }
 
         protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
+            final TransitionDrawable td =
+                    new TransitionDrawable(new Drawable[] {
+                            new ColorDrawable(Color.TRANSPARENT),
+                            new BitmapDrawable(context.getResources(), result)
+                    });
+//            // Show this background while loading bitmap
+//            bmImage.setImageDrawable(
+//                    new BitmapDrawable(context.getResources(), mLoadingBitmap)
+//            );
+            bmImage.setImageDrawable(td);
+            td.startTransition(FADE_IN_DURATION);
+            // Delete rest of method body except for next line
+            // to remove fade in animation.
+            //bmImage.setImageBitmap(result);
         }
     }
 }

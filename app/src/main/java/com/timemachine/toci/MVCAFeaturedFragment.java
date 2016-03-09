@@ -42,9 +42,6 @@ public class MVCAFeaturedFragment extends Fragment {
     // Strings to call the webservice and root directory of pictures
     String sortScript = "http://crowdzeeker.com/AppCrowdZeeker/fetchlatestcrowd.php";
     String imageBaseDirectory = "http://crowdzeeker.com/AppCrowdZeeker/AndroidFileUpload/uploads/";
-    String picUrl1 = "http://crowdzeeker.com/AppCrowdZeeker/AndroidFileUpload/uploads/IMG_20160224_142750.jpg";
-    String picUrl2 = "http://www.mollysmtview.com/images/img_1680.jpg";
-    String picUrl3 = "http://www.mollysmtview.com/images/img_1680.jpg";
 
 
 
@@ -67,11 +64,16 @@ public class MVCAFeaturedFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_mv_ca_featured, container, false);
 
         liveCrowdRow crowds[] = new liveCrowdRow[] {
-                new liveCrowdRow(sortScript,"Crowd_1", "Subtitle_1", "Distance_1"),
-                new liveCrowdRow(sortScript,"Crowd_2", "Subtitle_2", "Distance_2"),
-                new liveCrowdRow(sortScript,"Crowd_3", "Subtitle_3", "Distance_3"),
-                new liveCrowdRow(sortScript,"Crowd_4", "Subtitle_4", "Distance_4"),
-                new liveCrowdRow(sortScript,"Crowd_5", "Subtitle_5", "Distance_5"),
+                new liveCrowdRow(sortScript,"Molly Magees", "Famous Irish Bar", "123 Castro St. 2.6mi",
+                        LivePicsGalleryActivity.class),
+                new liveCrowdRow(sortScript,"stephen's green", "Irish Bar", "124 Castro St. 2.6mi",
+                        LivePicsGalleryActivity.class),
+                new liveCrowdRow(sortScript,"Opal", "Hip-hop Club", "122 Castro St. 2.6mi",
+                        LivePicsGalleryActivity.class),
+                new liveCrowdRow(sortScript,"monte carlo", "Latin Club", "341 Castro St. 2.6mi",
+                        LivePicsGalleryActivity.class),
+                new liveCrowdRow(sortScript,"merv's", "Dive Bar", " 2152 Columbus St. 2.6mi",
+                        LivePicsGalleryActivity.class),
         };
 
         liveCrowdRowAdapter adapter = new liveCrowdRowAdapter(getActivity(),
@@ -79,19 +81,6 @@ public class MVCAFeaturedFragment extends Fragment {
 
         listView1 = (ListView) rootView.findViewById(R.id.crowds_listview);
         listView1.setAdapter(adapter);
-
-//        ListView listView = (ListView) rootView.findViewById(R.id.crowds_listview);
-//        ArrayList<liveCrowdRow> list = new ArrayList<>();
-//
-//
-//        liveCrowdRow row1 = new liveCrowdRow();
-//        liveCrowdRow row2 = new liveCrowdRow();
-//        list.add(row1);
-//        list.add(row2);
-
-
-//        CrowdArrayAdapter adapter = new CrowdArrayAdapter(this.getActivity(), list);
-//        listView.setAdapter(adapter);
 
         return rootView;
 
@@ -484,129 +473,5 @@ public class MVCAFeaturedFragment extends Fragment {
     }
 
      */
-
-
-
-    public class CrowdArrayAdapter extends ArrayAdapter<FrameLayout> {
-
-        LayoutInflater inflater;
-
-        public CrowdArrayAdapter(Context context, ArrayList<FrameLayout> list) {
-            super(context, R.layout.row, list);
-
-            inflater = getActivity().getLayoutInflater();
-            //inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup container) {
-            liveCrowdRowViewHolder holder = null;
-
-            if (convertView == null) {
-                // inflate if not recycled
-                convertView = inflater.inflate(R.layout.row, container, false);
-
-                holder = new liveCrowdRowViewHolder(convertView);
-                convertView.setTag(holder);
-            }
-            else {
-                holder = (liveCrowdRowViewHolder) convertView.getTag();
-            }
-
-//            Picasso.with(getActivity()).load("http://www.mollysmtview.com/images/img_1694.jpg").into(viewHolder.livepic);
-
-            return convertView;
-        }
-    }
-
-
-    public static String GET(String url) {
-        InputStream inputStream;
-        String result = "";
-
-        try {
-            // create HttpClient
-            HttpClient httpclient = new DefaultHttpClient();
-
-            // make GET request to the given URL
-            HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
-
-            // receive response as inputStream
-            inputStream = httpResponse.getEntity().getContent();
-
-            // convert inputstream to string
-            if (inputStream != null)
-                result = convertInputStreamToString(inputStream);
-            else
-                result = "Did not work!";
-
-        } catch (Exception e) {
-            Log.d("InputStream", e.getLocalizedMessage());
-        }
-
-        return result;
-    }
-
-    // convert inputstream to String
-    private static String convertInputStreamToString(InputStream inputStream) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        String line;
-        String result = "";
-        while ((line = bufferedReader.readLine()) != null)
-            result += line;
-
-        inputStream.close();
-        return result;
-
-    }
-
-    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... urls) {
-
-            return GET(urls[0]);
-        }
-
-        // onPostExecute displays the results of the AsyncTask.
-        @Override
-        protected void onPostExecute(String result) {
-            //Toast.makeText(getBaseContext(), "Received!", Toast.LENGTH_LONG).show();
-            new DisplayImageFromURL((ImageView) getActivity().findViewById(R.id.livepic))
-                    .execute(imageBaseDirectory + result);
-        }
-    }
-
-    private class DisplayImageFromURL extends AsyncTask<String, Void, Bitmap> {
-
-        ImageView bmImage;
-
-        // constructor
-        public DisplayImageFromURL(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
-    }
 
 }

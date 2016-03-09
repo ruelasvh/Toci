@@ -6,9 +6,15 @@ package com.timemachine.toci;
 
 import com.timemachine.toci.AndroidMultiPartEntity.ProgressListener;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -27,6 +33,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -51,6 +58,9 @@ public class UploadActivity extends AppCompatActivity {
     private Button btnUpload;
     long totalSize = 0;
 
+    private File imageStorageDir, file;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +80,13 @@ public class UploadActivity extends AppCompatActivity {
 
         // image or video path that is captured in previous activity
         filePath = i.getStringExtra("filePath");
+        /**
+         * Block trying to get image storage dir from previous activity
+         */
+        //imageStorageDir = i.getStringExtra("imageStorageDir");
+        /**
+         * End of block
+         */
 
         // boolean flag to identify the media type, image or video
         boolean isImage = i.getBooleanExtra("isImage", true);
@@ -184,8 +201,57 @@ public class UploadActivity extends AppCompatActivity {
 
                 File sourceFile = new File(filePath);
 
+                /**
+                 * Try to shrink image block
+                 */
+                // get absolute path of file to shrink
+                String newPath = sourceFile.getAbsolutePath();
+                // get original dimensions
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                BitmapFactory.decodeFile(newPath, options);
+                int originalWidth = options.outWidth;
+                int originalHeight = options.outHeight;
+                int newWidth = -1;
+                int newHeight = -1;
+                float mulFactor = -1.0F;
+                if (originalHeight > originalWidth) {
+                    newHeight = 1024;
+                    mulFactor = (float) originalWidth / (float) originalHeight;
+                    newWidth = (int) (newHeight*mulFactor);
+                } else if (originalWidth > originalHeight) {
+                    newWidth = 1024;
+                    mulFactor = (float) originalHeight / (float)  originalWidth;
+                    newHeight = (int) (newWidth*mulFactor);
+                } else if (originalHeight == originalWidth) {
+                    newHeight = 1024;
+                    newWidth = 1024;
+                }
+
+                // Decode the file
+                Bitmap bMap = BitmapFactory.decodeFile(newPath);
+                Bitmap out = Bitmap.createScaledBitmap(bMap, newWidth, newHeight, false);
+                File resizedFile= getOutputMediaFile();
+
+                OutputStream fOut = null;
+                try {
+                    fOut = new BufferedOutputStream(new FileOutputStream(resizedFile));
+                    out.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+                    fOut.flush();
+                    fOut.close();
+                    bMap.recycle();
+                    out.recycle();
+                } catch (Exception e) {
+                    // TODO
+                }
+
+                entity.addPart("image", new FileBody(resizedFile));
+                /**
+                 * End try to shrink image block
+                 */
+
                 // Adding file data to http body
-                entity.addPart("image", new FileBody(sourceFile));
+                //entity.addPart("image", new FileBody(sourceFile));
 
                 // Extra parameters if you want to pass to server
                 entity.addPart("website",
@@ -226,6 +292,8 @@ public class UploadActivity extends AppCompatActivity {
             // showing the server response in an alert dialog
             showAlert(result);
 
+
+
             super.onPostExecute(result);
         }
 
@@ -245,6 +313,32 @@ public class UploadActivity extends AppCompatActivity {
                 });
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    // returning image/video
+    private static File getOutputMediaFile() {
+        // External sdcard location
+        File mediaStorageDir = new File(
+                Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_PICTURES), Config.IMAGE_DIRECTORY_NAME);
+
+        // Create the storage directory if it doesn't exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d(TAG, "Failed to create " + Config.IMAGE_DIRECTORY_NAME + " directory");
+                return null;
+            }
+        }
+
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
+                Locale.getDefault()).format(new Date());
+        File mediaFile;
+
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator
+                + "IMG_" + timeStamp + ".jpg");
+
+        return mediaFile;
     }
 
 }

@@ -15,13 +15,15 @@ public class liveCrowdRow {
     public String title;
     public String subtitle;
     public String distance;
+    public Class detailedCrowd;
 
-    public liveCrowdRow(String picUrl, String title, String subtitle, String distance) {
+    public liveCrowdRow(String picUrl, String title, String subtitle, String distance, Class detailedCrowd) {
         super();
         this.picUrl = picUrl;
         this.title = title;
         this.subtitle = subtitle;
         this.distance = distance;
+        this.detailedCrowd = detailedCrowd;
     }
 
 }

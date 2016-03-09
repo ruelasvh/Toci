@@ -4,15 +4,16 @@
     xmlns:card="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:orientation="vertical"
-    android:background="@color/view_background"
+    android:background="@color/PrimaryColor"
     tools:context="com.timemachine.toci.MVCAFeaturedFragment">
 
     <ListView
         android:id="@+id/crowds_listview"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:paddingTop="4dp"
+        android:dividerHeight="4dp">
     </ListView>
 
     <!--<ScrollView-->
