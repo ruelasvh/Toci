@@ -157,7 +157,7 @@ public class MostPopularFragment extends Fragment {
 //                TextView zipcode = (TextView) getActivity().findViewById(R.id.zipcode);
 //                zipcode.setText(getResources().getString(R.string.mtnview_zip));
 //
-//                MapsFragment mymap = new MapsFragment();
+//                FragmentMaps mymap = new FragmentMaps();
 //                LatLng mtnview = new LatLng(37.3894, -122.0819);
 //                mymap.setLocation(mtnview);
 //                FragmentManager fragmentManager = getFragmentManager();

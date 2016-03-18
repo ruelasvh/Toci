@@ -50,12 +50,12 @@ public class crowdCard extends Card {
     private String imageBaseDirectory = "http://crowdzeeker.com/AppCrowdZeeker/AndroidFileUpload/uploads/";
 
 
-    /*
+
     public crowdCard(Context context) {
         super(context, R.layout.crowd_card);
         //init();
     }
-    */
+
 
     public crowdCard(Context context, int innerLayout) {
         super(context, innerLayout);
@@ -132,11 +132,6 @@ public class crowdCard extends Card {
     public void setCrowdExpand(int layout, int view, int img) {
         crowdCardExpand expand = new crowdCardExpand(getContext(), layout);
         expand.Set_Img(view, img);
-        addCardExpand(expand);
-    }
-
-    public void setCrowdMapExpand(int layout) {
-        CardExpand expand = new CardExpand(getContext(), layout);
         addCardExpand(expand);
     }
 

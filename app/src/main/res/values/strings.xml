@@ -59,11 +59,33 @@
     <string name="title_activity_palo_alto_tabbed">PaloAltoTabbedActivity</string>
     <string name="title_activity_maps">Map</string>
 
-    <!-- Google Maps key -->
-    <string name="google_maps_key">AIzaSyDavmAHxexNqKMSmPNDckhrLCI23jARr9A</string>
-
     <!-- Addresses -->
     <string name="mtnview_street">500 Castro St</string>
     <string name="mtnview_zip">Mountain View, CA 94041</string>
 
+    <string name="selected_place">Last Selected Place:</string>
+    <!--<string name="place_details">-->
+    <!--<![CDATA[-->
+        <!--<b>%1$s</b>-->
+        <!--<br/>-->
+        <!--<i>Place Id: %2$s</i>-->
+        <!--<br/>-->
+        <!--Address: %3$s-->
+        <!--<br/>-->
+        <!--Phone: %4$s-->
+        <!--<br/>-->
+        <!--Website: %5$s-->
+    <!--]]>-->
+    <!--</string>-->
+    <string name="place_details">
+    <![CDATA[
+        <b>%1$s</b>
+        <br/>
+        Address: %2$s
+        <br/>
+        Phone: %3$s
+        <br/>
+        Website: %4$s
+    ]]>
+    </string>
 </resources>

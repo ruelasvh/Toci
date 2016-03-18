@@ -21,7 +21,7 @@ import it.gmariotti.cardslib.library.internal.CardThumbnail;
 import it.gmariotti.cardslib.library.internal.base.BaseCard;
 
 /**
- * This class provides a simple example of CrowdCard
+ * This class provides a simple example of CrowdCard.
  */
 public class CustomCard extends Card {
 

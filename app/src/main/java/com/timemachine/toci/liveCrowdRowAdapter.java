@@ -45,7 +45,7 @@ public class liveCrowdRowAdapter extends ArrayAdapter<liveCrowdRow> {
 
     Context context;
     int layoutResourceId;
-    liveCrowdRow crowds[] = null;
+    liveCrowdRow[] crowds = null;
 
     public liveCrowdRowAdapter(Context context, int layoutResourceId, liveCrowdRow[] crowds) {
         super(context, layoutResourceId, crowds);

@@ -133,9 +133,11 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
                 getResources().getDrawable(R.drawable.wine_icon)));
         items.add(new NavigationItem("San Francisco",
                 getResources().getDrawable(R.drawable.drink_icon)));
-        items.add(new NavigationItem("Sign In".toUpperCase(),
+        items.add(new NavigationItem("San Jose",
+                getResources().getDrawable(R.drawable.bottle_icon)));
+        items.add(new NavigationItem("Add Crowd".toUpperCase(),
                 getResources().getDrawable(R.drawable.navigation_drawer_item_empty)));
-        items.add(new NavigationItem("Settings".toUpperCase(),
+        items.add(new NavigationItem("Sign In".toUpperCase(),
                 getResources().getDrawable(R.drawable.navigation_drawer_item_empty)));
         items.add(new NavigationItem("About Us".toUpperCase(),
                 getResources().getDrawable(R.drawable.navigation_drawer_item_empty)));
@@ -359,7 +361,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
             //int childCount = parent.getChildCount();
             //for (int i = 0; i < childCount; i++) {
                 // Add separator only after 4th element in the list
-                View child = parent.getChildAt(3);
+                View child = parent.getChildAt(4);
 
                 RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
 

@@ -142,7 +142,7 @@ public class MountainViewCATabbedActivity extends ActionBarActivity implements A
                     fragment.setArguments(args);
                     return fragment;
                     */
-                    return new MVCAFeaturedFragment();
+                    return new CityFeaturedFragment();
             }
         }
 

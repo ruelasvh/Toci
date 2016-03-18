@@ -1,8 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+    useLibrary 'org.apache.http.legacy'
+
+//    compileSdkVersion 21
+//    buildToolsVersion "21.1.2"
 
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
@@ -12,10 +17,12 @@ android {
 
     defaultConfig {
         applicationId "com.timemachine.toci"
-        minSdkVersion 16
-        targetSdkVersion 21
+        minSdkVersion 14
+        targetSdkVersion 23
+//        minSdkVersion 16
+//        targetSdkVersion 21
         versionCode 1
-        versionName "1.1"
+        versionName "1.2"
     }
     buildTypes {
         release {
@@ -27,42 +34,45 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    //compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
-    compile 'org.apache.httpcomponents:httpmime:4.3.5'
-    compile 'org.apache.httpcomponents:httpclient:4.5.1'
-    compile 'org.apache.httpcomponents:httpcore:4.4.4'
 
+    // android support libraries
+//    compile 'com.android.support:appcompat-v7:21.0.0'
+//    compile 'com.android.support:support-v4:21.0.0'
+//    compile 'com.android.support:recyclerview-v7:21.0.0'
+//    compile 'com.google.android.gms:play-services:8.1.0'
 
+    
 
-
-
-    // Used in the header view of the profile picture
-    compile 'com.android.support:appcompat-v7:21.0.0'
-    compile 'com.android.support:support-v4:21.0.0'
-    compile 'com.android.support:recyclerview-v7:21.0.0'
+    // apache libraries
+//    compile 'org.apache.httpcomponents:httpcore:4.4.4'
+    compile ( 'org.apache.httpcomponents:httpcore:4.4.4'){
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+    }
+//    compile 'org.apache.httpcomponents:httpmime:4.3.5'
+    compile ('org.apache.httpcomponents:httpmime:4.3.5'){
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+    }
 
     // Used for circle button in SearchFragment class
-    compile 'com.github.markushi:circlebutton:1.1'
     // Used for tabs indicator in PaloAltoCATabbedActivity & MountainViewCATabbedActivity
-    compile 'fr.avianey.com.viewpagerindicator:library:2.4.1@aar'
     // Used for crowdCard class
+    // Used to make pictures fit in circle mainly for avatar pictures
+    // Picasso for web image handling
+    // Volley to make http calls
+    compile 'com.android.support:appcompat-v7:23.2.0'
+    compile 'com.android.support:support-v4:23.2.0'
+    compile 'com.android.support:support-v13:23.2.0'
+    compile 'com.android.support:recyclerview-v7:23.2.0'
+    compile 'com.android.support:cardview-v7:23.2.0'
+    compile 'com.google.android.gms:play-services:8.4.0'
+    compile 'com.github.markushi:circlebutton:1.1'
+    compile 'fr.avianey.com.viewpagerindicator:library:2.4.1@aar'
     compile 'com.github.gabrielemariotti.cards:cardslib-core:2.1.0'
     compile 'com.github.gabrielemariotti.cards:cardslib-cards:2.1.0'
     compile 'com.github.gabrielemariotti.cards:cardslib-recyclerview:2.1.0'
     compile 'com.github.gabrielemariotti.cards:cardslib-extra-staggeredgrid:2.1.0'
     compile 'com.github.gabrielemariotti.cards:cardslib-extra-dragdrop:2.1.0'
-    // Used to make pictures fit in circle mainly for avatar pictures
     compile 'de.hdodenhof:circleimageview:1.2.1'
-    // Google play services
-    compile 'com.google.android.gms:play-services:8.1.0'
-
-    // Picasso for web image handling
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.mcxiaoke.volley:library-aar:1.0.0'}
 
-    // Used for crowdCard ListArray animations
-    compile ('com.nhaarman.listviewanimations:lib-core:3.1.0')
-    compile ('com.nhaarman.listviewanimations:lib-manipulation:3.1.0')
-
-    // Volley to make http calls
-    compile 'com.mcxiaoke.volley:library-aar:1.0.0'
-}

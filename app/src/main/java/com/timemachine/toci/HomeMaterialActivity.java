@@ -13,7 +13,8 @@ import android.view.MenuItem;
 
 public class HomeMaterialActivity extends AppCompatActivity
         implements SearchFragment.OnFragmentInteractionListener, MostPopularFragment.OnFragmentInteractionListener,
-        LoginFragment.OnFragmentInteractionListener, AboutUsFragment.OnFragmentInteractionListener, NavigationDrawerCallbacks {
+        LoginFragment.OnFragmentInteractionListener, AboutUsFragment.OnFragmentInteractionListener,
+        AddNewCrowdFragment.OnFragmentInteractionListener ,NavigationDrawerCallbacks {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -31,8 +32,8 @@ public class HomeMaterialActivity extends AppCompatActivity
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.fragment_drawer);
+        // Set title of different fragments
         mTitle = getTitle();
-
         // Set up the drawer.
         mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mToolbar);
          //populate the navigation drawer
@@ -45,31 +46,31 @@ public class HomeMaterialActivity extends AppCompatActivity
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         //Toast.makeText(this, "Menu item selected -> " + position, Toast.LENGTH_SHORT).show();
-        Fragment fragment;
+        Fragment fragment = null;
         switch (position) {
-            default:
-                fragment = new LoginFragment();
-                break;
             case 0:
                 fragment = new SearchFragment();
                 break;
             case 1:
-                fragment = new MVCAFeaturedFragment();
+                fragment = MountainViewFeaturedFragment.newInstance();
                 //fragment = new MVCAFeaturedRecyclerViewFragment();
                 break;
             case 2:
-                fragment = new MostPopularFragment();
+                fragment = PaloAltoFeaturedFragment.newInstance();
                 break;
             case 3:
-                fragment = new MostPopularFragment();
+                fragment = SanFranciscoFeaturedFragment.newInstance();
                 break;
             case 4:
-                fragment = new LoginFragment();
+                fragment = SanJoseFeaturedFragment.newInstance();
                 break;
             case 5:
-                fragment = new LoginFragment();
+                fragment = AddNewCrowdFragment.newInstance();
                 break;
             case 6:
+                fragment = new LoginFragment();
+                break;
+            case 7:
                 fragment = new AboutUsFragment();
                 break;
         }
@@ -82,24 +83,27 @@ public class HomeMaterialActivity extends AppCompatActivity
     }
 
 
-
-    public void onSectionAttached(int number) {
-        switch (number) {
+    public void onSectionAttached(String section) {
+        switch (section) {
             default:
-            case 0:
-                mTitle = getString(R.string.drawer_section_1);
+                mTitle = getString(R.string.app_name);
                 break;
-            case 1:
-                mTitle = getString(R.string.drawer_section_2);
+            case "MountainViewFeaturedFragment":
+                mTitle = "Mountain View";
                 break;
-            case 2:
-                mTitle = getString(R.string.drawer_section_3);
+            case "PaloAltoFeaturedFragment":
+                mTitle = "Palo Alto";
                 break;
-            case 3:
-                mTitle = getString(R.string.drawer_section_4);
+            case "SanFranciscoFeaturedFragment":
+                mTitle = "San Francisco";
+                break;
+            case "SanJoseFeaturedFragment":
+                mTitle = "San Jose";
+                break;
+            case "AddNewCrowdFragment":
+                mTitle = "Add New Crowd";
                 break;
         }
-
         setTitle();
     }
 
