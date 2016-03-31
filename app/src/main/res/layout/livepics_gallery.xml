@@ -1,6 +1,80 @@
-<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/pager"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.timemachine.toci.LivePicsGalleryActivity" />
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+    <!--android:animateLayoutChanges="true">-->
+
+    <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.timemachine.toci.LivePicsGalleryActivity" />
+
+    <FrameLayout
+        android:id="@+id/details_container"
+        android:layout_width="match_parent"
+        android:layout_height="212dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal|bottom">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="162dp"
+            android:background="@color/black_transparent"
+            android:layout_gravity="center_horizontal|bottom">
+
+            <ImageView
+                android:id="@+id/image_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="OPEN"
+                android:id="@+id/status"
+                android:textColor="@color/white"
+                android:layout_marginTop="14dp"
+                android:layout_marginLeft="18dp"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="all"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/white"
+                android:id="@+id/address"
+                android:layout_marginTop="66dp"
+                android:layout_marginLeft="18dp"/>
+
+
+        </RelativeLayout>
+
+        <!--<at.markushi.ui.CircleButton-->
+            <!--android:id="@+id/main_btn"-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="100dp"-->
+            <!--app:cb_color="@color/PrimaryAccentColor"-->
+            <!--android:layout_marginLeft="40dp" />-->
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
+            <!--android:text="CLOSED"-->
+            <!--android:id="@+id/status"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:layout_marginLeft="50dp"-->
+            <!--android:layout_marginTop="36dp"-->
+            <!--android:layout_alignBottom="@+id/address" />-->
+
+    </FrameLayout>
+
+
+</FrameLayout>

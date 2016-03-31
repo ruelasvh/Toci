@@ -10,14 +10,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
-
-import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by victorhugo on 5/24/15.
@@ -26,14 +21,13 @@ public class CityFeaturedFragment extends Fragment /*implements GetCrowds.AsyncR
 
     private static final String ARG_SECTION_TITLE = "CityFeaturedFragment";
 
-    private static final String ARG_SECTION_CITY = "City";
+    private static final String FROM_CITY = "City";
 
     // Strings to call the webservice and root directory of pictures
     String sortScript = "http://crowdzeeker.com/AppCrowdZeeker/fetchlatestcrowdpics.php";
     String imageBaseDirectory = "http://crowdzeeker.com/AppCrowdZeeker/AndroidFileUpload/uploads/";
 
-    private liveCrowdRow[] crowds;
-    private liveCrowdRowAdapter adapter;
+    private liveCrowdRowAdapterv2 adapter;
 
     String result = "";
 
@@ -67,26 +61,26 @@ public class CityFeaturedFragment extends Fragment /*implements GetCrowds.AsyncR
         setHasOptionsMenu(true);
 
 
-//        new GetCrowds(this).execute(ARG_SECTION_CITY);
+//        new GetCrowds(this).execute(FROM_CITY);
 
-//        final liveCrowdRow[] crowds = new liveCrowdRow[2];
+//        final LiveCrowdRow[] crowds = new LiveCrowdRow[2];
 //
 //
 
-//        liveCrowdRow[] crowds = new liveCrowdRow[]{
-//                new liveCrowdRow(sortScript, "Molly Magees", "Famous Irish Bar", "123 Castro St. 2.6mi",
+//        LiveCrowdRow[] crowds = new LiveCrowdRow[]{
+//                new LiveCrowdRow(sortScript, "Molly Magees", "Famous Irish Bar", "123 Castro St. 2.6mi",
 //                        LivePicsGalleryActivity.class),
-//                new liveCrowdRow(sortScript, "stephen's green", "Irish Bar", "124 Castro St. 2.6mi",
+//                new LiveCrowdRow(sortScript, "stephen's green", "Irish Bar", "124 Castro St. 2.6mi",
 //                        Upload2DBActivity.class),
-//                new liveCrowdRow(sortScript, "Opal", "Hip-hop Club", "122 Castro St. 2.6mi",
+//                new LiveCrowdRow(sortScript, "Opal", "Hip-hop Club", "122 Castro St. 2.6mi",
 //                        LivePicsGalleryActivity.class),
-//                new liveCrowdRow(sortScript, "monte carlo", "Latin Club", "341 Castro St. 2.6mi",
+//                new LiveCrowdRow(sortScript, "monte carlo", "Latin Club", "341 Castro St. 2.6mi",
 //                        LivePicsGalleryActivity.class),
-//                new liveCrowdRow(sortScript, "merv's", "Dive Bar", " 2152 Columbus St. 2.6mi",
+//                new LiveCrowdRow(sortScript, "merv's", "Dive Bar", " 2152 Columbus St. 2.6mi",
 //                        LivePicsGalleryActivity.class),
 //        };
 //
-//        adapter = new liveCrowdRowAdapter(getActivity(), R.layout.row, crowds);
+//        adapter = new LiveCrowdRowAdapter(getActivity(), R.layout.row, crowds);
     }
 
     @Override
@@ -101,23 +95,15 @@ public class CityFeaturedFragment extends Fragment /*implements GetCrowds.AsyncR
         final View rootView = view;
         new GetCrowds(new GetCrowds.AsyncResponse() {
             @Override
-            public void onAsyncTaskFinish(ArrayList<HashMap<String, String>> output) {
+            public void onAsyncTaskFinish(liveCrowdRow[] crowds) {
 
                 ListView listView1 = (ListView) rootView.findViewById(R.id.crowds_listview);
-
-                crowds = new liveCrowdRow[output.size()];
-
-                for(int i = 0; i < output.size(); i++) {
-                    crowds[i] = new liveCrowdRow(sortScript, output.get(i).get("name"), "", "",
-                            LivePicsGalleryActivity.class);
-                }
-
-                adapter = new liveCrowdRowAdapter(getActivity(), R.layout.row, crowds);
+                adapter = new liveCrowdRowAdapterv2(getActivity(), R.layout.row, crowds);
                 adapter.notifyDataSetChanged();
                 listView1.setAdapter(adapter);
 
             }
-        }).execute(ARG_SECTION_CITY);
+        }).execute(FROM_CITY);
 
     }
 
@@ -399,7 +385,7 @@ public class CityFeaturedFragment extends Fragment /*implements GetCrowds.AsyncR
 //     */
 //
 //     private void initLiveCrowdCard() {
-//     liveCrowdRow card = new liveCrowdRow(getActivity());
+//     LiveCrowdRow card = new LiveCrowdRow(getActivity());
 //
 //     card.setHeaderTitle("I did something");
 //

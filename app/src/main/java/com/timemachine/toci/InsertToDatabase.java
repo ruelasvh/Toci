@@ -3,6 +3,7 @@ package com.timemachine.toci;
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
@@ -25,6 +26,8 @@ import java.util.List;
  */
 public class InsertToDatabase extends AsyncTask<String, Void, String> {
 
+    private static final String TAG = InsertToDatabase.class.getSimpleName();
+
     Context context;
 
     @Override
@@ -46,14 +49,16 @@ public class InsertToDatabase extends AsyncTask<String, Void, String> {
             httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
             HttpResponse response = httpClient.execute(httpPost);
-
             HttpEntity entity = response.getEntity();
+            Log.d(TAG, entity.toString());
 
         } catch (ClientProtocolException e) {
+            return "Failed to upload: ClientProtocolException.";
         } catch (IOException e) {
+            return "Failed to upload: IOException";
         }
 
-        return "success";
+        return "Successfully uploaded new crowd.";
     }
 
     @Override

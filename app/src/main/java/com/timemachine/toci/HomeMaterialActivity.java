@@ -12,7 +12,7 @@ import android.view.MenuItem;
 
 
 public class HomeMaterialActivity extends AppCompatActivity
-        implements SearchFragment.OnFragmentInteractionListener, MostPopularFragment.OnFragmentInteractionListener,
+        implements MostPopularFragment.OnFragmentInteractionListener,
         LoginFragment.OnFragmentInteractionListener, AboutUsFragment.OnFragmentInteractionListener,
         AddNewCrowdFragment.OnFragmentInteractionListener ,NavigationDrawerCallbacks {
 
@@ -72,6 +72,7 @@ public class HomeMaterialActivity extends AppCompatActivity
                 break;
             case 7:
                 fragment = new AboutUsFragment();
+//                fragment = new MVCAFeaturedRecyclerViewFragment();
                 break;
         }
 
@@ -85,7 +86,7 @@ public class HomeMaterialActivity extends AppCompatActivity
 
     public void onSectionAttached(String section) {
         switch (section) {
-            default:
+            case "SearchFragment":
                 mTitle = getString(R.string.app_name);
                 break;
             case "MountainViewFeaturedFragment":
@@ -103,6 +104,7 @@ public class HomeMaterialActivity extends AppCompatActivity
             case "AddNewCrowdFragment":
                 mTitle = "Add New Crowd";
                 break;
+            default:
         }
         setTitle();
     }
@@ -139,9 +141,9 @@ public class HomeMaterialActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
-            case R.id.action_settings:
-                // Can do something when user presses "Settings"
-                return true;
+//            case R.id.some_menu_item:
+//                // Can do something when user presses "some_menu_item"
+//                return true;
 
             default:
                 // If we got here, the user's action was not recognized.

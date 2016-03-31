@@ -77,7 +77,7 @@
         <!--Website: %5$s-->
     <!--]]>-->
     <!--</string>-->
-    <string name="place_details">
+    <string name="place_details_add_new">
     <![CDATA[
         <b>%1$s</b>
         <br/>
@@ -86,6 +86,17 @@
         Phone: %3$s
         <br/>
         Website: %4$s
+    ]]>
+    </string>
+        <string name="place_details_exist">
+    <![CDATA[
+        <b>%1$s</b>
+        <br/>
+        %2$s
+        <br/>
+        %3$s
+        <br/>
+        %4$s
     ]]>
     </string>
 </resources>

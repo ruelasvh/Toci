@@ -84,12 +84,12 @@
         <activity
             android:name=".UploadActivity"
             android:label="@string/btnUploadToServer"
-            android:parentActivityName=".LivePicsGalleryActivity"
+            android:parentActivityName=".CaptureImageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeSecondary">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".LivePicsGalleryActivity" />
+                android:value=".CaptureImageActivity" />
         </activity>
 
         <activity

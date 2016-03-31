@@ -1,11 +1,14 @@
 package com.timemachine.toci;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,26 +18,26 @@ import android.widget.Toast;
 
 
 public class SearchFragment extends Fragment {
+
+    /**
+     * LogCat
+     */
+    private static final String TAG = SearchFragment.class.getSimpleName();
     /**
      * The fragment argument representing the section number for this
      * fragment.
      */
-    private static final String ARG_SECTION_NUMBER = "sectionNumber";
-
-    private String mSectionNumber;
-
-    private OnFragmentInteractionListener mListener;
+    private static final String ARG_SECTION_TITLE = "SearchFragment";
 
 
     /**
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static SearchFragment newInstance(int sectionNumber) {
+    public static SearchFragment newInstance() {
         SearchFragment fragment = new SearchFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-        fragment.setArguments(args);
+        // Could add some parameters here that we wish to initialize
+        // during the instantiation of this fragment.
         return fragment;
     }
 
@@ -45,9 +48,7 @@ public class SearchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mSectionNumber = getArguments().getString(ARG_SECTION_NUMBER);
-        }
+
     }
 
     @Override
@@ -116,28 +117,19 @@ public class SearchFragment extends Fragment {
         startActivity(intent);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        ((HomeMaterialActivity) context).onSectionAttached(
+                ARG_SECTION_TITLE);
+
     }
 
     @Override
     public void onDetach() {
+        Log.d(TAG, "Detached");
         super.onDetach();
-        mListener = null;
     }
 
     /**
@@ -150,8 +142,8 @@ public class SearchFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
-    }
+//    public interface OnFragmentInteractionListener {
+//        // TODO: Update argument type and name
+//        public void onFragmentInteraction(Uri uri);
+//    }
 }

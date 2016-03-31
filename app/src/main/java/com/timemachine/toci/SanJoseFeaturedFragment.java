@@ -3,6 +3,7 @@ package com.timemachine.toci;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,9 +11,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by victorhugo on 5/24/15.
@@ -21,14 +22,12 @@ public class SanJoseFeaturedFragment extends Fragment {
 
     private static final String ARG_SECTION_TITLE = "SanJoseFeaturedFragment";
 
-    private static final String ARG_SECTION_CITY = "San Jose";
+    private static final String FROM_CITY = "San Jose";
 
-    // Strings to call the webservice and root directory of pictures
-    String sortScript = "http://crowdzeeker.com/AppCrowdZeeker/fetchlatestcrowdpics.php";
-    String imageBaseDirectory = "http://crowdzeeker.com/AppCrowdZeeker/AndroidFileUpload/uploads/";
-
-    private liveCrowdRow[] crowds;
-    private liveCrowdRowAdapter adapter;
+    private liveCrowdRowAdapterv2 adapter;
+    private ProgressBar spinner;
+    private ListView crowdList;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     public SanJoseFeaturedFragment() {
         // Required empty public constructor
@@ -63,38 +62,59 @@ public class SanJoseFeaturedFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_city_featured, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_city_featured, container, false);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swiperefresh);
+        // BEGIN_INCLUDE (change_colors)
+        // Set the color scheme of the SwipeRefreshLayout by providing 4 color resource ids
+        mSwipeRefreshLayout.setColorSchemeResources(
+                R.color.PrimaryAccentColor, R.color.PrimaryAccentColor,
+                R.color.PrimaryAccentColor, R.color.PrimaryAccentColor);
 
+        return rootView;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        final View rootView = view;
+        initiateRefresh();
+    }
+
+    /**
+     * By abstracting the refresh process to a single method, the app
+     * allows both the SwipeGestureLayout onRefresh() method and the
+     * Refresh action item to refresh the content.
+     */
+
+    private void initiateRefresh() {
+
         new GetCrowds(new GetCrowds.AsyncResponse() {
             @Override
-            public void onAsyncTaskFinish(ArrayList<HashMap<String, String>> output) {
+            public void onAsyncTaskFinish(liveCrowdRow[] crowds) {
 
-                ListView listView1 = (ListView) rootView.findViewById(R.id.crowds_listview);
+                spinner = (ProgressBar) getActivity().findViewById(R.id.spinner);
+                spinner.setVisibility(View.VISIBLE);
+                crowdList = (ListView) getActivity().findViewById(R.id.crowds_listview);
 
-                crowds = new liveCrowdRow[output.size()];
-
-                for(int i = 0; i < output.size(); i++) {
-                    crowds[i] = new liveCrowdRow(sortScript, output.get(i).get("name"), "", "",
-                            LivePicsGalleryActivity.class);
-                }
-
-                adapter = new liveCrowdRowAdapter(getActivity(), R.layout.row, crowds);
+                adapter = new liveCrowdRowAdapterv2(getActivity(), R.layout.row, crowds);
                 adapter.notifyDataSetChanged();
-                listView1.setAdapter(adapter);
+                if (!adapter.isEmpty()) spinner.setVisibility(View.GONE);
+                crowdList.setAdapter(adapter);
+                mSwipeRefreshLayout.setRefreshing(false);
 
             }
-        }).execute(ARG_SECTION_CITY);
-
+        }).execute(FROM_CITY);
     }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initiateRefresh();
+            }
+        });
 
     }
 
@@ -116,14 +136,15 @@ public class SanJoseFeaturedFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_refresh, menu);
+
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // TODO: handle refresh item selection in actionbar
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                // refreshCrowds();
+                mSwipeRefreshLayout.setRefreshing(true);
+                initiateRefresh();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

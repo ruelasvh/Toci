@@ -1,28 +1,27 @@
 package com.timemachine.toci;
 
-import android.content.Context;
-import android.widget.FrameLayout;
-
 /**
  * Created by Victor Ruelas on 3/7/16.
  */
 public class liveCrowdRow {
 
-    String imageBaseDirectory = "http://crowdzeeker.com/AppCrowdZeeker/testcrowdpics/";
-    String sortScript = "http://crowdzeeker.com/AppCrowdZeeker/fetchlatestcrowd.php";
-
-    public String picUrl;
+    public String id;
     public String title;
+    public String city;
     public String subtitle;
     public String distance;
+    public String[] picUrls;
     public Class detailedCrowd;
 
-    public liveCrowdRow(String picUrl, String title, String subtitle, String distance, Class detailedCrowd) {
+    public liveCrowdRow(String id, String title, String city, String subtitle,
+                        String distance, String[] picUrls, Class detailedCrowd) {
         super();
-        this.picUrl = picUrl;
+        this.id = id;
         this.title = title;
+        this.city = city;
         this.subtitle = subtitle;
         this.distance = distance;
+        this.picUrls = picUrls;
         this.detailedCrowd = detailedCrowd;
     }
 

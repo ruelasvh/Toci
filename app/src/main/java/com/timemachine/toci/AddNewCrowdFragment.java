@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -25,7 +26,6 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
 import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.internal.CardThumbnail;
 import it.gmariotti.cardslib.library.view.CardViewNative;
 
@@ -156,9 +156,14 @@ public class AddNewCrowdFragment extends Fragment {
                 btnUpload.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new InsertToDatabase().execute(place.getId(),
+                        new InsertToDatabase(){
+                            @Override
+                            public void onPostExecute(String result) {
+                                Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();
+                            }
+                        }.execute(place.getId(),
                                 place.getName().toString(), getCity(place.getAddress()));
-                        //
+                        // Changed button's text to "Added" and cancel onclicklistener
                         btnUpload.setOnClickListener(null);
                         btnUpload.setText("Added");
                     }
@@ -215,10 +220,10 @@ public class AddNewCrowdFragment extends Fragment {
     /*
      * Helper methods to format information about a place nicely.
      */
-    private static Spanned formatPlaceDetails(Resources res, CharSequence name, /*String id,*/
+    public static Spanned formatPlaceDetails(Resources res, CharSequence name, /*String id,*/
                                               CharSequence address, CharSequence phoneNumber,
                                               Uri websiteUri) {
-        return Html.fromHtml(res.getString(R.string.place_details, name, /*id,*/ address, phoneNumber,
+        return Html.fromHtml(res.getString(R.string.place_details_add_new, name, /*id,*/ address, phoneNumber,
                 websiteUri));
     }
 

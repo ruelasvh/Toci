@@ -23,7 +23,7 @@ import android.widget.Toast;
 public class CaptureImageActivity extends AppCompatActivity {
 
     // LogCat tag
-    private static final String TAG = SearchActivity.class.getSimpleName();
+    private static final String TAG = CaptureImageActivity.class.getSimpleName();
 
     // Camera activity request codes
     private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
@@ -42,11 +42,6 @@ public class CaptureImageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_capture);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        // Take to camera right away
-        captureImage();
 
         // Handle buttons for taking video or picture
         btnTakePicture = (Button) findViewById(R.id.btnTakePicture);
@@ -165,14 +160,10 @@ public class CaptureImageActivity extends AppCompatActivity {
                 // user cancelled image capture
 //                Toast.makeText(getApplicationContext(), "User cancelled image capture",
 //                        Toast.LENGTH_SHORT).show();
-                // Return to previous activity
-                returnToPreviousActivity();
             } else {
                 // failed to capture image
                 Toast.makeText(getApplicationContext(), "Internal Error: Couldn't capture image",
                         Toast.LENGTH_SHORT).show();
-                // Return to previous activity
-                returnToPreviousActivity();
             }
         } else if (requestCode == CAMERA_CAPTURE_VIDEO_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
@@ -182,14 +173,10 @@ public class CaptureImageActivity extends AppCompatActivity {
                 // user cancelled recording
 //                Toast.makeText(getApplicationContext(), "Cancelled video recording by user",
 //                        Toast.LENGTH_SHORT).show();
-                // Return to previous activity
-                returnToPreviousActivity();
             } else {
                 // failed to record video
                 Toast.makeText(getApplicationContext(), "Internal Error: Couldn't record video",
                         Toast.LENGTH_SHORT).show();
-                // Return to previous activity
-                returnToPreviousActivity();
             }
         }
     }
@@ -199,11 +186,6 @@ public class CaptureImageActivity extends AppCompatActivity {
         i.putExtra("filePath", fileUri.getPath());
         i.putExtra("isImage", isImage);
         startActivity(i);
-    }
-
-    private void returnToPreviousActivity() {
-        Intent intent = new Intent(this, LivePicsGalleryActivity.class);
-        startActivity(intent);
     }
 
     /*
