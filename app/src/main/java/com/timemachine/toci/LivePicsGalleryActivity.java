@@ -58,6 +58,7 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 
@@ -109,7 +110,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     /**
      * String array to hold picture urls passed from previous activity
      */
-    private static String[] picUrls;
+    private static HashMap<Integer, ArrayList<String>> picUrls;
 
 
     @Override
@@ -118,7 +119,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         setContentView(R.layout.livepics_gallery);
 
         // Get picture urls array from previous activity
-        picUrls = getIntent().getExtras().getStringArray("picUrls");
+        picUrls = (HashMap<Integer, ArrayList<String>>)getIntent().getSerializableExtra("picUrls");
 
         // Create the adapter that will return a fragment for each of the five
         // primary sections of the activity.
@@ -538,7 +539,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         @Override
         public int getCount() {
             // Show total pages.
-            int num_pages = picUrls.length;
+            int num_pages = picUrls.size();
             return num_pages;
         }
     }
@@ -597,19 +598,24 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
             switch (this.getPageNum()) {
                 case 1:
-                    Picasso.with(getActivity()).load( picUrls[picUrls.length-1] ).into( image );
+                    Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-1 ).get(0) )
+                            .into( image );
                     break;
                 case 2:
-                    Picasso.with(getActivity()).load( picUrls[picUrls.length-2] ).into(image);
+                    Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-2 ).get(0) )
+                            .into(image);
                     break;
                 case 3:
-                    Picasso.with(getActivity()).load( picUrls[picUrls.length-3] ).into(image);
+                    Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-3 ).get(0) )
+                            .into(image);
                     break;
                 case 4:
-                    Picasso.with(getActivity()).load( picUrls[picUrls.length-4] ).into( image );
+                    Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-4 ).get(0) )
+                            .into( image );
                     break;
                 case 5:
-                    Picasso.with(getActivity()).load( picUrls[picUrls.length-5] ).into( image );
+                    Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-5 ).get(0) )
+                            .into( image );
                     break;
 
             }

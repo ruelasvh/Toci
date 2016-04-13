@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -12,9 +13,26 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
 
 
 public class SearchFragment extends Fragment {
@@ -58,36 +76,30 @@ public class SearchFragment extends Fragment {
 
         final EditText mainEditText = (EditText) rootView.findViewById(R.id.enter_city);
         final ImageView mainButton = (ImageView) rootView.findViewById(R.id.main_btn);
-        mainButton.setOnTouchListener(new View.OnTouchListener() {
+        mainButton.setOnClickListener(new Button.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View v) {
 
-                //mainEditText.setFilters(new InputFilter[] {new InputFilter.AllCaps()});
-                String zip_code = mainEditText.getText().toString();
+                final String desired_city = mainEditText.getText().toString();
 
-                switch (zip_code) {
-                    case "Maps":
-                        StartMaps();
-                        break;
-                    case "Mountain View":
-                        StartMtnViewActivity();
-                        break;
-                    case "94040":
-                        StartMtnViewActivity();
-                        break;
-                    case "Palo Alto":
-                        StartPaloAltoActivity();
-                        break;
-                    case "94301":
-                        StartPaloAltoActivity();
-                    case "":
-                        break;
-                    default:
-                        Toast.makeText(getActivity(), "No city found!", Toast.LENGTH_SHORT).show();
-                        break;
-                }
+                /**
+                 * AsyncTask which makes call to server and returns
+                 * true if city found, false if city not found.
+                 */
+                new CheckCityTask() {
+                    @Override
+                    protected void onPostExecute(Boolean result) {
+                        if (result) {
 
-                return false;
+                            StartCityActivity(desired_city);
+
+                        } else {
+
+                            Toast.makeText(getActivity(), "City not found", Toast.LENGTH_LONG).show();
+
+                        }
+                    }
+                }.execute(desired_city);
 
             }
         });
@@ -95,25 +107,14 @@ public class SearchFragment extends Fragment {
         return rootView;
     }
 
-    /*
-    public void StartMtnViewActivity() {
-        Intent intent = new Intent(getActivity(), MountainViewCAActivity.class);
-        startActivity(intent);
-    }
-    */
-
-    public void StartMaps() {
-        Intent intent = new Intent(getActivity(), MapsActivity.class);
-        startActivity(intent);
-    }
-
-    public void StartMtnViewActivity() {
-        Intent intent = new Intent(getActivity(), MountainViewCATabbedActivity.class);
-        startActivity(intent);
-    }
-
-    public void StartPaloAltoActivity() {
-        Intent intent = new Intent(getActivity(), PaloAltoCATabbedActivity.class);
+    /**
+     * Method which starts the CityActivity and passes the city for
+     * loading the CityFragment.
+     * @param city
+     */
+    public void StartCityActivity(String city) {
+        Intent intent = new Intent(getActivity(), CityActivity.class);
+        intent.putExtra("city", city);
         startActivity(intent);
     }
 
@@ -146,4 +147,45 @@ public class SearchFragment extends Fragment {
 //        // TODO: Update argument type and name
 //        public void onFragmentInteraction(Uri uri);
 //    }
+
+    /**
+     * AsyncTask which checks if city exists and returns boolean
+     */
+    private class CheckCityTask extends AsyncTask<String, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground (String... params) {
+
+            String response;
+            String city = params[0];
+
+            try {
+                String link = "http://crowdzeeker.com/AppCrowdZeeker/checkcity.php?city=" + URLEncoder.encode(city) + "";
+                URI url = new URI(link);
+                HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet();
+                request.setURI(url);
+                HttpResponse httpResponse = client.execute(request);
+                HttpEntity httpEntity = httpResponse.getEntity();
+                response = EntityUtils.toString(httpEntity);
+                Log.d(TAG, city + " found: " + response);
+
+                return Boolean.valueOf(response);
+
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute (Boolean result) {
+
+        }
+    }
 }

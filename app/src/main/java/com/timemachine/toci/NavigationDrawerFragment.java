@@ -72,9 +72,27 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
 
+    /**
+     * Holder for favorite cities
+     */
+    ArrayList<String> mFavoriteCities;
+
+    /**
+     * Begin Fragment class methods.
+     * Initialize values.
+     * @param savedInstanceState
+     */
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Add favorite cities
+        mFavoriteCities = new ArrayList<>();
+        mFavoriteCities.add("Brooklyn");
+        mFavoriteCities.add("Palo Alto");
+        mFavoriteCities.add("San Francisco");
+        mFavoriteCities.add("Mountain View");
 
         // Read in the flag indicating whether or not the user has demonstrated awareness of the
         // drawer. See PREF_USER_LEARNED_DRAWER for details.
@@ -127,14 +145,19 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
         List<NavigationItem> items = new ArrayList<NavigationItem>();
         items.add(new NavigationItem("Find Crowds",
                 getResources().getDrawable(R.drawable.ic_chevron_right_grey600_24dp)));
-        items.add(new NavigationItem("Mountain View",
-                getResources().getDrawable(R.drawable.beer_icon)));
-        items.add(new NavigationItem("Palo Alto",
-                getResources().getDrawable(R.drawable.wine_icon)));
-        items.add(new NavigationItem("San Francisco",
-                getResources().getDrawable(R.drawable.drink_icon)));
-        items.add(new NavigationItem("San Jose",
-                getResources().getDrawable(R.drawable.bottle_icon)));
+        // Added this to load favorite cities dynamically
+        for (int i = 0; i < mFavoriteCities.size(); i++) {
+            items.add(new NavigationItem(mFavoriteCities.get(i),
+                    getResources().getDrawable(R.drawable.beer_icon)));
+        }
+//        items.add(new NavigationItem("Mountain View",
+//                getResources().getDrawable(R.drawable.beer_icon)));
+//        items.add(new NavigationItem("Palo Alto",
+//                getResources().getDrawable(R.drawable.wine_icon)));
+//        items.add(new NavigationItem("San Francisco",
+//                getResources().getDrawable(R.drawable.drink_icon)));
+//        items.add(new NavigationItem("San Jose",
+//                getResources().getDrawable(R.drawable.bottle_icon)));
         items.add(new NavigationItem("Add Crowd".toUpperCase(),
                 getResources().getDrawable(R.drawable.navigation_drawer_item_empty)));
         items.add(new NavigationItem("Sign In".toUpperCase(),

@@ -44,7 +44,7 @@ public class ScrimInsetsFrameLayout extends FrameLayout {
         if (a == null) {
             return;
         }
-        mInsetForeground = a.getDrawable(R.styleable.ScrimInsetsView_insetForeground);
+        mInsetForeground = a.getDrawable(R.styleable.ScrimInsetsView_insetForeground2);
         a.recycle();
 
         setWillNotDraw(true);
@@ -54,10 +54,12 @@ public class ScrimInsetsFrameLayout extends FrameLayout {
     @Override
     public WindowInsets dispatchApplyWindowInsets(WindowInsets insets) {
         mInsets = new Rect();
-        mInsets.bottom = insets.getSystemWindowInsetBottom();
-        mInsets.top = insets.getSystemWindowInsetTop();
-        mInsets.left = insets.getSystemWindowInsetLeft();
-        mInsets.right = insets.getSystemWindowInsetRight();
+        if (Build.VERSION.SDK_INT >= 20) {
+            mInsets.bottom = insets.getSystemWindowInsetBottom();
+            mInsets.top = insets.getSystemWindowInsetTop();
+            mInsets.left = insets.getSystemWindowInsetLeft();
+            mInsets.right = insets.getSystemWindowInsetRight();
+        }
         setWillNotDraw(mInsetForeground == null);
         ViewCompat.postInvalidateOnAnimation(this);
         return insets;

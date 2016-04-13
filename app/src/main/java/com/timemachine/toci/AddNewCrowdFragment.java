@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.Spanned;
@@ -97,11 +98,35 @@ public class AddNewCrowdFragment extends Fragment {
 
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
-        searchCard = new Card(getContext());
-        searchCard.setTitle("Search");
-        searchCard.setOnClickListener(new Card.OnCardClickListener() {
+//        searchCard = new Card(getContext());
+//        searchCard.setTitle("Search");
+//        searchCard.setOnClickListener(new Card.OnCardClickListener() {
+//            @Override
+//            public void onClick(Card card, View view) {
+//                try {
+//                    Intent intent =
+//                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
+//                                    .build(getActivity());
+//                    startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+//                } catch (GooglePlayServicesRepairableException e) {
+//                    // TODO: Handle the error.
+//                } catch (GooglePlayServicesNotAvailableException e) {
+//                    // TODO: Handle the error.
+//                }
+//            }
+//        });
+//        CustomThumbCard thumb = new CustomThumbCard(getContext());
+//        thumb.setDrawableResource(R.drawable.places_ic_search);
+//        searchCard.addCardThumbnail(thumb);
+//        CardViewNative cardView = (CardViewNative) view.findViewById(R.id.search);
+//        cardView.setCard(searchCard);
+
+
+        // Floating bar action button
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(Card card, View view) {
+        public void onClick(View view) {
                 try {
                     Intent intent =
                             new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
@@ -114,11 +139,6 @@ public class AddNewCrowdFragment extends Fragment {
                 }
             }
         });
-        CustomThumbCard thumb = new CustomThumbCard(getContext());
-        thumb.setDrawableResource(R.drawable.places_ic_search);
-        searchCard.addCardThumbnail(thumb);
-        CardViewNative cardView = (CardViewNative) view.findViewById(R.id.search);
-        cardView.setCard(searchCard);
 
         mPlaceDetailsText = (TextView) view.findViewById(R.id.place_details);
         mPlaceAttribution = (TextView) view.findViewById(R.id.place_attribution);
@@ -139,7 +159,7 @@ public class AddNewCrowdFragment extends Fragment {
                 final Place place = PlaceAutocomplete.getPlace(getActivity(), data);
 
                 // Format the place's details and display them in a TextView.
-                mPlaceDetailsText.setText(formatPlaceDetails(getResources(), place.getName(), /*place.getId(),*/
+                mPlaceDetailsText.setText(formatPlaceDetails(getResources(), place.getName(), place.getId(),
                         place.getAddress(), place.getPhoneNumber(), place.getWebsiteUri()));
 
                 // Display attribution if required.
@@ -220,10 +240,10 @@ public class AddNewCrowdFragment extends Fragment {
     /*
      * Helper methods to format information about a place nicely.
      */
-    public static Spanned formatPlaceDetails(Resources res, CharSequence name, /*String id,*/
+    public static Spanned formatPlaceDetails(Resources res, CharSequence name, String id,
                                               CharSequence address, CharSequence phoneNumber,
                                               Uri websiteUri) {
-        return Html.fromHtml(res.getString(R.string.place_details_add_new, name, /*id,*/ address, phoneNumber,
+        return Html.fromHtml(res.getString(R.string.place_details, name, id, address, phoneNumber,
                 websiteUri));
     }
 

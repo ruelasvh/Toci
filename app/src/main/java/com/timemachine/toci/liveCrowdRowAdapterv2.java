@@ -74,7 +74,7 @@ public class liveCrowdRowAdapterv2 extends ArrayAdapter<liveCrowdRow> {
             holder = new liveCrowdRowHolder();
             holder.livepic = (ImageButton) row.findViewById(R.id.livepic);
             holder.title = (TextView) row.findViewById(R.id.title);
-            holder.subtitle = (TextView) row.findViewById(R.id.subtitle);
+            holder.timeago = (TextView) row.findViewById(R.id.timeago);
             holder.distance = (TextView) row.findViewById(R.id.distance);
 
             row.setTag(holder);
@@ -86,7 +86,7 @@ public class liveCrowdRowAdapterv2 extends ArrayAdapter<liveCrowdRow> {
 
         final liveCrowdRow crowdRow = crowds[position];
         holder.title.setText(crowdRow.title);
-        holder.subtitle.setText(crowdRow.subtitle);
+        holder.timeago.setText(crowdRow.timeago);
         holder.distance.setText(crowdRow.distance);
         holder.livepic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,8 +99,8 @@ public class liveCrowdRowAdapterv2 extends ArrayAdapter<liveCrowdRow> {
             }
         });
 
-        Picasso.with(context).load( crowdRow.picUrls[crowdRow.picUrls.length - 1] )
-                .into( holder.livepic );
+        Picasso.with(context).load( crowdRow.picUrls.get( crowdRow.picUrls.size() - 1).get(0) )
+                .into( holder.livepic);
 
         return row;
     }
@@ -112,7 +112,7 @@ public class liveCrowdRowAdapterv2 extends ArrayAdapter<liveCrowdRow> {
 
         ImageButton livepic;
         TextView title;
-        TextView subtitle;
+        TextView timeago;
         TextView distance;
 
     }

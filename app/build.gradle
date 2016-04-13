@@ -23,6 +23,7 @@ android {
 //        targetSdkVersion 21
         versionCode 1
         versionName "1.2"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -41,15 +42,13 @@ dependencies {
 //    compile 'com.android.support:recyclerview-v7:21.0.0'
 //    compile 'com.google.android.gms:play-services:8.1.0'
 
-
-
     // apache libraries
 //    compile 'org.apache.httpcomponents:httpcore:4.4.4'
-    compile ( 'org.apache.httpcomponents:httpcore:4.4.4'){
+    compile('org.apache.httpcomponents:httpcore:4.4.4') {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
 //    compile 'org.apache.httpcomponents:httpmime:4.3.5'
-    compile ('org.apache.httpcomponents:httpmime:4.3.5'){
+    compile('org.apache.httpcomponents:httpmime:4.3.5') {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
 
@@ -59,6 +58,7 @@ dependencies {
     // Used to make pictures fit in circle mainly for avatar pictures
     // Picasso for web image handling
     // Volley to make http calls
+    compile 'com.android.support:multidex:1.0.0'
     compile 'com.android.support:appcompat-v7:23.2.0'
     compile 'com.android.support:support-v4:23.2.0'
     compile 'com.android.support:support-v13:23.2.0'
@@ -74,5 +74,11 @@ dependencies {
     compile 'com.github.gabrielemariotti.cards:cardslib-extra-dragdrop:2.1.0'
     compile 'de.hdodenhof:circleimageview:1.2.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.mcxiaoke.volley:library-aar:1.0.0'}
+    compile 'com.mcxiaoke.volley:library-aar:1.0.0'
+    compile 'com.android.support:design:23.2.0'
+    compile 'com.google.android.gms:play-services-ads:8.4.0'
+}
+
+
+
 

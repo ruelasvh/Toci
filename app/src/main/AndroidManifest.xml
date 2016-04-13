@@ -91,7 +91,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".CaptureImageActivity" />
         </activity>
-
         <activity
             android:name=".Upload2DBActivity"
             android:label="Upload to Database"
@@ -102,7 +101,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeMaterialActivity" />
         </activity>
-
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
@@ -146,14 +144,40 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDM62dEHR6cC3Dlr_4UO6szGNEem1QJcgc" />
-
-        <meta-data android:name="com.google.android.gms.version"
+        <meta-data
+            android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
         <!-- <meta-data -->
         <!-- android:name="com.google.android.maps.v2.API_KEY" -->
         <!-- android:value="@string/google_maps_key" /> -->
 
+        <activity
+            android:name=".CityActivity"
+            android:label="@string/title_activity_city"
+            android:parentActivityName=".HomeMaterialActivity"
+            android:theme="@style/AppThemeMain">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.timemachine.toci.HomeMaterialActivity" />
+        </activity>
+        <activity
+            android:name=".City2Activity"
+            android:label="@string/title_activity_city2"
+            android:parentActivityName=".HomeMaterialActivity"
+            android:theme="@style/AppThemeMain">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.timemachine.toci.HomeMaterialActivity" />
+        </activity>
+        <activity
+            android:name=".AdActivity"
+            android:label="@string/title_activity_ad"></activity>
+        <!-- Include the AdActivity configChanges and theme. -->
+        <activity
+            android:name="com.google.android.gms.ads.AdActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:theme="@android:style/Theme.Translucent" />
     </application>
 
 </manifest>

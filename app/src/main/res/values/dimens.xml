@@ -11,4 +11,5 @@
     <!-- crowdCard Picasso Thumbnail dimensions -->
     <dimen name="list_detail_image_size_low_res">60dp</dimen>
     <dimen name="list_detail_image_size_high_res">400dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

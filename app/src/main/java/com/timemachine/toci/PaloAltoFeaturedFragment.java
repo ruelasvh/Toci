@@ -87,7 +87,7 @@ public class PaloAltoFeaturedFragment extends Fragment {
 
     private void initiateRefresh() {
 
-        new GetCrowds(new GetCrowds.AsyncResponse() {
+        new GetCrowdsv2(new GetCrowdsv2.AsyncResponse() {
             @Override
             public void onAsyncTaskFinish(liveCrowdRow[] crowds) {
 

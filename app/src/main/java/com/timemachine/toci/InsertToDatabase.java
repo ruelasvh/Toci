@@ -32,10 +32,11 @@ public class InsertToDatabase extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... params) {
-        String paramPlaceId = params[0];
-        String paramPlaceName = params[1];
-        String paramPlaceCity = params[2];
-
+        String paramPlaceId = params[0].replace("'","''");
+        String paramPlaceName = params[1].replace("'", "''");
+        String paramPlaceCity = params[2].replace("'","''");
+        Log.d(TAG, "parameters to insert to database: " + paramPlaceId
+                + ", " + paramPlaceName + ", " + paramPlaceCity);
 
         List<NameValuePair> nameValuePairs = new ArrayList<>();
         nameValuePairs.add(new BasicNameValuePair("id", paramPlaceId));
