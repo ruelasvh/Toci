@@ -34,24 +34,21 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     // android support libraries
-//    compile 'com.android.support:appcompat-v7:21.0.0'
-//    compile 'com.android.support:support-v4:21.0.0'
-//    compile 'com.android.support:recyclerview-v7:21.0.0'
-//    compile 'com.google.android.gms:play-services:8.1.0'
-
+    //    compile 'com.android.support:appcompat-v7:21.0.0'
+    //    compile 'com.android.support:support-v4:21.0.0'
+    //    compile 'com.android.support:recyclerview-v7:21.0.0'
+    //    compile 'com.google.android.gms:play-services:8.1.0'
     // apache libraries
-//    compile 'org.apache.httpcomponents:httpcore:4.4.4'
+    //    compile 'org.apache.httpcomponents:httpcore:4.4.4'
     compile('org.apache.httpcomponents:httpcore:4.4.4') {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
-//    compile 'org.apache.httpcomponents:httpmime:4.3.5'
+    //    compile 'org.apache.httpcomponents:httpmime:4.3.5'
     compile('org.apache.httpcomponents:httpmime:4.3.5') {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
-
     // Used for circle button in SearchFragment class
     // Used for tabs indicator in PaloAltoCATabbedActivity & MountainViewCATabbedActivity
     // Used for crowdCard class
@@ -77,7 +74,12 @@ dependencies {
     compile 'com.mcxiaoke.volley:library-aar:1.0.0'
     compile 'com.android.support:design:23.2.0'
     compile 'com.google.android.gms:play-services-ads:8.4.0'
+    compile 'com.google.code.gson:gson:2.7'
 }
+
+
+
+
 
 
 

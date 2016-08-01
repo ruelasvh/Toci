@@ -113,7 +113,7 @@ public class GetCrowdsv2 extends AsyncTask<String, Void, liveCrowdRow[]> {
             HttpResponse httpResponse = client.execute(request);
             HttpEntity httpEntity = httpResponse.getEntity();
             response = EntityUtils.toString(httpEntity);
-            Log.d(TAG, "response is: " + response);
+            Log.d(TAG, "GetCrowdsv2.getList response is: " + response);
             return new JSONArray(response);
 
 
@@ -171,11 +171,7 @@ public class GetCrowdsv2 extends AsyncTask<String, Void, liveCrowdRow[]> {
                     }
                 }
 
-
                 return picUrls;
-
-
-                /** finish adding picture urls */
 
             } catch (JSONException e) {
                 Log.d(TAG, "could not get id from JSONArray: ");
@@ -189,6 +185,7 @@ public class GetCrowdsv2 extends AsyncTask<String, Void, liveCrowdRow[]> {
             }
         }
         return null;
+        /** finish adding picture urls */
     }
 
     String getTimeAgo(String url) {

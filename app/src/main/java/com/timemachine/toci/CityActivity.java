@@ -1,45 +1,57 @@
 package com.timemachine.toci;
 
+import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-public class CityActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
 
-    private static String FROM_CITY;
+public class CityActivity extends AppCompatActivity {
+    // helper in debugging
+    private final static String TAG = CityActivity.class.getSimpleName();
+
+    private static String mCity;
 
     private liveCrowdRowAdapterv2 adapter;
     private ProgressBar spinner;
     private ListView crowdList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
+    // Helper fields to help store favorite settings
+    Context mContext;
+    AppPrefs mAppPrefs;
+    List<String> mCityFavorites;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city);
 
-        FROM_CITY = getIntent().getStringExtra("city");
+        mCity = getIntent().getStringExtra("city");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(FROM_CITY);
+        toolbar.setTitle(mCity);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
@@ -75,6 +87,9 @@ public class CityActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+        mContext = getApplicationContext();
+        mAppPrefs = new AppPrefs(mContext);
+
         switch (item.getItemId()) {
             // This returns to previous fragment in previous activity.
             case android.R.id.home:
@@ -85,7 +100,16 @@ public class CityActivity extends AppCompatActivity {
                 mSwipeRefreshLayout.setRefreshing(true);
                 initiateRefresh();
                 return true;
-
+            case R.id.action_favorite:
+                mAppPrefs.setFavorite_city(mCity);
+                if (mAppPrefs.getFavorite_cities() != null) {
+                    for (String city : mAppPrefs.getFavorite_cities()) {
+                        Log.i(TAG, city);
+                    }
+                }
+                Snackbar.make(findViewById(android.R.id.content), "Pinned To Home Menu", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
 
@@ -109,7 +133,7 @@ public class CityActivity extends AppCompatActivity {
                 mSwipeRefreshLayout.setRefreshing(false);
 
             }
-        }).execute(FROM_CITY);
+        }).execute(mCity);
     }
 
 }

@@ -93,10 +93,6 @@
         <b>%1$s</b>
         <br/>
         %2$s
-        <br/>
-        %3$s
-        <br/>
-        %4$s
     ]]>
     </string>
     <string name="title_activity_city">CityActivity</string>

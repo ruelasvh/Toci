@@ -92,8 +92,10 @@ public class liveCrowdRowAdapterv2 extends ArrayAdapter<liveCrowdRow> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, crowdRow.detailedCrowd);
-                intent.putExtra("city", crowdRow.city);
                 intent.putExtra("id", crowdRow.id);
+                intent.putExtra("name", crowdRow.title);
+                intent.putExtra("city", crowdRow.city);
+                intent.putExtra("timeAgo", crowdRow.timeago);
                 intent.putExtra("picUrls", crowdRow.picUrls);
                 context.startActivity(intent);
             }

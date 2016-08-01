@@ -23,9 +23,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -57,6 +57,10 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
      * A pointer to the current callbacks instance (the Activity).
      */
     private NavigationDrawerCallbacks mCallbacks;
+    /**
+     * A pointer to deliver content to host activity (HomeMaterialActivity)
+     */
+//    private OnFragmentInteractionListener mListener;
 
     /**
      * Helper component that ties the action bar to the navigation drawer.
@@ -67,15 +71,17 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
     private RecyclerView mDrawerList;
     private LinearLayoutManager mLayoutManager;
     private View mFragmentContainerView;
+    private NavigationDrawerAdapter mAdapter;
 
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
+    private List<NavigationItem> navigationItems;
 
-    /**
-     * Holder for favorite cities
-     */
-    ArrayList<String> mFavoriteCities;
+    // Helper fields to help store favorite settings
+    Context mContext;
+    AppPrefs mAppPrefs;
+    List<String> mCityFavorites;
 
     /**
      * Begin Fragment class methods.
@@ -87,13 +93,6 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Add favorite cities
-        mFavoriteCities = new ArrayList<>();
-        mFavoriteCities.add("Brooklyn");
-        mFavoriteCities.add("Palo Alto");
-        mFavoriteCities.add("San Francisco");
-        mFavoriteCities.add("Mountain View");
-
         // Read in the flag indicating whether or not the user has demonstrated awareness of the
         // drawer. See PREF_USER_LEARNED_DRAWER for details.
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -103,7 +102,16 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
             mFromSavedInstanceState = true;
         }
-    }
+
+        // Used to save user preferences
+        mContext = getActivity().getApplicationContext();
+        mAppPrefs = new AppPrefs(mContext);
+
+        // Initialize the list of navigation items and mAdapter
+        navigationItems = getMenu();
+        mAdapter = new NavigationDrawerAdapter(navigationItems);
+        mAdapter.setNavigationDrawerCallbacks(this);
+    } // End of onCreate method
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -114,12 +122,14 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mDrawerList.setLayoutManager(mLayoutManager);
         mDrawerList.setHasFixedSize(true);
-        mDrawerList.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+//        // check that there are user preferences and add divider
+//        if (mAppPrefs.getFavorite_cities() != null) {
+//            mDrawerList.addItemDecoration(new SimpleDividerItemDecoration(getActivity(),
+//                    mAppPrefs.getFavorite_cities().size()));
+//        }
 
-        final List<NavigationItem> navigationItems = getMenu();
-        NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(navigationItems);
-        adapter.setNavigationDrawerCallbacks(this);
-        mDrawerList.setAdapter(adapter);
+        mDrawerList.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
         selectItem(mCurrentSelectedPosition);
         return view;
     }
@@ -142,22 +152,29 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
     }
 
     public List<NavigationItem> getMenu() {
-        List<NavigationItem> items = new ArrayList<NavigationItem>();
+
+        List<NavigationItem> items = new ArrayList<>();
+
+        // Always show this fragment, so search is possible
         items.add(new NavigationItem("Find Crowds",
                 getResources().getDrawable(R.drawable.ic_chevron_right_grey600_24dp)));
-        // Added this to load favorite cities dynamically
-        for (int i = 0; i < mFavoriteCities.size(); i++) {
-            items.add(new NavigationItem(mFavoriteCities.get(i),
-                    getResources().getDrawable(R.drawable.beer_icon)));
+
+        // Added this to load favorite cities dynamically per user preferences
+        if (mAppPrefs.getFavorite_cities() != null) {
+
+            mCityFavorites = new ArrayList<>(mAppPrefs.getFavorite_cities());
+
+            if (mCityFavorites != null) {
+                for (int i = 0; i < mCityFavorites.size(); i++) {
+                    items.add(new NavigationItem(mCityFavorites.get(i),
+                            getResources().getDrawable(R.drawable.beer_icon)));
+                }
+            }
         }
-//        items.add(new NavigationItem("Mountain View",
-//                getResources().getDrawable(R.drawable.beer_icon)));
-//        items.add(new NavigationItem("Palo Alto",
-//                getResources().getDrawable(R.drawable.wine_icon)));
-//        items.add(new NavigationItem("San Francisco",
-//                getResources().getDrawable(R.drawable.drink_icon)));
-//        items.add(new NavigationItem("San Jose",
-//                getResources().getDrawable(R.drawable.bottle_icon)));
+        // Add crowd-specific favorites
+        items.add(new NavigationItem("Favorites".toUpperCase(),
+                getResources().getDrawable(R.drawable.navigation_drawer_item_empty)));
+        // Add rest of fragments to app interaction
         items.add(new NavigationItem("Add Crowd".toUpperCase(),
                 getResources().getDrawable(R.drawable.navigation_drawer_item_empty)));
         items.add(new NavigationItem("Sign In".toUpperCase(),
@@ -183,15 +200,18 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
         mActionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerClosed(View drawerView) {
+
                 super.onDrawerClosed(drawerView);
                 if (!isAdded()) return;
 
                 getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
+
                 if (!isAdded()) return;
                 if (!mUserLearnedDrawer) {
                     mUserLearnedDrawer = true;
@@ -199,8 +219,15 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
                             .getDefaultSharedPreferences(getActivity());
                     sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
                 }
+
                 getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+
+                navigationItems.clear();
+                navigationItems.addAll(getMenu());
+                mAdapter.notifyDataSetChanged();
+
             }
+
         };
 
         // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
@@ -371,9 +398,11 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
 
     public class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
         private Drawable mDivider;
+        private int mMarker;
 
-        public SimpleDividerItemDecoration(Context context) {
+        public SimpleDividerItemDecoration(Context context, int marker) {
             mDivider = context.getResources().getDrawable(R.drawable.navigation_drawer_line_divider);
+            mMarker = marker;
         }
 
         @Override
@@ -381,10 +410,9 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
             int left = parent.getPaddingLeft();
             int right = parent.getWidth() - parent.getPaddingRight();
 
-            //int childCount = parent.getChildCount();
-            //for (int i = 0; i < childCount; i++) {
-                // Add separator only after 4th element in the list
-                View child = parent.getChildAt(4);
+//            int childCount = parent.getChildCount();
+//            for (int i = 0; i < childCount; i++) {
+                View child = parent.getChildAt(mMarker);
 
                 RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
 
@@ -393,7 +421,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
 
                 mDivider.setBounds(left, top, right, bottom);
                 mDivider.draw(c);
-            //}
+//            }
         }
     }
 }

@@ -3,15 +3,17 @@ package com.timemachine.toci;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,16 +27,20 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardThumbnail;
-import it.gmariotti.cardslib.library.view.CardViewNative;
 
 /**
  * Created by Victor Ruelas on 3/16/16.
  * Copyright (c) 2016 CrowdZeeker, LLC. All rights reserved.
  */
-public class AddNewCrowdFragment extends Fragment {
+public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback {
 
     // used to set title to fragment when it's attached to the activity
     private static final String ARG_SECTION_TITLE = "AddNewCrowdFragment";
@@ -58,6 +64,9 @@ public class AddNewCrowdFragment extends Fragment {
 
     private TextView mPlaceDetailsText;
     private TextView mPlaceAttribution;
+
+    private GoogleMap mMap;
+    private LatLng mLatLng = new LatLng(37.3894, -122.0819);
 
     public AddNewCrowdFragment() {
         // Required empty public constructor
@@ -93,34 +102,33 @@ public class AddNewCrowdFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_add_new_crowd, parent, false);
+        View view = inflater.inflate(R.layout.fragment_add_new_crowd, parent, false);
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.web);
+        mapFragment.getMapAsync(this);
+        return view;
     }
 
     @Override
-    public void onViewCreated(final View view, Bundle savedInstanceState) {
-//        searchCard = new Card(getContext());
-//        searchCard.setTitle("Search");
-//        searchCard.setOnClickListener(new Card.OnCardClickListener() {
-//            @Override
-//            public void onClick(Card card, View view) {
-//                try {
-//                    Intent intent =
-//                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
-//                                    .build(getActivity());
-//                    startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
-//                } catch (GooglePlayServicesRepairableException e) {
-//                    // TODO: Handle the error.
-//                } catch (GooglePlayServicesNotAvailableException e) {
-//                    // TODO: Handle the error.
-//                }
-//            }
-//        });
-//        CustomThumbCard thumb = new CustomThumbCard(getContext());
-//        thumb.setDrawableResource(R.drawable.places_ic_search);
-//        searchCard.addCardThumbnail(thumb);
-//        CardViewNative cardView = (CardViewNative) view.findViewById(R.id.search);
-//        cardView.setCard(searchCard);
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        if ( ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION ) == PackageManager.PERMISSION_GRANTED ) {
+            mMap.setMyLocationEnabled(true);
+        }
 
+    }
+
+    public void setLocation(LatLng latLng) {
+        mLatLng = latLng;
+        // Add a marker in mLatLng and move the camera
+        mMap.addMarker(new MarkerOptions().position(mLatLng));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(mLatLng));
+    }
+
+
+
+    @Override
+    public void onViewCreated(final View view, Bundle savedInstanceState) {
 
         // Floating bar action button
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
@@ -162,6 +170,9 @@ public class AddNewCrowdFragment extends Fragment {
                 mPlaceDetailsText.setText(formatPlaceDetails(getResources(), place.getName(), place.getId(),
                         place.getAddress(), place.getPhoneNumber(), place.getWebsiteUri()));
 
+                // Update the map
+                setLocation(place.getLatLng());
+
                 // Display attribution if required.
                 CharSequence attributions = place.getAttributions();
                 if (!TextUtils.isEmpty(attributions)) {
@@ -179,7 +190,9 @@ public class AddNewCrowdFragment extends Fragment {
                         new InsertToDatabase(){
                             @Override
                             public void onPostExecute(String result) {
-                                Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();
+//                                Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();
+                                Snackbar.make(getActivity().findViewById(android.R.id.content), result,
+                                        Snackbar.LENGTH_LONG).setAction("Action", null).show();
                             }
                         }.execute(place.getId(),
                                 place.getName().toString(), getCity(place.getAddress()));
@@ -199,6 +212,45 @@ public class AddNewCrowdFragment extends Fragment {
             }
         }
 
+    }
+
+    /*
+ * Helper methods to format information about a place nicely.
+ */
+    public static Spanned formatPlaceDetails(Resources res, CharSequence name, String id,
+                                             CharSequence address, CharSequence phoneNumber,
+                                             Uri websiteUri) {
+        return Html.fromHtml(res.getString(R.string.place_details, name, id, address, phoneNumber,
+                websiteUri));
+    }
+
+    private static String getCity(CharSequence address) {
+
+        String city = "";
+        boolean[] separators = new boolean[address.length()];
+        int[] separatorIndeces = new int[5];
+        int counter = 0;
+
+        for(int j = 0; j < address.length(); j++)
+            separators[j] = false;
+
+        for(int i = 0; i < address.length(); i++) {
+            if(address.charAt(i) == ',') {
+                separators[i] = true;
+            }
+
+        }
+
+        for(int k = 0; k < separators.length; k++) {
+            if(separators[k]) {
+                separatorIndeces[counter] = k;
+                counter++;
+            }
+        }
+
+        city = address.subSequence(separatorIndeces[0]+2, separatorIndeces[1]).toString();
+
+        return city;
     }
 
     @Override
@@ -235,68 +287,6 @@ public class AddNewCrowdFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-
-    /*
-     * Helper methods to format information about a place nicely.
-     */
-    public static Spanned formatPlaceDetails(Resources res, CharSequence name, String id,
-                                              CharSequence address, CharSequence phoneNumber,
-                                              Uri websiteUri) {
-        return Html.fromHtml(res.getString(R.string.place_details, name, id, address, phoneNumber,
-                websiteUri));
-    }
-
-    private static String getCity(CharSequence address) {
-
-        String city = "";
-        boolean[] separators = new boolean[address.length()];
-        int[] separatorIndeces = new int[5];
-        int counter = 0;
-
-        for(int j = 0; j < address.length(); j++)
-            separators[j] = false;
-
-        for(int i = 0; i < address.length(); i++) {
-            if(address.charAt(i) == ',') {
-                separators[i] = true;
-            }
-
-        }
-
-        for(int k = 0; k < separators.length; k++) {
-            if(separators[k]) {
-                separatorIndeces[counter] = k;
-                counter++;
-            }
-        }
-
-        city = address.subSequence(separatorIndeces[0]+2, separatorIndeces[1]).toString();
-
-        return city;
-    }
-
-    /**
-     * Custom card search button thumbnail.
-     */
-
-    public class CustomThumbCard extends CardThumbnail {
-
-        public CustomThumbCard(Context context) {
-            super(context);
-        }
-
-        @Override
-        public void setupInnerViewElements(ViewGroup parent, View viewImage) {
-            if (viewImage!=null){
-                //viewImage.getLayoutParams().width=250;
-                //viewImage.getLayoutParams().height=250;
-
-                DisplayMetrics metrics=parent.getResources().getDisplayMetrics();
-                viewImage.getLayoutParams().width= (int)(30*metrics.density);
-                viewImage.getLayoutParams().height = (int)(30*metrics.density);
-            }
-        }
     }
 
 }

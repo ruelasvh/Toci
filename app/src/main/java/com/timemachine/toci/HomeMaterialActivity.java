@@ -1,5 +1,6 @@
 package com.timemachine.toci;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,11 +11,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class HomeMaterialActivity extends AppCompatActivity
         implements MostPopularFragment.OnFragmentInteractionListener,
         LoginFragment.OnFragmentInteractionListener, AboutUsFragment.OnFragmentInteractionListener,
-        AddNewCrowdFragment.OnFragmentInteractionListener ,NavigationDrawerCallbacks {
+        AddNewCrowdFragment.OnFragmentInteractionListener, FavoriteCityFragment.OnFragmentInteractionListener
+        ,NavigationDrawerCallbacks {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -23,9 +28,15 @@ public class HomeMaterialActivity extends AppCompatActivity
     private Toolbar mToolbar;
     private CharSequence mTitle;
 
+    // Helper fields to help store favorite settings
+    Context mContext;
+    AppPrefs mAppPrefs;
+    List<String> mCityFavorites;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_home_material);
         mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(mToolbar);
@@ -40,40 +51,59 @@ public class HomeMaterialActivity extends AppCompatActivity
         mNavigationDrawerFragment.setUserData(getResources().getString(R.string.cz_moto));
 //        mNavigationDrawerFragment.setUserData(getResources().getString(R.string.cz_moto),
 //                BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_pink));
-    }
+
+    } // End onCreate method
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
+
+        // Used to retrieve user preferences
+        mContext = getApplicationContext();
+        mAppPrefs = new AppPrefs(mContext);
+
         // update the main content by replacing fragments
-        //Toast.makeText(this, "Menu item selected -> " + position, Toast.LENGTH_SHORT).show();
         Fragment fragment = null;
-        switch (position) {
-            case 0:
+
+        // if user preferences exist, load fragments accordingly
+        if (mAppPrefs.getFavorite_cities() != null) {
+
+            mCityFavorites = new ArrayList<>(mAppPrefs.getFavorite_cities());
+            int totalCities = mCityFavorites.size();
+
+            if (position == 0) {
                 fragment = new SearchFragment();
-                break;
-            case 1:
-                fragment = MountainViewFeaturedFragment.newInstance();
-                //fragment = new MVCAFeaturedRecyclerViewFragment();
-                break;
-            case 2:
-                fragment = PaloAltoFeaturedFragment.newInstance();
-                break;
-            case 3:
-                fragment = SanFranciscoFeaturedFragment.newInstance();
-                break;
-            case 4:
-                fragment = SanJoseFeaturedFragment.newInstance();
-                break;
-            case 5:
+            }
+            for (int i = 1; i <= totalCities; i++) {
+                if (position == i) {
+                    fragment = FavoriteCityFragment.newInstance(mCityFavorites.get(i-1));
+                }
+            }
+            if (position == (totalCities+1)) {
+                fragment = FavoriteCrowdsFragment.newInstance();
+            } else if (position == (totalCities+2)) {
                 fragment = AddNewCrowdFragment.newInstance();
-                break;
-            case 6:
+            } else if (position == (totalCities+3)) {
                 fragment = new LoginFragment();
-                break;
-            case 7:
+            } else if (position == (totalCities+4)) {
                 fragment = new AboutUsFragment();
-//                fragment = new MVCAFeaturedRecyclerViewFragment();
-                break;
+            }
+        } else { // otherwise load basic list of fragments
+            switch (position) {
+                case 0:
+                    fragment = new SearchFragment();
+                    break;
+                case 1:
+                    fragment = FavoriteCrowdsFragment.newInstance();
+                    break;
+                case 2:
+                    fragment = AddNewCrowdFragment.newInstance();
+                    break;
+                case 3:
+                    fragment = new LoginFragment();
+                    break;
+                case 4:
+                    fragment = new AboutUsFragment();
+            }
         }
 
         if (fragment != null) {
@@ -85,27 +115,44 @@ public class HomeMaterialActivity extends AppCompatActivity
 
 
     public void onSectionAttached(String section) {
-        switch (section) {
-            case "SearchFragment":
-                mTitle = getString(R.string.app_name);
-                break;
-            case "MountainViewFeaturedFragment":
-                mTitle = "Mountain View";
-                break;
-            case "PaloAltoFeaturedFragment":
-                mTitle = "Palo Alto";
-                break;
-            case "SanFranciscoFeaturedFragment":
-                mTitle = "San Francisco";
-                break;
-            case "SanJoseFeaturedFragment":
-                mTitle = "San Jose";
-                break;
-            case "AddNewCrowdFragment":
-                mTitle = "Add New Crowd";
-                break;
-            default:
+
+        if (mAppPrefs.getFavorite_cities() != null) {
+
+            for (int i = 0; i < mCityFavorites.size(); i++) {
+                if (section == mCityFavorites.get(i)) {
+                    mTitle = mCityFavorites.get(i);
+                }
+            }
         }
+
+        if (section == "SearchFragment") {
+            mTitle = getString(R.string.app_name);
+        }
+
+        if (section == "AddNewCrowdFragment") {
+            mTitle = "Add New Crowd";
+        }
+//        switch (section) {
+//            case "SearchFragment":
+//                mTitle = getString(R.string.app_name);
+//                break;
+//            case "MountainViewFeaturedFragment":
+//                mTitle = "Mountain View";
+//                break;
+//            case "PaloAltoFeaturedFragment":
+//                mTitle = "Palo Alto";
+//                break;
+//            case "SanFranciscoFeaturedFragment":
+//                mTitle = "San Francisco";
+//                break;
+//            case "SanJoseFeaturedFragment":
+//                mTitle = "San Jose";
+//                break;
+//            case "AddNewCrowdFragment":
+//                mTitle = "Add New Crowd";
+//                break;
+//            default:
+//        }
         setTitle();
     }
 
@@ -153,6 +200,10 @@ public class HomeMaterialActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Method to communicate with fragments
+     * @param uri
+     */
     public void onFragmentInteraction(Uri uri) {
         // empty
     }

@@ -1,10 +1,12 @@
 package com.timemachine.toci;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,6 +26,8 @@ import android.widget.ProgressBar;
  * create an instance of this fragment.
  */
 public class FavoriteCityFragment extends Fragment {
+    // helper in debugging
+    private final static String TAG = FavoriteCityFragment.class.getSimpleName();
     // the fragment initialization parameters
     private static final String CITY = "cityHolder";
 
@@ -40,6 +44,11 @@ public class FavoriteCityFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    // Helper fields to help store favorite settings
+    Context mContext;
+    AppPrefs mAppPrefs;
+
+
     public FavoriteCityFragment() {
         // Required empty public constructor
     }
@@ -48,13 +57,13 @@ public class FavoriteCityFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param _city Parameter 1.
+     * @param city Parameter 1.
      * @return A new instance of fragment FavoriteCityFragment.
      */
-    public static FavoriteCityFragment newInstance(String _city) {
+    public static FavoriteCityFragment newInstance(String city) {
         FavoriteCityFragment fragment = new FavoriteCityFragment();
         Bundle args = new Bundle();
-        args.putString(CITY, _city);
+        args.putString(CITY, city);
         fragment.setArguments(args);
         return fragment;
     }
@@ -66,7 +75,11 @@ public class FavoriteCityFragment extends Fragment {
         setHasOptionsMenu(true);
         if (getArguments() != null) {
             mCity = getArguments().getString(CITY);
+            setFragmentTitle(getActivity(), mCity);
         }
+
+        mContext = getActivity().getApplicationContext();
+        mAppPrefs = new AppPrefs(mContext);
     }
 
     @Override
@@ -85,7 +98,7 @@ public class FavoriteCityFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-
+        // Populate the view with list of cards
         initiateRefresh();
 
     }
@@ -114,6 +127,14 @@ public class FavoriteCityFragment extends Fragment {
                 mSwipeRefreshLayout.setRefreshing(true);
                 initiateRefresh();
                 return true;
+            case R.id.action_favorite:
+                mAppPrefs.setFavorite_city(mCity);
+                if (mAppPrefs.getFavorite_cities() != null) {
+                    for (String city : mAppPrefs.getFavorite_cities()) {
+                        Log.i(TAG, city);
+                    }
+                }
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -129,9 +150,6 @@ public class FavoriteCityFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-        // Pass city name to main home activity to utilize in labeling
-        // fragment upon attaching.
-        ((HomeMaterialActivity) context).onSectionAttached(mCity);
     }
 
     @Override
@@ -178,6 +196,10 @@ public class FavoriteCityFragment extends Fragment {
 
             }
         }).execute(mCity);
+    }
+
+    public void setFragmentTitle(Context context, String city) {
+        ((HomeMaterialActivity) context).onSectionAttached(city);
     }
 // End of FavoriteCityFragment class
 }

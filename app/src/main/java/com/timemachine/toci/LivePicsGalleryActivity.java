@@ -1,5 +1,6 @@
 package com.timemachine.toci;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -8,6 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -34,6 +36,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import org.apache.http.HttpEntity;
@@ -57,8 +60,10 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -112,6 +117,12 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
      */
     private static HashMap<Integer, ArrayList<String>> picUrls;
 
+    /**
+     * Helper fields to help store favorite settings
+     */
+    Context mContext;
+    AppPrefs mAppPrefs;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +143,9 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         // Set views for the crowds details
         mDetailsContainer = (FrameLayout) findViewById(R.id.details_container);
         final TextView mAddress = (TextView) findViewById(R.id.address);
+        final ImageView mPhone = (ImageView) findViewById(R.id.phone);
+        final ImageView mMap = (ImageView) findViewById(R.id.map);
+        final ImageView mWeb = (ImageView) findViewById(R.id.web);
 
         // Instantiate google location api
         buildGoogleApiClient();
@@ -145,7 +159,56 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                             final Place myPlace = places.get(0);
                             // Do stuff with the place
                             mAddress.setText(formatPlaceDetails(getResources(), myPlace.getName(),
-                                    getShortAddress(myPlace.getAddress()), myPlace.getPhoneNumber(), myPlace.getWebsiteUri()));
+                                    getShortAddress(myPlace.getAddress())));
+                            // Set phone action
+                            final CharSequence phone = myPlace.getPhoneNumber();
+                            mPhone.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    String dialIntentUri = "tel:" + phone;
+                                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                                    intent.setData(Uri.parse(dialIntentUri));
+                                    startActivity(intent);
+                                }
+                            });
+                            // Set map action
+                            final CharSequence address = myPlace.getAddress();
+                            final String nameLabel = myPlace.getName().toString();
+                            mMap.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Uri gmmIntentUri = Uri.parse("geo:0,0?q="+address+"("+Uri.encode(nameLabel)+")");
+                                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                                    mapIntent.setPackage("com.google.android.apps.maps");
+                                    if (mapIntent.resolveActivity(getPackageManager()) != null) {
+                                        startActivity(mapIntent);
+                                    }
+                                }
+                            });
+                            // Set web action
+                            final String url;
+                            if (myPlace.getWebsiteUri() != null) {
+                                url = myPlace.getWebsiteUri().toString();
+                            }
+                            else {
+                                url = null;
+                            }
+                            mWeb.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+//                                    if (!url.startsWith("https://") && !url.startsWith("http://")){
+//                                        url = "http://" + url;
+//                                    }
+                                    if (url != null) {
+                                        Intent openUrlIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                        startActivity(openUrlIntent);
+                                    }
+                                    else {
+                                        Snackbar.make(findViewById(android.R.id.content), "Crowd Has No Website",
+                                                Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                    }
+                                }
+                            });
                             // Log of place if found
                             Log.i(TAG, "Place found: " + myPlace.getName());
                         } else {
@@ -167,6 +230,9 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
             }
         });
 
+        // Setup up preferences resources
+        mContext = getApplicationContext();
+        mAppPrefs = new AppPrefs(mContext);
     }
 
 
@@ -196,6 +262,27 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
             case R.id.action_camera:
                 // Bring up the camera
                 captureImage();
+                return true;
+
+            case R.id.action_favorite:
+                // Add individual crowd to favorites
+//                liveCrowdRow crowd = new liveCrowdRow(
+//                        getIntent().getExtras().getString("id"),
+//                        getIntent().getExtras().getString("name"),
+//                        getIntent().getExtras().getString("city"),
+//                        getIntent().getExtras().getString("timeAgo"),
+//                        "", (HashMap<Integer, ArrayList<String>>)getIntent().getSerializableExtra("picUrls"),
+//                        LivePicsGalleryActivity.class);
+//
+//                mAppPrefs.setFavorite_crowd(crowd);
+
+                // New way for saving
+//                saveToFavs();
+                saveToFavsv2();
+
+//                HashMap<Integer, ArrayList<String>> picurls = (HashMap<Integer, ArrayList<String>>)getIntent().getSerializableExtra("picUrls");
+//                ArrayList<String> urls = picurls.get(0);
+//                Log.i(TAG, urls.toString());
                 return true;
 
             default:
@@ -299,10 +386,8 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
      * Helper methods to format information about a place nicely.
      */
     public static Spanned formatPlaceDetails(Resources res, CharSequence name,
-                                             CharSequence address, CharSequence phoneNumber,
-                                             Uri websiteUri) {
-        return Html.fromHtml(res.getString(R.string.place_details_exist, name, address, phoneNumber,
-                websiteUri));
+                                             CharSequence address) {
+        return Html.fromHtml(res.getString(R.string.place_details_exist, name, address));
     }
 
     // Get short address for displaying in the details container
@@ -310,7 +395,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
         String short_address = "";
         boolean[] separators = new boolean[address.length()];
-        int[] separatorIndeces = new int[5];
+        int[] separatorIndices = new int[5];
         int counter = 0;
 
         for(int j = 0; j < address.length(); j++)
@@ -324,11 +409,11 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
         for(int k = 0; k < separators.length; k++) {
             if(separators[k]) {
-                separatorIndeces[counter] = k;
+                separatorIndices[counter] = k;
                 counter++;
             }
         }
-        short_address = address.subSequence(0, separatorIndeces[1]).toString();
+        short_address = address.subSequence(0, separatorIndices[2]).toString();
 
         return short_address;
     }
@@ -516,6 +601,52 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 + "IMG_" + timeStamp + ".jpg");
 
         return mediaFile;
+    }
+
+    // Helper method for saving individual crowd to shared preferences
+    public void saveToFavs() {
+        String[] props = new String[] {
+                getIntent().getExtras().getString("city"),
+                getIntent().getExtras().getString("id")
+        };
+
+        mAppPrefs.setFavorite_crowd(Arrays.toString(props));
+
+        //Debug
+        if (mAppPrefs.getFavorite_crowds() != null) {
+            for (String crowd : mAppPrefs.getFavorite_crowds()) {
+                Log.i(TAG, crowd);
+            }
+        }
+    }
+
+    public void saveToFavsv2() {
+        String id = getIntent().getExtras().getString("id");
+        String name = getIntent().getExtras().getString("name");
+        String city = getIntent().getExtras().getString("city");
+        String timeago = getIntent().getExtras().getString("timeAgo");
+        String distance = "";
+        HashMap<Integer, ArrayList<String>> picurls = (HashMap<Integer, ArrayList<String>>)getIntent().getSerializableExtra("picUrls");
+        Class livepicsgalleryactivity = LivePicsGalleryActivity.class;
+
+        liveCrowdRow crowd = new liveCrowdRow(
+                id,
+                name,
+                city,
+                timeago,
+                distance,
+                picurls,
+                livepicsgalleryactivity);
+
+        mAppPrefs.setFavorite_crowdv2(crowd);
+
+        // Debug
+        if (mAppPrefs.getFavorite_crowdsv2() != null) {
+            List<liveCrowdRow> list = mAppPrefs.getFavorite_crowdsv2();
+            Gson gson = new Gson();
+
+            Log.i(TAG, gson.toJson(list));
+        }
     }
 
 
