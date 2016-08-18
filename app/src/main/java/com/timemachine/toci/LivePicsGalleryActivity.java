@@ -277,8 +277,8 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 //                mAppPrefs.setFavorite_crowd(crowd);
 
                 // New way for saving
-//                saveToFavs();
-                saveToFavsv2();
+              //  saveToFavs();
+                // saveToFavsv2();
 
 //                HashMap<Integer, ArrayList<String>> picurls = (HashMap<Integer, ArrayList<String>>)getIntent().getSerializableExtra("picUrls");
 //                ArrayList<String> urls = picurls.get(0);
