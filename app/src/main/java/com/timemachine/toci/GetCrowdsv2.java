@@ -29,12 +29,12 @@ import java.util.HashMap;
  * Created by Victor Ruelas on 3/17/16.
  * Copyright (c) 2016 CrowdZeeker, LLC. All rights reserved.
  */
-public class GetCrowdsv2 extends AsyncTask<String, Void, liveCrowdRow[]> {
+public class GetCrowdsv2 extends AsyncTask<String, Void, LiveCrowdRow[]> {
 
     private final static String TAG = GetCrowdsv2.class.getSimpleName();
 
     public interface AsyncResponse {
-        void onAsyncTaskFinish(liveCrowdRow[] crowds);
+        void onAsyncTaskFinish(LiveCrowdRow[] crowds);
     }
 
     Context context;
@@ -46,7 +46,7 @@ public class GetCrowdsv2 extends AsyncTask<String, Void, liveCrowdRow[]> {
     }
 
     @Override
-    protected liveCrowdRow[] doInBackground (String...params){
+    protected LiveCrowdRow[] doInBackground (String...params){
 
         JSONArray result;
 
@@ -54,11 +54,11 @@ public class GetCrowdsv2 extends AsyncTask<String, Void, liveCrowdRow[]> {
 
         result = getList(fromCity);
 
-        liveCrowdRow[] crowds = null;
+        LiveCrowdRow[] crowds = null;
 
         if (result != null) {
 
-            crowds = new liveCrowdRow[result.length()];
+            crowds = new LiveCrowdRow[result.length()];
             try {
 
                 for (int i = 0; i < result.length(); i++) {
@@ -68,12 +68,8 @@ public class GetCrowdsv2 extends AsyncTask<String, Void, liveCrowdRow[]> {
                     String timeAgo = picUrls.get(picUrls.size()-1).get(1);
                     String distance = "";
 
-
-
-
-                    crowds[i] = new liveCrowdRow(crowdId, crowdName,
-                            fromCity, timeAgo, distance, picUrls,
-                            LivePicsGalleryActivity.class);
+                    crowds[i] = new LiveCrowdRow(crowdId, crowdName,
+                            fromCity, timeAgo, distance, picUrls);
                 }
 
                 return crowds;
@@ -89,7 +85,7 @@ public class GetCrowdsv2 extends AsyncTask<String, Void, liveCrowdRow[]> {
     }
 
     @Override
-    protected void onPostExecute (liveCrowdRow[] crowds) {
+    protected void onPostExecute (LiveCrowdRow[] crowds) {
         super.onPostExecute(crowds);
 
         delegate.onAsyncTaskFinish(crowds);

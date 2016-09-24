@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CityActivity extends AppCompatActivity {
@@ -22,7 +21,7 @@ public class CityActivity extends AppCompatActivity {
 
     private static String mCity;
 
-    private liveCrowdRowAdapterv2 adapter;
+    private LiveCrowdRowAdapterv2 adapter;
     private ProgressBar spinner;
     private ListView crowdList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -120,13 +119,13 @@ public class CityActivity extends AppCompatActivity {
 
         new GetCrowdsv2(new GetCrowdsv2.AsyncResponse() {
             @Override
-            public void onAsyncTaskFinish(liveCrowdRow[] crowds) {
+            public void onAsyncTaskFinish(LiveCrowdRow[] crowds) {
 
                 spinner = (ProgressBar) findViewById(R.id.spinner);
                 spinner.setVisibility(View.VISIBLE);
                 crowdList = (ListView) findViewById(R.id.crowds_listview);
 
-                adapter = new liveCrowdRowAdapterv2(CityActivity.this, R.layout.row, crowds);
+                adapter = new LiveCrowdRowAdapterv2(CityActivity.this, R.layout.row, crowds);
                 adapter.notifyDataSetChanged();
                 if (!adapter.isEmpty()) spinner.setVisibility(View.GONE);
                 crowdList.setAdapter(adapter);

@@ -1,6 +1,5 @@
 package com.timemachine.toci;
 
-import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -34,7 +33,7 @@ public class FavoriteCityFragment extends Fragment {
     private String mCity;
 
     // Adapter which loads crowds
-    private liveCrowdRowAdapterv2 mLiveCrowdRowAdapterv2;
+    private LiveCrowdRowAdapterv2 mLiveCrowdRowAdapterv2;
     // ListView that will hold the crowds
     private ListView mListView;
     // Spinner which shows while adapter loads cards
@@ -182,13 +181,13 @@ public class FavoriteCityFragment extends Fragment {
 
         new GetCrowdsv2(new GetCrowdsv2.AsyncResponse() {
             @Override
-            public void onAsyncTaskFinish(liveCrowdRow[] crowds) {
+            public void onAsyncTaskFinish(LiveCrowdRow[] crowds) {
 
                 mProgressBar = (ProgressBar) getActivity().findViewById(R.id.spinner);
                 mProgressBar.setVisibility(View.VISIBLE);
                 mListView = (ListView) getActivity().findViewById(R.id.crowds_listview);
 
-                mLiveCrowdRowAdapterv2 = new liveCrowdRowAdapterv2(getActivity(), R.layout.row, crowds);
+                mLiveCrowdRowAdapterv2 = new LiveCrowdRowAdapterv2(getActivity(), R.layout.row, crowds);
                 mLiveCrowdRowAdapterv2.notifyDataSetChanged();
                 if (!mLiveCrowdRowAdapterv2.isEmpty()) mProgressBar.setVisibility(View.GONE);
                 mListView.setAdapter(mLiveCrowdRowAdapterv2);

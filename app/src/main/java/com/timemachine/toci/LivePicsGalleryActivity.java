@@ -36,34 +36,28 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URI;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 
 
@@ -265,24 +259,8 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 return true;
 
             case R.id.action_favorite:
-                // Add individual crowd to favorites
-//                liveCrowdRow crowd = new liveCrowdRow(
-//                        getIntent().getExtras().getString("id"),
-//                        getIntent().getExtras().getString("name"),
-//                        getIntent().getExtras().getString("city"),
-//                        getIntent().getExtras().getString("timeAgo"),
-//                        "", (HashMap<Integer, ArrayList<String>>)getIntent().getSerializableExtra("picUrls"),
-//                        LivePicsGalleryActivity.class);
-//
-//                mAppPrefs.setFavorite_crowd(crowd);
-
-                // New way for saving
-               saveToFavs();
-                // saveToFavsv2();
-
-//                HashMap<Integer, ArrayList<String>> picurls = (HashMap<Integer, ArrayList<String>>)getIntent().getSerializableExtra("picUrls");
-//                ArrayList<String> urls = picurls.get(0);
-//                Log.i(TAG, urls.toString());
+                // Save to favorites
+                saveToFavsv4();
                 return true;
 
             default:
@@ -604,48 +582,28 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     }
 
     // Helper method for saving individual crowd to shared preferences
-    public void saveToFavs() {
-        String[] props = new String[] {
-                getIntent().getExtras().getString("city"),
-                getIntent().getExtras().getString("id")
-        };
 
-        mAppPrefs.setFavorite_crowd(Arrays.toString(props));
-
-        //Debug
-        if (mAppPrefs.getFavorite_crowds() != null) {
-            for (String crowd : mAppPrefs.getFavorite_crowds()) {
-                Log.i(TAG, crowd);
-            }
-        }
-    }
-
-    public void saveToFavsv2() {
+    public void saveToFavsv4() {
         String id = getIntent().getExtras().getString("id");
         String name = getIntent().getExtras().getString("name");
         String city = getIntent().getExtras().getString("city");
         String timeago = getIntent().getExtras().getString("timeAgo");
         String distance = "";
         HashMap<Integer, ArrayList<String>> picurls = (HashMap<Integer, ArrayList<String>>)getIntent().getSerializableExtra("picUrls");
-        Class livepicsgalleryactivity = LivePicsGalleryActivity.class;
 
-        liveCrowdRow crowd = new liveCrowdRow(
+        LiveCrowdRow crowd = new LiveCrowdRow(
                 id,
                 name,
                 city,
                 timeago,
                 distance,
-                picurls,
-                livepicsgalleryactivity);
+                picurls);
 
-        mAppPrefs.setFavorite_crowdv2(crowd);
+        mAppPrefs.setFav_crowdsv4(crowd);
 
         // Debug
-        if (mAppPrefs.getFavorite_crowdsv2() != null) {
-            List<liveCrowdRow> list = mAppPrefs.getFavorite_crowdsv2();
-            Gson gson = new Gson();
-
-            Log.i(TAG, gson.toJson(list));
+        if (mAppPrefs.getFav_crowdsv4() != null) {
+            Log.i(TAG, mAppPrefs.getFav_crowdsv4());
         }
     }
 

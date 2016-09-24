@@ -8,8 +8,4 @@
     <dimen name="navigation_drawer_width">240dp</dimen>
     <dimen name="toolbar_elevation">4dp</dimen>
 
-    <!-- crowdCard Picasso Thumbnail dimensions -->
-    <dimen name="list_detail_image_size_low_res">60dp</dimen>
-    <dimen name="list_detail_image_size_high_res">400dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
 </resources>

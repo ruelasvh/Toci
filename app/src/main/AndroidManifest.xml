@@ -22,7 +22,7 @@
     -->
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher_circle_pink"
+        android:icon="@drawable/cs_logo"
         android:label="@string/app_name"
         android:theme="@style/AppThemeMain">
         <activity
@@ -36,35 +36,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MountainViewCATabbedActivity"
-            android:label="Mountain View (CA)"
-            android:parentActivityName=".HomeMaterialActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppThemeSecondary">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeMaterialActivity" />
-        </activity>
-        <activity
-            android:name=".PaloAltoCATabbedActivity"
-            android:label="Palo Alto (CA)"
-            android:parentActivityName=".HomeMaterialActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppThemeTransparentActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeMaterialActivity" />
-        </activity>
-        <activity
-            android:name=".GetCurrImageActivity"
-            android:label="Display Current Image"
-            android:parentActivityName=".HomeMaterialActivity"
-            android:theme="@style/AppThemeSecondary">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeMaterialActivity" />
-        </activity>
-        <activity
             android:name=".LivePicsGalleryActivity"
             android:label="@string/livepics_gallery"
             android:parentActivityName=".HomeMaterialActivity"
@@ -73,64 +44,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeMaterialActivity" />
         </activity>
-        <activity
-            android:name=".CaptureImageActivity"
-            android:label="@string/title_activity_capture_image"
-            android:parentActivityName=".LivePicsGalleryActivity"
-            android:theme="@style/AppThemeSecondary">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".LivePicsGalleryActivity" />
-        </activity>
-        <activity
-            android:name=".UploadActivity"
-            android:label="@string/btnUploadToServer"
-            android:parentActivityName=".CaptureImageActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppThemeSecondary">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".CaptureImageActivity" />
-        </activity>
-        <activity
-            android:name=".Upload2DBActivity"
-            android:label="Upload to Database"
-            android:parentActivityName=".HomeMaterialActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppThemeSecondary">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeMaterialActivity" />
-        </activity>
-        <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_maps" />
-
-        <!-- <activity -->
-        <!-- android:name=".SearchActivity" -->
-        <!-- android:parentActivityName=".ViewFlipperHomeActivity" -->
-        <!-- android:screenOrientation="portrait" > -->
-        <!-- </activity> -->
-        <!--  -->
-        <!-- <activity -->
-        <!-- android:name=".ViewFlipperHomeActivity" -->
-        <!-- android:label="@string/app_name" -->
-        <!-- android:screenOrientation="portrait" > -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-        <!-- </intent-filter> -->
-        <!-- </activity> -->
-        <!--  -->
-
-
-        <!-- <activity -->
-        <!-- android:name=".MountainViewCAActivity" -->
-        <!-- android:label="@string/title_activity_mountain_view_ca" > -->
-        <!-- </activity> -->
-
 
         <!-- GOOGLE MAPS API KEY -->
         <!--
@@ -162,18 +75,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.timemachine.toci.HomeMaterialActivity" />
         </activity>
-        <activity
-            android:name=".City2Activity"
-            android:label="@string/title_activity_city2"
-            android:parentActivityName=".HomeMaterialActivity"
-            android:theme="@style/AppThemeMain">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.timemachine.toci.HomeMaterialActivity" />
-        </activity>
-        <activity
-            android:name=".AdActivity"
-            android:label="@string/title_activity_ad"></activity>
         <!-- Include the AdActivity configChanges and theme. -->
         <activity
             android:name="com.google.android.gms.ads.AdActivity"

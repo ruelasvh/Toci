@@ -16,8 +16,7 @@ import java.util.List;
 
 
 public class HomeMaterialActivity extends AppCompatActivity
-        implements MostPopularFragment.OnFragmentInteractionListener,
-        LoginFragment.OnFragmentInteractionListener, AboutUsFragment.OnFragmentInteractionListener,
+        implements LoginFragment.OnFragmentInteractionListener, AboutUsFragment.OnFragmentInteractionListener,
         AddNewCrowdFragment.OnFragmentInteractionListener, FavoriteCityFragment.OnFragmentInteractionListener
         ,NavigationDrawerCallbacks {
 
@@ -132,27 +131,6 @@ public class HomeMaterialActivity extends AppCompatActivity
         if (section == "AddNewCrowdFragment") {
             mTitle = "Add New Crowd";
         }
-//        switch (section) {
-//            case "SearchFragment":
-//                mTitle = getString(R.string.app_name);
-//                break;
-//            case "MountainViewFeaturedFragment":
-//                mTitle = "Mountain View";
-//                break;
-//            case "PaloAltoFeaturedFragment":
-//                mTitle = "Palo Alto";
-//                break;
-//            case "SanFranciscoFeaturedFragment":
-//                mTitle = "San Francisco";
-//                break;
-//            case "SanJoseFeaturedFragment":
-//                mTitle = "San Jose";
-//                break;
-//            case "AddNewCrowdFragment":
-//                mTitle = "Add New Crowd";
-//                break;
-//            default:
-//        }
         setTitle();
     }
 

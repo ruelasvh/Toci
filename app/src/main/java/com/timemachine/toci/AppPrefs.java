@@ -3,7 +3,6 @@ package com.timemachine.toci;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -12,10 +11,12 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -30,13 +31,18 @@ public class AppPrefs {
     private SharedPreferences.Editor prefsEditor;
     private String fav_cities = "fav_cities_prefs";
     private String fav_crowds = "fav_crowds_prefs";
-    private String fav_crowdsv2 = "fav_crowds_prefsvs";
+    private String fav_crowdsv2 = "fav_crowds_prefs";
+    private String fav_crowdsv3 = "fav_crowds_prefs";
     private String user_name = "user_name_prefs";
     private String user_id = "user_id_prefs";
     private Set<String> in;
     private Set<String> out;
-    private Set<liveCrowdRow> crowd_in;
-    private Set<liveCrowdRow> crowd_out;
+    private Set<LiveCrowdRow> crowd_in;
+    private Set<LiveCrowdRow> crowd_out;
+    private JSONArray jsonArrayIn;
+    private JSONArray jsonArrayOut;
+    private ArrayList<LiveCrowdRow> crowds_in;
+    private LiveCrowdRow[] crowds_out;
 
     public AppPrefs(Context context) {
         this.appSharedPrefs = context.getSharedPreferences(USER_PREFS, Activity.MODE_PRIVATE);
@@ -48,18 +54,9 @@ public class AppPrefs {
         return appSharedPrefs.getStringSet(fav_cities, null);
     }
 
-    public Set<String> getFavorite_crowds() {
-        return appSharedPrefs.getStringSet(fav_crowds, null);
-    }
 
-    public List<liveCrowdRow> getFavorite_crowdsv2() {
-        String listString = appSharedPrefs.getString(fav_crowdsv2, "");
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<liveCrowdRow>>(){}.getType();
-
-        List<liveCrowdRow> list = gson.fromJson(listString, type);
-
-        return list;
+    public String getFav_crowdsv4() {
+        return appSharedPrefs.getString(fav_crowds, null);
     }
 
     // Setter methods
@@ -79,22 +76,14 @@ public class AppPrefs {
         }
     }
 
-    public void setFavorite_crowdv2(liveCrowdRow favorite_crowdv2) {
+
+    public void setFav_crowdsv4(LiveCrowdRow liveCrowdRow) {
         Gson gson = new Gson();
-        Type type = new TypeToken<liveCrowdRow>(){}.getType();
-        String jsonLiveCrowdRow = gson.toJson(favorite_crowdv2, type);
-
-        prefsEditor.putString(fav_crowdsv2, jsonLiveCrowdRow);
+        String json = gson.toJson(liveCrowdRow);
+        prefsEditor.putString(fav_crowds, json);
         prefsEditor.commit();
     }
 
-    public void setFavorite_crowd(String _favorite_crowd) {
-        out = appSharedPrefs.getStringSet(fav_crowds, new HashSet<String>());
-        in = new HashSet<>(out);
-        in.add(_favorite_crowd);
-        prefsEditor.putStringSet(fav_crowds, in);
-        prefsEditor.commit();
-    }
 
     // Methods to remove favorites
     public void removeFavorite_city(String _favorite_city) {
@@ -131,25 +120,4 @@ public class AppPrefs {
         prefsEditor.putString(user_name, _user_name).commit();
     }
 
-    /**
-     * Helper class to help save liveCrowdRows objects.
-     */
-    private class Adapter implements JsonSerializer<liveCrowdRow> {
-
-        @Override
-        public JsonElement serialize(
-                liveCrowdRow livecrowdrow,
-                Type type,
-                JsonSerializationContext jsc) {
-
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("id", livecrowdrow.getId());
-            jsonObject.addProperty("title", livecrowdrow.getTitle());
-            jsonObject.addProperty("city", livecrowdrow.getCity());
-            jsonObject.addProperty("timeago", livecrowdrow.getTimeago());
-            jsonObject.addProperty("distance", livecrowdrow.getDistance());
-//            jsonObject.addProperty("picurls", livecrowdrow.getPicUrls());
-            return jsonObject;
-        }
-    }
 }
