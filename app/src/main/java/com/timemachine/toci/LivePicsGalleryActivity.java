@@ -55,7 +55,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -260,7 +259,8 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
             case R.id.action_favorite:
                 // Save to favorites
-                saveToFavsv4();
+                saveToFavs();
+                Toast.makeText(this, "Added To Favorites", Toast.LENGTH_SHORT).show();
                 return true;
 
             default:
@@ -582,8 +582,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     }
 
     // Helper method for saving individual crowd to shared preferences
-
-    public void saveToFavsv4() {
+    public void saveToFavs() {
         String id = getIntent().getExtras().getString("id");
         String name = getIntent().getExtras().getString("name");
         String city = getIntent().getExtras().getString("city");
@@ -599,13 +598,39 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 distance,
                 picurls);
 
-        mAppPrefs.setFav_crowdsv4(crowd);
+        mAppPrefs.setFav_crowds(crowd);
 
         // Debug
-        if (mAppPrefs.getFav_crowdsv4() != null) {
-            Log.i(TAG, mAppPrefs.getFav_crowdsv4());
+        if (mAppPrefs.getFav_crowds() != null) {
+            for (String element : mAppPrefs.getFav_crowds()) {
+                Log.i(TAG, element);
+            }
         }
     }
+
+//    public void saveToFavsv4() {
+//        String id = getIntent().getExtras().getString("id");
+//        String name = getIntent().getExtras().getString("name");
+//        String city = getIntent().getExtras().getString("city");
+//        String timeago = getIntent().getExtras().getString("timeAgo");
+//        String distance = "";
+//        HashMap<Integer, ArrayList<String>> picurls = (HashMap<Integer, ArrayList<String>>)getIntent().getSerializableExtra("picUrls");
+//
+//        LiveCrowdRow crowd = new LiveCrowdRow(
+//                id,
+//                name,
+//                city,
+//                timeago,
+//                distance,
+//                picurls);
+//
+//        mAppPrefs.setFav_crowdsv4(crowd);
+//
+//        // Debug
+//        if (mAppPrefs.getFav_crowdsv4() != null) {
+//            Log.i(TAG, mAppPrefs.getFav_crowdsv4());
+//        }
+//    }
 
 
     /**

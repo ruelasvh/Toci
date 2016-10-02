@@ -1,22 +1,21 @@
 package com.timemachine.toci;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -25,9 +24,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URI;
@@ -80,6 +76,14 @@ public class SearchFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                // Hide the keyboard
+                InputMethodManager inputManager = (InputMethodManager)
+                        getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
+
+
                 final String desired_city = mainEditText.getText().toString();
 
                 /**
@@ -93,10 +97,12 @@ public class SearchFragment extends Fragment {
 
                             StartCityActivity(desired_city);
 
-                        } else {
-
-                            Toast.makeText(getActivity(), "City not found", Toast.LENGTH_LONG).show();
-
+                        }
+                        else {
+                            Snackbar mySnackbar = Snackbar.make(getActivity().findViewById(R.id.root_fragment_search),
+                                    "No City Found", Snackbar.LENGTH_LONG);
+                            mySnackbar.setAction("Add Crowd", new AddCrowdListener());
+                            mySnackbar.show();
                         }
                     }
                 }.execute(desired_city);
@@ -186,6 +192,21 @@ public class SearchFragment extends Fragment {
         @Override
         protected void onPostExecute (Boolean result) {
 
+        }
+    }
+
+    public class AddCrowdListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+
+//            Log.d(TAG, "Action detected");
+
+            // Lauch AddNewCrowdFragment
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.container, new AddNewCrowdFragment());
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
         }
     }
 }

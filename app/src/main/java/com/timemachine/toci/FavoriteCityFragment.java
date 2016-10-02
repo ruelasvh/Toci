@@ -36,7 +36,7 @@ public class FavoriteCityFragment extends Fragment {
     private LiveCrowdRowAdapterv2 mLiveCrowdRowAdapterv2;
     // ListView that will hold the crowds
     private ListView mListView;
-    // Spinner which shows while adapter loads cards
+    // Spinner which shows while adapter loads crowds
     private ProgressBar mProgressBar;
     // Widget used for pull-to-refresh ListView
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -97,8 +97,8 @@ public class FavoriteCityFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        // Populate the view with list of cards
-        initiateRefresh();
+        // Populate the view with list of crowds
+        displayCrowds();
 
     }
 
@@ -109,7 +109,7 @@ public class FavoriteCityFragment extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                initiateRefresh();
+                displayCrowds();
             }
         });
     }
@@ -124,13 +124,13 @@ public class FavoriteCityFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.action_refresh:
                 mSwipeRefreshLayout.setRefreshing(true);
-                initiateRefresh();
+                displayCrowds();
                 return true;
             case R.id.action_favorite:
                 mAppPrefs.setFavorite_city(mCity);
                 if (mAppPrefs.getFavorite_cities() != null) {
                     for (String city : mAppPrefs.getFavorite_cities()) {
-                        Log.i(TAG, city);
+                        Log.d(TAG, city);
                     }
                 }
                 return true;
@@ -177,7 +177,7 @@ public class FavoriteCityFragment extends Fragment {
      * allows both the SwipeGestureLayout onRefresh() method and the
      * Refresh action item to refresh the content.
      */
-    private void initiateRefresh() {
+    private void displayCrowds() {
 
         new GetCrowdsv2(new GetCrowdsv2.AsyncResponse() {
             @Override
@@ -197,8 +197,8 @@ public class FavoriteCityFragment extends Fragment {
         }).execute(mCity);
     }
 
-    public void setFragmentTitle(Context context, String city) {
-        ((HomeMaterialActivity) context).onSectionAttached(city);
+    public void setFragmentTitle(Context context, String title) {
+        ((HomeMaterialActivity) context).onSectionAttached(title);
     }
 // End of FavoriteCityFragment class
 }

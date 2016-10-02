@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:id="@+id/rootLO"
+    android:id="@+id/root_fragment_search"
     android:background="@drawable/city_3"
     tools:context="com.timemachine.toci.HomeMaterialActivity.SearchFragment">
 

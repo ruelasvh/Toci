@@ -12,13 +12,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 
 public class HomeMaterialActivity extends AppCompatActivity
         implements LoginFragment.OnFragmentInteractionListener, AboutUsFragment.OnFragmentInteractionListener,
-        AddNewCrowdFragment.OnFragmentInteractionListener, FavoriteCityFragment.OnFragmentInteractionListener
-        ,NavigationDrawerCallbacks {
+        AddNewCrowdFragment.OnFragmentInteractionListener, FavoriteCrowdsFragment.OnFragmentInteractionListener,
+        FavoriteCityFragment.OnFragmentInteractionListener,NavigationDrawerCallbacks {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -78,7 +79,7 @@ public class HomeMaterialActivity extends AppCompatActivity
                 }
             }
             if (position == (totalCities+1)) {
-                fragment = FavoriteCrowdsFragment.newInstance();
+                fragment = FavoriteCrowdsFragment.newInstance(mAppPrefs.getFav_crowds());
             } else if (position == (totalCities+2)) {
                 fragment = AddNewCrowdFragment.newInstance();
             } else if (position == (totalCities+3)) {
@@ -92,7 +93,7 @@ public class HomeMaterialActivity extends AppCompatActivity
                     fragment = new SearchFragment();
                     break;
                 case 1:
-                    fragment = FavoriteCrowdsFragment.newInstance();
+                    fragment = FavoriteCrowdsFragment.newInstance(mAppPrefs.getFav_crowds());
                     break;
                 case 2:
                     fragment = AddNewCrowdFragment.newInstance();

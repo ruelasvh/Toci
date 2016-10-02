@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -27,6 +30,7 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -66,7 +70,7 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
     private TextView mPlaceAttribution;
 
     private GoogleMap mMap;
-    private LatLng mLatLng = new LatLng(37.3894, -122.0819);
+    private LatLng mLatLng = new LatLng(37.3894, 122.0819);
 
     public AddNewCrowdFragment() {
         // Required empty public constructor
@@ -112,10 +116,18 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
         if ( ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION ) == PackageManager.PERMISSION_GRANTED ) {
             mMap.setMyLocationEnabled(true);
         }
 
+        // Get current location
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
+        LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+        // Move map to current location
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
     }
 
     public void setLocation(LatLng latLng) {
