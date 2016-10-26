@@ -157,29 +157,30 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
 
         // Always show this fragment, so search is possible
         items.add(new NavigationItem("Find Crowds",
-                getResources().getDrawable(R.drawable.ic_chevron_right_grey600_24dp)));
+                getResources().getDrawable(R.drawable.navigation_drawer_item_empty)));
 
         // Added this to load favorite cities dynamically per user preferences
-        if (mAppPrefs.getFavorite_cities() != null) {
+//        if (mAppPrefs.getFavorite_cities() != null) {
+//
+//            mCityFavorites = new ArrayList<>(mAppPrefs.getFavorite_cities());
+//
+//            if (mCityFavorites != null) {
+//                for (int i = 0; i < mCityFavorites.size(); i++) {
+//                    items.add(new NavigationItem(mCityFavorites.get(i),
+//                            getResources().getDrawable(R.drawable.beer_icon)));
+//                }
+//            }
+//        }
 
-            mCityFavorites = new ArrayList<>(mAppPrefs.getFavorite_cities());
-
-            if (mCityFavorites != null) {
-                for (int i = 0; i < mCityFavorites.size(); i++) {
-                    items.add(new NavigationItem(mCityFavorites.get(i),
-                            getResources().getDrawable(R.drawable.beer_icon)));
-                }
-            }
-        }
         // Add crowd-specific favorites
-        items.add(new NavigationItem("Favorites".toUpperCase(),
+        items.add(new NavigationItem("Favorites",
                 getResources().getDrawable(R.drawable.navigation_drawer_item_empty)));
         // Add rest of fragments to app interaction
-        items.add(new NavigationItem("Add Crowd".toUpperCase(),
+        items.add(new NavigationItem("Add Crowd",
                 getResources().getDrawable(R.drawable.navigation_drawer_item_empty)));
-        items.add(new NavigationItem("Sign In".toUpperCase(),
+        items.add(new NavigationItem("Log In",
                 getResources().getDrawable(R.drawable.navigation_drawer_item_empty)));
-        items.add(new NavigationItem("About Us".toUpperCase(),
+        items.add(new NavigationItem("About",
                 getResources().getDrawable(R.drawable.navigation_drawer_item_empty)));
         return items;
     }

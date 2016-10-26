@@ -2,14 +2,6 @@
 <items version="2" >
 
     <item
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.github.gabrielemariotti.cards/cardslib-recyclerview/2.1.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="c187f5fc4f47d1abb8839d124591502ece9b7a37">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.github.gabrielemariotti.cards-cardslib-recyclerview-2.1.0_dd0d213e55e143d0d303ede7c40fde2ed7c08415/classes.dex" />
-    </item>
-    <item
         is-multidex="true"
         jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/8.4.0/jars/classes.jar"
         jumboMode="true"
@@ -35,15 +27,6 @@
         revision="23.0.2"
         sha1="292a9fa091757208efa65e77eef63088247e51f3">
         <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-vector-drawable-23.2.0_083dd3fd75c977abad9058a206ad640a26c65157/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.github.gabrielemariotti.cards/cardslib-cards/2.1.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="9ec1d846000db2b979dac2159584f027195a8174">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.github.gabrielemariotti.cards-cardslib-cards-2.1.0_0eba13335b8b0c3adca0e6e82ecf1c7c75a4daa7/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -101,15 +84,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="/home/victorhugo/.gradle/caches/modules-2/files-2.1/com.nhaarman.listviewanimations/lib-manipulation/3.1.0/63737e512fcd9e0ebe9bcd0bb375c2dded74116f/lib-manipulation-3.1.0.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="63737e512fcd9e0ebe9bcd0bb375c2dded74116f">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/lib-manipulation-3.1.0_dacce6d771ccf150491c5330a3309674a44663a4/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/8.4.0/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -123,7 +97,7 @@
         jumboMode="true"
         optimize="true"
         revision="23.0.2"
-        sha1="c02cb8dbd98d82c163dba6f9b1ed352b5f0985bd">
+        sha1="d50f252593c33766f91b31c5f367eb8f6296c163">
         <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_abb7d78a2fe41e8a6d941fa4cba275832a2b8d81/classes.dex" />
     </item>
     <item
@@ -172,30 +146,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.github.gabrielemariotti.cards/cardslib-recyclerview/2.1.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="c187f5fc4f47d1abb8839d124591502ece9b7a37">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.github.gabrielemariotti.cards-cardslib-recyclerview-2.1.0_dd0d213e55e143d0d303ede7c40fde2ed7c08415/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.android.support/support-v13/23.2.0/jars/classes.jar"
         jumboMode="true"
         optimize="true"
         revision="23.0.2"
         sha1="f3a3189a228a65d03b3ea92a1b58a2b44bc7366e">
         <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-v13-23.2.0_fa198ded157c63e2919037a3a2735de6cf2ab5a0/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/victorhugo/.gradle/caches/modules-2/files-2.1/com.nhaarman.listviewanimations/lib-core/3.1.0/f3f9629b068554d8513a2aaf34418171bf430851/lib-core-3.1.0.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="f3f9629b068554d8513a2aaf34418171bf430851">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/lib-core-3.1.0_4bc587ac06be1be23d8b4c6be3ab65d4e554b712/classes.dex" />
     </item>
     <item
         jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/de.hdodenhof/circleimageview/1.2.1/jars/classes.jar"
@@ -256,7 +212,7 @@
         jumboMode="true"
         optimize="true"
         revision="23.0.2"
-        sha1="4ef30e2b31df08d792d864ceb0454dbed887c423">
+        sha1="b9f86b351177dc3ce60cf7e5c5dce2119e6a3101">
         <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_c78a0ca57b0f2a96a76272013915392a11919397/classes.dex" />
     </item>
     <item
@@ -391,15 +347,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="/home/victorhugo/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/library-2.4.0_8eb7ef46dc20dc0c6869f2ed584e3f84569e0382/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.android.support/support-v13/23.2.0/jars/libs/internal_impl-23.2.0.jar"
         jumboMode="true"
         optimize="true"
@@ -444,40 +391,6 @@
         <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-fitness-8.4.0_5136cdc1cc61d5639684c5964bc09f3e09445692/classes.dex" />
     </item>
     <item
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.github.gabrielemariotti.cards/cardslib-extra-staggeredgrid/2.1.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="50229116d50d9475f4a9fc4d497845aa18e9518f">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.github.gabrielemariotti.cards-cardslib-extra-staggeredgrid-2.1.0_d2d8a60026a1d6faf11b024c54e5b3305467329d/classes.dex" />
-    </item>
-    <item
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.github.gabrielemariotti.cards/cardslib-extra-dragdrop/2.1.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="51946b4ca8e38b3be550798723faf47dacb3a444">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.github.gabrielemariotti.cards-cardslib-extra-dragdrop-2.1.0_d51cdc26641bdac4eb10c850155e762aba3b3650/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.github.gabrielemariotti.cards/cardslib-core/2.1.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="8190861e323934dad89d5e6b830ea66878c11970">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.github.gabrielemariotti.cards-cardslib-core-2.1.0_ca7be3f2a241bc48bbf3679efb742d8f78613932/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.github.gabrielemariotti.cards/cardslib-extra-dragdrop/2.1.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="51946b4ca8e38b3be550798723faf47dacb3a444">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.github.gabrielemariotti.cards-cardslib-extra-dragdrop-2.1.0_d51cdc26641bdac4eb10c850155e762aba3b3650/classes.dex" />
-    </item>
-    <item
         is-multidex="true"
         jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/fr.avianey.com.viewpagerindicator/library/2.4.1/jars/classes.jar"
         jumboMode="true"
@@ -485,15 +398,6 @@
         revision="23.0.2"
         sha1="86f452c126cb92a79e1dcf08efec5404529b698e">
         <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/fr.avianey.com.viewpagerindicator-library-2.4.1_f3df2b2408dd870105a86c501cf3c236cae62e3f/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.etsy.android.grid/library/1.0.5/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="8218789edb56bdcfff7da48e892b37460fc707e2">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.etsy.android.grid-library-1.0.5_dce23747490b757196a4e32ba7da320b4d4303b1/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -537,15 +441,6 @@
         revision="23.0.2"
         sha1="78ea232052df889856dcb7b7b542707c89bb3bfb">
         <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-multidex-1.0.1_9a51d5424cd25fde9d7cc13404fdd372ae50d0b5/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.github.gabrielemariotti.cards/cardslib-extra-staggeredgrid/2.1.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="50229116d50d9475f4a9fc4d497845aa18e9518f">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.github.gabrielemariotti.cards-cardslib-extra-staggeredgrid-2.1.0_d2d8a60026a1d6faf11b024c54e5b3305467329d/classes.dex" />
     </item>
     <item
         is-multidex="true"

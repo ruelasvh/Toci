@@ -1,19 +1,35 @@
 package com.timemachine.toci;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.vision.Frame;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -160,7 +176,6 @@ public class FavoriteCrowdsFragment extends Fragment {
 
         mProgressBar = (ProgressBar) getActivity().findViewById(R.id.spinner);
 
-
         if (crowds.length != 0) {
             mProgressBar.setVisibility(View.VISIBLE);
             mListView = (ListView) getActivity().findViewById(R.id.crowds_listview);
@@ -170,13 +185,49 @@ public class FavoriteCrowdsFragment extends Fragment {
             if (!mLiveCrowdRowAdapterv2.isEmpty()) mProgressBar.setVisibility(View.GONE);
             mListView.setAdapter(mLiveCrowdRowAdapterv2);
             mSwipeRefreshLayout.setRefreshing(false);
+
+
         }
         else {
             mProgressBar.setVisibility(View.GONE);
-            Button search = new Button(getActivity());
-            search.setText("Search Crowds");
+
+            final ImageButton searchButton = new ImageButton(getActivity());
+            searchButton.setId('1');
+            searchButton.setBackgroundColor(getResources().getColor(R.color.transparent));
+            searchButton.setImageResource(R.drawable.ic_search_white_48dp);
+            searchButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // Launch Fragment
+                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.container, new SearchFragment());
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                }
+            });
+
+            final TextView searchText = new TextView(getActivity());
+            searchText.setId('0');
+            searchText.setText("Search");
+            searchText.setTextColor(getResources().getColor(R.color.white));
+            searchText.setTextSize(24.f);
+//            searchText.setTypeface(null, Typeface.BOLD);
+
+
             RelativeLayout rootLayout = (RelativeLayout)getActivity().findViewById(R.id.root);
-            rootLayout.addView(search);
+            rootLayout.setGravity(Gravity.CENTER);
+            rootLayout.addView(searchButton);
+            rootLayout.addView(searchText);
+
+            RelativeLayout.LayoutParams layoutParamsSearchButton = (RelativeLayout.LayoutParams) searchButton.getLayoutParams();
+
+            layoutParamsSearchButton.addRule(RelativeLayout.ABOVE, searchText.getId());
+            layoutParamsSearchButton.addRule(RelativeLayout.CENTER_IN_PARENT);
+            searchButton.setLayoutParams(layoutParamsSearchButton);
+
+            RelativeLayout.LayoutParams layoutParamsSearchText = (RelativeLayout.LayoutParams) searchText.getLayoutParams();
+            layoutParamsSearchText.addRule(RelativeLayout.CENTER_IN_PARENT);
+            searchText.setLayoutParams(layoutParamsSearchText);
         }
     }
 }

@@ -2,11 +2,9 @@ package com.timemachine.toci;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -99,16 +97,16 @@ public class CityActivity extends AppCompatActivity {
                 mSwipeRefreshLayout.setRefreshing(true);
                 displayCrowds();
                 return true;
-            case R.id.action_favorite:
-                mAppPrefs.setFavorite_city(mCity);
-                if (mAppPrefs.getFavorite_cities() != null) {
-                    for (String city : mAppPrefs.getFavorite_cities()) {
-                        Log.i(TAG, city);
-                    }
-                }
-                Snackbar.make(findViewById(android.R.id.content), "Pinned To Home Menu", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                return true;
+//            case R.id.action_favorite:
+//                mAppPrefs.setFavorite_city(mCity);
+//                if (mAppPrefs.getFavorite_cities() != null) {
+//                    for (String city : mAppPrefs.getFavorite_cities()) {
+//                        Log.i(TAG, city);
+//                    }
+//                }
+//                Snackbar.make(findViewById(android.R.id.content), "Pinned To Home Menu", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//                return true;
             default:
                 return super.onOptionsItemSelected(item);
 

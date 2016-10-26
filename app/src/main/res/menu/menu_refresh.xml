@@ -1,17 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!--<item-->
-        <!--android:id="@+id/action_add"-->
-        <!--android:icon="@drawable/ic_menu_add"-->
-        <!--android:title="Add New"-->
-        <!--app:showAsAction="ifRoom" />-->
-
-    <item
-        android:id="@+id/action_favorite"
-        android:icon="@drawable/ic_action_goldstar"
-        android:title="Add To Favorites"
-        app:showAsAction="ifRoom" />
+        <!--android:id="@+id/action_settings"-->
+        <!--android:orderInCategory="100"-->
+        <!--android:title="@string/action_settings"-->
+        <!--app:showAsAction="never" />-->
 
 
     <item

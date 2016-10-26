@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -14,23 +13,19 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.text.Html;
-import android.text.Spanned;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -38,7 +33,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import it.gmariotti.cardslib.library.internal.Card;
 
 /**
  * Created by Victor Ruelas on 3/16/16.
@@ -51,6 +45,11 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
 
     final private int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
 
+    /**
+     * Request code passed to the PlacePicker intent to identify its result when it returns.
+     */
+    private static final int REQUEST_PLACE_PICKER = 1;
+
 //    // TODO: Rename parameter arguments, choose names that match
 //    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 //    private static final String ARG_PARAM1 = "param1";
@@ -62,15 +61,8 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
 
     private OnFragmentInteractionListener mListener;
 
-    private Card searchCard;
-
-    private Button btnUpload;
-
-    private TextView mPlaceDetailsText;
-    private TextView mPlaceAttribution;
-
     private GoogleMap mMap;
-    private LatLng mLatLng = new LatLng(37.3894, 122.0819);
+    private LatLng mLatLng;
 
     public AddNewCrowdFragment() {
         // Required empty public constructor
@@ -108,7 +100,7 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_new_crowd, parent, false);
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
-                .findFragmentById(R.id.web);
+                .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         return view;
     }
@@ -128,16 +120,10 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
 
         // Move map to current location
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+
+        // Disable Toolbar i.e. Directions and Google Maps buttons
+        mMap.getUiSettings().setMapToolbarEnabled(false);
     }
-
-    public void setLocation(LatLng latLng) {
-        mLatLng = latLng;
-        // Add a marker in mLatLng and move the camera
-        mMap.addMarker(new MarkerOptions().position(mLatLng));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(mLatLng));
-    }
-
-
 
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
@@ -148,22 +134,21 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
             @Override
         public void onClick(View view) {
                 try {
-                    Intent intent =
-                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
-                                    .build(getActivity());
-                    startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+                    PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
+                    Intent intent = intentBuilder.build(getActivity());
+                    // Start the Intent by requesting a result, identified by a request code.
+                    startActivityForResult(intent, REQUEST_PLACE_PICKER);
+
                 } catch (GooglePlayServicesRepairableException e) {
-                    // TODO: Handle the error.
+                    GooglePlayServicesUtil
+                            .getErrorDialog(e.getConnectionStatusCode(), getActivity(), 0);
                 } catch (GooglePlayServicesNotAvailableException e) {
-                    // TODO: Handle the error.
+                    Toast.makeText(getActivity(), "Google Play Services is not available.",
+                            Toast.LENGTH_LONG)
+                            .show();
                 }
             }
         });
-
-        mPlaceDetailsText = (TextView) view.findViewById(R.id.place_details);
-        mPlaceAttribution = (TextView) view.findViewById(R.id.place_attribution);
-        btnUpload = (Button) view.findViewById(R.id.btnUpload);
-        btnUpload.setVisibility(View.GONE);
     }
 
     /* Called after the autocomplete activity has finished to return its result. */
@@ -173,46 +158,23 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
         super.onActivityResult(requestCode, resultCode, data);
 
         // Check that the result was from the autocomplete widget.
-        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+        if (requestCode == REQUEST_PLACE_PICKER) {
             if (resultCode == Activity.RESULT_OK) {
                 // Get the user's selected place from the Intent.
-                final Place place = PlaceAutocomplete.getPlace(getActivity(), data);
+//                final Place place = PlaceAutocomplete.getPlace(getActivity(), data);
+                final Place place = PlacePicker.getPlace(data, getActivity());
 
-                // Format the place's details and display them in a TextView.
-                mPlaceDetailsText.setText(formatPlaceDetails(getResources(), place.getName(), place.getId(),
-                        place.getAddress(), place.getPhoneNumber(), place.getWebsiteUri()));
-
-                // Update the map
-                setLocation(place.getLatLng());
-
-                // Display attribution if required.
-                CharSequence attributions = place.getAttributions();
-                if (!TextUtils.isEmpty(attributions)) {
-                    mPlaceAttribution.setText(Html.fromHtml(attributions.toString()));
-                } else {
-                    mPlaceAttribution.setText("");
-                }
-
-                // Upload placeId and name to crowdzeeker database.
-                btnUpload.setVisibility(View.VISIBLE);
-                btnUpload.setText("Add This Crowd");
-                btnUpload.setOnClickListener(new View.OnClickListener() {
+//============= After selecting place insert to database immediately ========================//
+                new InsertToDatabase(){
                     @Override
-                    public void onClick(View v) {
-                        new InsertToDatabase(){
-                            @Override
-                            public void onPostExecute(String result) {
-//                                Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();
-                                Snackbar.make(getActivity().findViewById(android.R.id.content), result,
-                                        Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                            }
-                        }.execute(place.getId(),
-                                place.getName().toString(), getCity(place.getAddress()));
-                        // Changed button's text to "Added" and cancel onclicklistener
-                        btnUpload.setOnClickListener(null);
-                        btnUpload.setText("Added");
+                    public void onPostExecute(String result) {
+                        Snackbar.make(getActivity().findViewById(R.id.root_add_new_crowd),
+                                result, Snackbar.LENGTH_LONG).setAction("UNDO", new InsertDatabaseListener()).show();
                     }
-                });
+                }.execute(place.getId(),
+                        place.getName().toString(), getCity(place.getAddress()));
+
+                setLocation(place.getLatLng(), place.getName().toString());
 
 
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
@@ -226,14 +188,11 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
 
     }
 
-    /*
- * Helper methods to format information about a place nicely.
- */
-    public static Spanned formatPlaceDetails(Resources res, CharSequence name, String id,
-                                             CharSequence address, CharSequence phoneNumber,
-                                             Uri websiteUri) {
-        return Html.fromHtml(res.getString(R.string.place_details, name, id, address, phoneNumber,
-                websiteUri));
+    public void setLocation(LatLng latLng, String title) {
+        mLatLng = latLng;
+        // Add a marker in mLatLng and move the camera
+        mMap.addMarker(new MarkerOptions().position(mLatLng).title(title).snippet("Added To Your Crowds"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(mLatLng));
     }
 
     private static String getCity(CharSequence address) {
@@ -299,6 +258,16 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public class InsertDatabaseListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+
+//            Log.d(TAG, "Action detected");
+
+        }
     }
 
 }

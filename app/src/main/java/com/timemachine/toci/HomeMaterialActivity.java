@@ -64,47 +64,64 @@ public class HomeMaterialActivity extends AppCompatActivity
         // update the main content by replacing fragments
         Fragment fragment = null;
 
-        // if user preferences exist, load fragments accordingly
-        if (mAppPrefs.getFavorite_cities() != null) {
-
-            mCityFavorites = new ArrayList<>(mAppPrefs.getFavorite_cities());
-            int totalCities = mCityFavorites.size();
-
-            if (position == 0) {
+        switch (position) {
+            case 0:
                 fragment = new SearchFragment();
-            }
-            for (int i = 1; i <= totalCities; i++) {
-                if (position == i) {
-                    fragment = FavoriteCityFragment.newInstance(mCityFavorites.get(i-1));
-                }
-            }
-            if (position == (totalCities+1)) {
+                break;
+            case 1:
                 fragment = FavoriteCrowdsFragment.newInstance(mAppPrefs.getFav_crowds());
-            } else if (position == (totalCities+2)) {
+                break;
+            case 2:
                 fragment = AddNewCrowdFragment.newInstance();
-            } else if (position == (totalCities+3)) {
+                break;
+            case 3:
                 fragment = new LoginFragment();
-            } else if (position == (totalCities+4)) {
+                break;
+            case 4:
                 fragment = new AboutUsFragment();
-            }
-        } else { // otherwise load basic list of fragments
-            switch (position) {
-                case 0:
-                    fragment = new SearchFragment();
-                    break;
-                case 1:
-                    fragment = FavoriteCrowdsFragment.newInstance(mAppPrefs.getFav_crowds());
-                    break;
-                case 2:
-                    fragment = AddNewCrowdFragment.newInstance();
-                    break;
-                case 3:
-                    fragment = new LoginFragment();
-                    break;
-                case 4:
-                    fragment = new AboutUsFragment();
-            }
         }
+
+        // if user preferences exist, load fragments accordingly
+//        if (mAppPrefs.getFavorite_cities() != null) {
+//
+//            mCityFavorites = new ArrayList<>(mAppPrefs.getFavorite_cities());
+//            int totalCities = mCityFavorites.size();
+//
+//            if (position == 0) {
+//                fragment = new SearchFragment();
+//            }
+//            for (int i = 1; i <= totalCities; i++) {
+//                if (position == i) {
+//                    fragment = FavoriteCityFragment.newInstance(mCityFavorites.get(i-1));
+//                }
+//            }
+//            if (position == (totalCities+1)) {
+//                fragment = FavoriteCrowdsFragment.newInstance(mAppPrefs.getFav_crowds());
+//            } else if (position == (totalCities+2)) {
+//                fragment = AddNewCrowdFragment.newInstance();
+//            } else if (position == (totalCities+3)) {
+//                fragment = new LoginFragment();
+//            } else if (position == (totalCities+4)) {
+//                fragment = new AboutUsFragment();
+//            }
+//        } else { // otherwise load basic list of fragments
+//            switch (position) {
+//                case 0:
+//                    fragment = new SearchFragment();
+//                    break;
+//                case 1:
+//                    fragment = FavoriteCrowdsFragment.newInstance(mAppPrefs.getFav_crowds());
+//                    break;
+//                case 2:
+//                    fragment = AddNewCrowdFragment.newInstance();
+//                    break;
+//                case 3:
+//                    fragment = new LoginFragment();
+//                    break;
+//                case 4:
+//                    fragment = new AboutUsFragment();
+//            }
+//        }
 
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();

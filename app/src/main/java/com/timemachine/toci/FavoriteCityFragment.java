@@ -116,7 +116,7 @@ public class FavoriteCityFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_refresh, menu);
+        inflater.inflate(R.menu.menu_favorites_refresh, menu);
     }
 
     @Override

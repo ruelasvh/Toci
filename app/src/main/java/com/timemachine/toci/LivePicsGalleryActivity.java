@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -24,17 +23,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.squareup.picasso.Picasso;
 
@@ -91,7 +87,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     /**
      * Layout which holds details about crowds
      */
-    FrameLayout mDetailsContainer;
+    RelativeLayout mDetailsLayout;
 
     /**
      * The api client used in connecting to google places api
@@ -134,85 +130,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         // Set views for the crowds details
-        mDetailsContainer = (FrameLayout) findViewById(R.id.details_container);
-        final TextView mAddress = (TextView) findViewById(R.id.address);
-        final ImageView mPhone = (ImageView) findViewById(R.id.phone);
-        final ImageView mMap = (ImageView) findViewById(R.id.map);
-        final ImageView mWeb = (ImageView) findViewById(R.id.web);
-
-        // Instantiate google location api
-        buildGoogleApiClient();
-        // Get place by its place id, the id was passed in previous activity/liveCrowdsAdapter
-        Places.GeoDataApi.getPlaceById(mGoogleApiClient, getIntent().getExtras().getString("id"))
-                .setResultCallback(new ResultCallback<PlaceBuffer>() {
-                    @Override
-                    public void onResult(PlaceBuffer places) {
-                        if (places.getStatus().isSuccess() && places.getCount() > 0) {
-                            // Finally get the place here
-                            final Place myPlace = places.get(0);
-                            // Do stuff with the place
-                            mAddress.setText(formatPlaceDetails(getResources(), myPlace.getName(),
-                                    getShortAddress(myPlace.getAddress())));
-                            // Set phone action
-                            final CharSequence phone = myPlace.getPhoneNumber();
-                            mPhone.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    String dialIntentUri = "tel:" + phone;
-                                    Intent intent = new Intent(Intent.ACTION_DIAL);
-                                    intent.setData(Uri.parse(dialIntentUri));
-                                    startActivity(intent);
-                                }
-                            });
-                            // Set map action
-                            final CharSequence address = myPlace.getAddress();
-                            final String nameLabel = myPlace.getName().toString();
-                            mMap.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    Uri gmmIntentUri = Uri.parse("geo:0,0?q="+address+"("+Uri.encode(nameLabel)+")");
-                                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                                    mapIntent.setPackage("com.google.android.apps.maps");
-                                    if (mapIntent.resolveActivity(getPackageManager()) != null) {
-                                        startActivity(mapIntent);
-                                    }
-                                }
-                            });
-                            // Set web action
-                            final String url;
-                            if (myPlace.getWebsiteUri() != null) {
-                                url = myPlace.getWebsiteUri().toString();
-                            }
-                            else {
-                                url = null;
-                            }
-                            mWeb.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-//                                    if (!url.startsWith("https://") && !url.startsWith("http://")){
-//                                        url = "http://" + url;
-//                                    }
-                                    if (url != null) {
-                                        Intent openUrlIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                                        startActivity(openUrlIntent);
-                                    }
-                                    else {
-                                        Snackbar.make(findViewById(android.R.id.content), "Crowd Has No Website",
-                                                Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                                    }
-                                }
-                            });
-                            // Log of place if found
-                            Log.i(TAG, "Place found: " + myPlace.getName());
-                        } else {
-                            // Log if place is not found
-                            Log.e(TAG, "Place not found");
-                        }
-                        // Release place buffer to avoid memory leaks
-                        places.release();
-                    }
-                });
-
+        mDetailsLayout = (RelativeLayout) findViewById(R.id.details_container);
 
         // ImageView which takes up space so that onclicklistener from livepic is not triggered
         ImageView detailsView = (ImageView) findViewById(R.id.image_container);
@@ -691,8 +609,9 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_livepiclayout, container, false);
-            final ImageView image = (ImageView) rootView.findViewById(R.id.livePic);
-            image.setOnClickListener(new View.OnClickListener() {
+            final ImageView liveImageView = (ImageView) rootView.findViewById(R.id.livePic);
+            final TextView timeStampView = (TextView) getDetailsContainer().findViewById(R.id.timestamp);
+            liveImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (getActionBar().isShowing()) {
@@ -713,23 +632,38 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
             switch (this.getPageNum()) {
                 case 1:
                     Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-1 ).get(0) )
-                            .into( image );
+                            .into( liveImageView );
+//                    timeStampView.setText( picUrls.get( picUrls.size()-1 ).get(1));
+//                    timeStampView.setText("First image");
+                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("First image");
                     break;
                 case 2:
                     Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-2 ).get(0) )
-                            .into(image);
+                            .into(liveImageView);
+//                    timeStampView.setText( picUrls.get( picUrls.size()-2 ).get(1) );
+//                    timeStampView.setText("Second image");
+                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("Second image");
                     break;
                 case 3:
                     Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-3 ).get(0) )
-                            .into(image);
+                            .into(liveImageView);
+//                    timeStampView.setText( picUrls.get( picUrls.size()-3 ).get(1) );
+//                    timeStampView.setText("Third image");
+                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("Third image");
                     break;
                 case 4:
                     Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-4 ).get(0) )
-                            .into( image );
+                            .into( liveImageView );
+//                    timeStampView.setText( picUrls.get( picUrls.size()-4 ).get(1) );
+//                    timeStampView.setText("Fourth image");
+                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("Fourth image");
                     break;
                 case 5:
                     Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-5 ).get(0) )
-                            .into( image );
+                            .into( liveImageView );
+//                    timeStampView.setText( picUrls.get( picUrls.size()-5 ).get(1) );
+//                    timeStampView.setText("Fifth image");
+                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("Fifth image");
                     break;
 
             }
@@ -746,8 +680,8 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
             return ((LivePicsGalleryActivity) getActivity()).getSupportActionBar();
         }
 
-        private FrameLayout getDetailsContainer() {
-            return ((LivePicsGalleryActivity) getActivity()).mDetailsContainer;
+        private RelativeLayout getDetailsContainer() {
+            return ((LivePicsGalleryActivity) getActivity()).mDetailsLayout;
         }
 
         // To animate details container from bottom to top
