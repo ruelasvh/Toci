@@ -6,7 +6,7 @@ import java.util.HashMap;
 /**
  * Created by Victor Ruelas on 3/7/16.
  */
-public class LiveCrowdRow {
+public class LiveCrowd {
 
     private String id;
     private String title;
@@ -15,12 +15,12 @@ public class LiveCrowdRow {
     private String distance;
     private HashMap<Integer, ArrayList<String>> picUrls;
 
-    public LiveCrowdRow() {
+    public LiveCrowd() {
         // Default constructor
     }
 
-    public LiveCrowdRow(String id, String title, String city, String timeago,
-                        String distance, HashMap picUrls) {
+    public LiveCrowd(String id, String title, String city, String timeago,
+                     String distance, HashMap picUrls) {
         super();
         this.id = id;
         this.title = title;
@@ -58,7 +58,7 @@ public class LiveCrowdRow {
 
     @Override
     public String toString() {
-        return "LiveCrowdRow [id=" + id + ", title=" + title + ", " +
+        return "LiveCrowd [id=" + id + ", title=" + title + ", " +
                 "city=" + city + ", timeago=" + timeago + ", " +
                 "distance=" + distance + ", picUrls=" + "]";
     }
