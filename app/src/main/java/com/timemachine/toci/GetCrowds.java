@@ -29,24 +29,24 @@ import java.util.HashMap;
  * Created by Victor Ruelas on 3/17/16.
  * Copyright (c) 2016 CrowdZeeker, LLC. All rights reserved.
  */
-public class GetCrowdsv2 extends AsyncTask<String, Void, LiveCrowdRow[]> {
+public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
 
-    private final static String TAG = GetCrowdsv2.class.getSimpleName();
+    private final static String TAG = GetCrowds.class.getSimpleName();
 
     public interface AsyncResponse {
-        void onAsyncTaskFinish(LiveCrowdRow[] crowds);
+        void onAsyncTaskFinish(LiveCrowd[] crowds);
     }
 
     Context context;
 
     public AsyncResponse delegate = null;
 
-    public GetCrowdsv2(AsyncResponse delegate) {
+    public GetCrowds(AsyncResponse delegate) {
         this.delegate = delegate;
     }
 
     @Override
-    protected LiveCrowdRow[] doInBackground (String...params){
+    protected LiveCrowd[] doInBackground (String...params){
 
         JSONArray result;
 
@@ -54,11 +54,11 @@ public class GetCrowdsv2 extends AsyncTask<String, Void, LiveCrowdRow[]> {
 
         result = getList(fromCity);
 
-        LiveCrowdRow[] crowds = null;
+        LiveCrowd[] crowds = null;
 
         if (result != null) {
 
-            crowds = new LiveCrowdRow[result.length()];
+            crowds = new LiveCrowd[result.length()];
             try {
 
                 for (int i = 0; i < result.length(); i++) {
@@ -68,7 +68,7 @@ public class GetCrowdsv2 extends AsyncTask<String, Void, LiveCrowdRow[]> {
                     String timeAgo = picUrls.get(picUrls.size()-1).get(1);
                     String distance = "";
 
-                    crowds[i] = new LiveCrowdRow(crowdId, crowdName,
+                    crowds[i] = new LiveCrowd(crowdId, crowdName,
                             fromCity, timeAgo, distance, picUrls);
                 }
 
@@ -85,7 +85,7 @@ public class GetCrowdsv2 extends AsyncTask<String, Void, LiveCrowdRow[]> {
     }
 
     @Override
-    protected void onPostExecute (LiveCrowdRow[] crowds) {
+    protected void onPostExecute (LiveCrowd[] crowds) {
         super.onPostExecute(crowds);
 
         delegate.onAsyncTaskFinish(crowds);
@@ -109,7 +109,7 @@ public class GetCrowdsv2 extends AsyncTask<String, Void, LiveCrowdRow[]> {
             HttpResponse httpResponse = client.execute(request);
             HttpEntity httpEntity = httpResponse.getEntity();
             response = EntityUtils.toString(httpEntity);
-            Log.d(TAG, "GetCrowdsv2.getList response is: " + response);
+            Log.d(TAG, "GetCrowds.getList response is: " + response);
             return new JSONArray(response);
 
 
@@ -126,7 +126,7 @@ public class GetCrowdsv2 extends AsyncTask<String, Void, LiveCrowdRow[]> {
         return null;
     }
 
-    private HashMap<Integer, ArrayList<String>> getPicUrls(String crowdCity, String crowdId) {
+    public static HashMap<Integer, ArrayList<String>> getPicUrls(String crowdCity, String crowdId) {
 
         String response;
 
@@ -184,7 +184,7 @@ public class GetCrowdsv2 extends AsyncTask<String, Void, LiveCrowdRow[]> {
         /** finish adding picture urls */
     }
 
-    String getTimeAgo(String url) {
+    public static String getTimeAgo(String url) {
 
         try {
             // get timestamp from url
