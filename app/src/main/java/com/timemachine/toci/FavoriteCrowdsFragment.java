@@ -2,37 +2,36 @@ package com.timemachine.toci;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
+import android.support.design.widget.SwipeDismissBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
+import android.widget.BaseAdapter;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.vision.Frame;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -41,16 +40,17 @@ import java.util.Set;
  * create an instance of this fragment.
  */
 public class FavoriteCrowdsFragment extends Fragment {
+    // Tag to be used for debugging
     private static final String TAG = HomeMaterialActivity.class.getSimpleName();
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
-
     // TODO: Rename and change types of parameters
     private ArrayList<String> mParam1;
-
+    // Used for setting Fragment's title in parent activity
+    private static final String SECTION_TITLE = "FavoriteCrowdsFragment";
     // Adapter which loads crowds
-    private LiveCrowdRowAdapterv2 mLiveCrowdRowAdapterv2;
+    private ListAdapter mListAdapter;
     // ListView which will hold the crowds
     private ListView mListView;
     // Spinner which shows while adapter loads crowds
@@ -76,10 +76,10 @@ public class FavoriteCrowdsFragment extends Fragment {
      * @return A new instance of fragment FavoriteCrowdsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static FavoriteCrowdsFragment newInstance(Set<String> param1) {
+    public static FavoriteCrowdsFragment newInstance(/*Set<String> param1*/) {
         FavoriteCrowdsFragment fragment = new FavoriteCrowdsFragment();
         Bundle args = new Bundle();
-        args.putStringArrayList(ARG_PARAM1, new ArrayList<>(param1));
+//        args.putStringArrayList(ARG_PARAM1, new ArrayList<>(param1));
         fragment.setArguments(args);
         return fragment;
     }
@@ -89,11 +89,15 @@ public class FavoriteCrowdsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         // This fragment has it's own toolbar menu, so display it
         setHasOptionsMenu(true);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getStringArrayList(ARG_PARAM1);
-            // Set fragment's title
-            setFragmentTitle(getActivity(), "Favorite Crowds");
-        }
+
+        // Assign value passed from parent activity to mParam1
+//        if (getArguments() != null) {
+//            mParam1 = getArguments().getStringArrayList(ARG_PARAM1);
+//        }
+
+        // Set up preferences
+        mContext = getContext();
+        mAppPrefs = new AppPrefs(mContext);
     }
 
     @Override
@@ -134,12 +138,28 @@ public class FavoriteCrowdsFragment extends Fragment {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+                mSwipeRefreshLayout.setRefreshing(true);
+                displayCrowds();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof FavoriteCityFragment.OnFragmentInteractionListener) {
-            mListener = (FavoriteCrowdsFragment.OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
+
+        // Set Fragment's title in parent activity
+        ((HomeMaterialActivity) context).onSectionAttached(SECTION_TITLE);
+
+        try {
+            mListener = (OnFragmentInteractionListener) context;
+        } catch (ClassCastException e){
+            throw new ClassCastException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
     }
@@ -165,12 +185,9 @@ public class FavoriteCrowdsFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public void setFragmentTitle(Context context, String title) {
-        ((HomeMaterialActivity) context).onSectionAttached(title);
-    }
-
     private void displayCrowds() {
-        LiveCrowdRow[] crowds = SerializeLiveCrowdRow.fromJson(mParam1);
+//        LiveCrowd[] crowds = SerializeLiveCrowd.fromJson(mParam1);
+        LiveCrowd[] crowds = SerializeLiveCrowd.fromJson(new ArrayList<>(mAppPrefs.getFav_crowds()));
 
 //        Log.d(TAG, Integer.toString(crowds.length));
 
@@ -180,10 +197,10 @@ public class FavoriteCrowdsFragment extends Fragment {
             mProgressBar.setVisibility(View.VISIBLE);
             mListView = (ListView) getActivity().findViewById(R.id.crowds_listview);
 
-            mLiveCrowdRowAdapterv2 = new LiveCrowdRowAdapterv2(getActivity(), R.layout.row, crowds);
-            mLiveCrowdRowAdapterv2.notifyDataSetChanged();
-            if (!mLiveCrowdRowAdapterv2.isEmpty()) mProgressBar.setVisibility(View.GONE);
-            mListView.setAdapter(mLiveCrowdRowAdapterv2);
+            mListAdapter = new ListAdapter(crowds);
+            mListAdapter.notifyDataSetChanged();
+            if (!mListAdapter.isEmpty()) mProgressBar.setVisibility(View.GONE);
+            mListView.setAdapter(mListAdapter);
             mSwipeRefreshLayout.setRefreshing(false);
 
 
@@ -228,6 +245,129 @@ public class FavoriteCrowdsFragment extends Fragment {
             RelativeLayout.LayoutParams layoutParamsSearchText = (RelativeLayout.LayoutParams) searchText.getLayoutParams();
             layoutParamsSearchText.addRule(RelativeLayout.CENTER_IN_PARENT);
             searchText.setLayoutParams(layoutParamsSearchText);
+        }
+    }
+
+    class ListAdapter extends BaseAdapter {
+
+        List<LiveCrowd> crowdsList;
+
+        public ListAdapter(LiveCrowd[] crowds) {
+            this.crowdsList = new ArrayList<>(Arrays.asList(crowds));
+        }
+
+        @Override
+        public int getCount() {
+            return crowdsList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return crowdsList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            final ViewHolder viewHolder;
+
+            if (convertView == null) {
+                convertView = getActivity().getLayoutInflater().inflate(R.layout.rowv2, null);
+                viewHolder = new ViewHolder(convertView);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+                Picasso.with(getContext()).cancelRequest(viewHolder.livepic);
+            }
+
+            final LiveCrowd crowd = crowdsList.get(position);
+            viewHolder.title.setText(crowd.getTitle());
+            viewHolder.timeago.setText(crowd.getTimeago());
+            viewHolder.distance.setText(crowd.getDistance());
+            viewHolder.livepic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), LivePicsGalleryActivity.class);
+                    intent.putExtra("crowd", SerializeLiveCrowd.toJson(crowd));
+                    getContext().startActivity(intent);
+                }
+            });
+
+            Picasso.with(getContext()).load( crowd.getPicUrls().get( crowd.getPicUrls().size() - 1).get(0) )
+                    .into( viewHolder.livepic);
+
+            final CardView cardView = viewHolder.cardView;
+            final CoordinatorLayout coordinatorLayout = viewHolder.coordinatorLayout;
+            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) cardView.getLayoutParams();
+            final SwipeDismissBehavior<CardView> behavior = new SwipeDismissBehavior<>();
+            behavior.setSwipeDirection(SwipeDismissBehavior.SWIPE_DIRECTION_END_TO_START);
+            behavior.setListener(new SwipeDismissBehavior.OnDismissListener() {
+
+                @Override
+                public void onDismiss(final View view) {
+                    crowdsList.remove(position);
+                    mAppPrefs.removeFav_crowd(crowd);
+                    notifyDataSetChanged();
+                    // Debug
+                    if (mAppPrefs.getFav_crowds() != null) {
+                        for (String element : mAppPrefs.getFav_crowds()) {
+                            Log.i(TAG, element);
+                        }
+                    }                    Snackbar.make(getActivity().findViewById(R.id.crowds_listview),
+                            "Removed " + crowd.getTitle(), Snackbar.LENGTH_LONG)
+                            .setAction("UNDO", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    crowdsList.add(position, crowd);
+//                                    mAppPrefs.setFav_crowd(crowd);
+                                    notifyDataSetChanged();
+                                    // Debug
+                                    if (mAppPrefs.getFav_crowds() != null) {
+                                        for (String element : mAppPrefs.getFav_crowds()) {
+                                            Log.i(TAG, element);
+                                        }
+                                    }                                }
+                            })
+                            .show();
+                }
+
+                @Override
+                public void onDragStateChanged(int i) {
+                }
+            });
+            params.setBehavior(behavior);
+
+            coordinatorLayout.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return behavior.onTouchEvent(coordinatorLayout, cardView, event);
+                }
+            });
+
+            return convertView;
+        }
+
+        class ViewHolder {
+
+            CoordinatorLayout coordinatorLayout;
+            CardView cardView;
+            ImageButton livepic;
+            TextView title;
+            TextView timeago;
+            TextView distance;
+
+            public ViewHolder(View convertView) {
+                coordinatorLayout = (CoordinatorLayout) convertView.findViewById(R.id.coordinatorLayout);
+                cardView = (CardView) convertView.findViewById(R.id.cardView);
+                livepic = (ImageButton) convertView.findViewById(R.id.livepic);
+                title = (TextView) convertView.findViewById(R.id.title);
+                timeago = (TextView) convertView.findViewById(R.id.timeago);
+                distance = (TextView) convertView.findViewById(R.id.distance);
+            }
         }
     }
 }

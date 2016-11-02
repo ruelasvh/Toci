@@ -1,10 +1,11 @@
 package com.timemachine.toci;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +21,13 @@ import android.widget.ScrollView;
  * Use the {@link AboutUsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AboutUsFragment extends android.support.v4.app.Fragment {
+public class AboutUsFragment extends Fragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
-
     // TODO: Rename and change types of parameters
     private String mParam1;
+    // Used for setting Fragment's title in parent activity
+    private static final String SECTION_TITLE = "AboutUsFragment";
 
     private OnFragmentInteractionListener mListener;
 
@@ -88,23 +90,18 @@ public class AboutUsFragment extends android.support.v4.app.Fragment {
 
     }
 
-    /*
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        ((HomeMaterialActivity) activity).onSectionAttached(
-                getArguments().getInt(ARG_SECTION_NUMBER));
-
-    }
-    */
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // Set Fragment's title in parent activity
+        ((HomeMaterialActivity) context).onSectionAttached(SECTION_TITLE);
+
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (OnFragmentInteractionListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
+            throw new ClassCastException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
     }

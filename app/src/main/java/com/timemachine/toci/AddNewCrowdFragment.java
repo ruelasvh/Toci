@@ -41,7 +41,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback {
 
     // used to set title to fragment when it's attached to the activity
-    private static final String ARG_SECTION_TITLE = "AddNewCrowdFragment";
+    private static final String SECTION_TITLE = "AddNewCrowdFragment";
 
     final private int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
 
@@ -228,13 +228,13 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        ((HomeMaterialActivity) context).onSectionAttached(
-                ARG_SECTION_TITLE);
+        // Set Fragment's title in parent activity
+        ((HomeMaterialActivity) context).onSectionAttached(SECTION_TITLE);
 
-        if (context instanceof OnFragmentInteractionListener) {
+        try {
             mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
+        } catch (ClassCastException e){
+            throw new ClassCastException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
     }

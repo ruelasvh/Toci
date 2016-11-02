@@ -69,7 +69,7 @@ public class HomeMaterialActivity extends AppCompatActivity
                 fragment = new SearchFragment();
                 break;
             case 1:
-                fragment = FavoriteCrowdsFragment.newInstance(mAppPrefs.getFav_crowds());
+                fragment = FavoriteCrowdsFragment.newInstance();
                 break;
             case 2:
                 fragment = AddNewCrowdFragment.newInstance();
@@ -133,26 +133,26 @@ public class HomeMaterialActivity extends AppCompatActivity
 
     public void onSectionAttached(String section) {
 
-        if (mAppPrefs.getFavorite_cities() != null) {
-
-            for (int i = 0; i < mCityFavorites.size(); i++) {
-                if (section == mCityFavorites.get(i)) {
-                    mTitle = mCityFavorites.get(i);
-                }
-            }
+        switch (section) {
+            case "SearchFragment":
+                mTitle = getString(R.string.app_name);
+                break;
+            case "AddNewCrowdFragment":
+                mTitle = "Add New Crowd";
+                break;
+            case "FavoriteCrowdsFragment":
+                mTitle = "Favorite Crowds";
+                break;
+            case "LoginFragment":
+                mTitle = "Log In";
+                break;
+            case "AboutUsFragment":
+                mTitle = "About Us";
+                break;
+            default:
+                break;
         }
 
-        if (section == "SearchFragment") {
-            mTitle = getString(R.string.app_name);
-        }
-
-        if (section == "AddNewCrowdFragment") {
-            mTitle = "Add New Crowd";
-        }
-        setTitle();
-    }
-
-    private void setTitle() {
         mToolbar.setTitle(mTitle);
     }
 

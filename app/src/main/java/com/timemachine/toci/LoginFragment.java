@@ -1,10 +1,10 @@
 package com.timemachine.toci;
 
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +19,13 @@ import android.widget.TextView;
  * Use the {@link LoginFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LoginFragment extends android.support.v4.app.Fragment {
+public class LoginFragment extends Fragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
-
     // TODO: Rename and change types of parameters
     private String mParam1;
+    // Used for setting Fragment's title in parent activity
+    private static final String SECTION_TITLE = "LoginFragment";
 
     private OnFragmentInteractionListener mListener;
 
@@ -51,15 +52,16 @@ public class LoginFragment extends android.support.v4.app.Fragment {
         // Required empty public constructor
     }
 
-    /*
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_SECTION_NUMBER);
-        }
+//        if (getArguments() != null) {
+//            mParam1 = getArguments().getString(ARG_SECTION_NUMBER);
+//        }
     }
-    */
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -79,23 +81,17 @@ public class LoginFragment extends android.support.v4.app.Fragment {
         }
     }
 
-    /*
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        ((HomeMaterialActivity) activity).onSectionAttached(
-                getArguments().getInt(ARG_SECTION_NUMBER));
+    public void onAttach(Context context) {
+        super.onAttach(context);
 
-    }
-    */
+        // Set Fragment's title in parent activity
+        ((HomeMaterialActivity) context).onSectionAttached(SECTION_TITLE);
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (OnFragmentInteractionListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
+            throw new ClassCastException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
     }
