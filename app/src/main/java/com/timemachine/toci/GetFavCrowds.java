@@ -7,7 +7,6 @@ import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -31,15 +30,22 @@ import java.util.HashMap;
  */
 public class GetFavCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
 
+    public interface AsyncResponse {
+        void onAsyncTaskFinish(LiveCrowd[] crowds);
+    }
+
     private final static String TAG = GetFavCrowds.class.getSimpleName();
+
+    public AsyncResponse delegate = null;
 
     // Helper fields to help store favorite settings
     private Context mContext;
     AppPrefs mAppPrefs;
 
 
-    public GetFavCrowds(Context context) {
-        mContext = context;
+    public GetFavCrowds(Context context, AsyncResponse delegate) {
+        this.mContext = context;
+        this.delegate = delegate;
     }
 
     @Override
@@ -77,6 +83,7 @@ public class GetFavCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
     protected void onPostExecute (LiveCrowd[] crowds) {
         super.onPostExecute(crowds);
 
+        delegate.onAsyncTaskFinish(crowds);
 //        Log.d(TAG, crowds.toString());
     }
 

@@ -41,7 +41,7 @@ import java.util.List;
  */
 public class FavoriteCrowdsFragment extends Fragment {
     // Tag to be used for debugging
-    private static final String TAG = HomeMaterialActivity.class.getSimpleName();
+    private static final String TAG = FavoriteCrowdsFragment.class.getSimpleName();
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -186,67 +186,85 @@ public class FavoriteCrowdsFragment extends Fragment {
     }
 
     private void displayCrowds() {
-//        LiveCrowd[] crowds = SerializeLiveCrowd.fromJson(mParam1);
-        LiveCrowd[] crowds = SerializeLiveCrowd.fromJson(new ArrayList<>(mAppPrefs.getFav_crowds()));
 
-//        Log.d(TAG, Integer.toString(crowds.length));
+        new GetFavCrowds(getContext(), new GetFavCrowds.AsyncResponse() {
+            @Override
+            public void onAsyncTaskFinish(LiveCrowd[] crowds) {
+                mProgressBar = (ProgressBar) getActivity().findViewById(R.id.spinner);
+                mProgressBar.setVisibility(View.VISIBLE);
+                mListView = (ListView) getActivity().findViewById(R.id.crowds_listview);
 
-        mProgressBar = (ProgressBar) getActivity().findViewById(R.id.spinner);
-
-        if (crowds.length != 0) {
-            mProgressBar.setVisibility(View.VISIBLE);
-            mListView = (ListView) getActivity().findViewById(R.id.crowds_listview);
-
-            mListAdapter = new ListAdapter(crowds);
-            mListAdapter.notifyDataSetChanged();
-            if (!mListAdapter.isEmpty()) mProgressBar.setVisibility(View.GONE);
-            mListView.setAdapter(mListAdapter);
-            mSwipeRefreshLayout.setRefreshing(false);
-
-
-        }
-        else {
-            mProgressBar.setVisibility(View.GONE);
-
-            final ImageButton searchButton = new ImageButton(getActivity());
-            searchButton.setId('1');
-            searchButton.setBackgroundColor(getResources().getColor(R.color.transparent));
-            searchButton.setImageResource(R.drawable.ic_search_white_48dp);
-            searchButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // Launch Fragment
-                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(R.id.container, new SearchFragment());
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
-                }
-            });
-
-            final TextView searchText = new TextView(getActivity());
-            searchText.setId('0');
-            searchText.setText("Search");
-            searchText.setTextColor(getResources().getColor(R.color.white));
-            searchText.setTextSize(24.f);
-//            searchText.setTypeface(null, Typeface.BOLD);
-
-
-            RelativeLayout rootLayout = (RelativeLayout)getActivity().findViewById(R.id.root);
-            rootLayout.setGravity(Gravity.CENTER);
-            rootLayout.addView(searchButton);
-            rootLayout.addView(searchText);
-
-            RelativeLayout.LayoutParams layoutParamsSearchButton = (RelativeLayout.LayoutParams) searchButton.getLayoutParams();
-
-            layoutParamsSearchButton.addRule(RelativeLayout.ABOVE, searchText.getId());
-            layoutParamsSearchButton.addRule(RelativeLayout.CENTER_IN_PARENT);
-            searchButton.setLayoutParams(layoutParamsSearchButton);
-
-            RelativeLayout.LayoutParams layoutParamsSearchText = (RelativeLayout.LayoutParams) searchText.getLayoutParams();
-            layoutParamsSearchText.addRule(RelativeLayout.CENTER_IN_PARENT);
-            searchText.setLayoutParams(layoutParamsSearchText);
-        }
+                mListAdapter = new ListAdapter(crowds);
+                mListAdapter.notifyDataSetChanged();
+                if (!mListAdapter.isEmpty()) mProgressBar.setVisibility(View.GONE);
+                mListView.setAdapter(mListAdapter);
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        }).execute();
     }
+
+//    private void displayCrowds() {
+////        LiveCrowd[] crowds = SerializeLiveCrowd.fromJson(mParam1);
+//        LiveCrowd[] crowds = SerializeLiveCrowd.fromJson(new ArrayList<>(mAppPrefs.getFav_crowds()));
+//
+////        Log.d(TAG, Integer.toString(crowds.length));
+//
+//        mProgressBar = (ProgressBar) getActivity().findViewById(R.id.spinner);
+//
+//        if (crowds.length != 0) {
+//            mProgressBar.setVisibility(View.VISIBLE);
+//            mListView = (ListView) getActivity().findViewById(R.id.crowds_listview);
+//
+//            mListAdapter = new ListAdapter(crowds);
+//            mListAdapter.notifyDataSetChanged();
+//            if (!mListAdapter.isEmpty()) mProgressBar.setVisibility(View.GONE);
+//            mListView.setAdapter(mListAdapter);
+//            mSwipeRefreshLayout.setRefreshing(false);
+//
+//
+//        }
+//        else {
+//            mProgressBar.setVisibility(View.GONE);
+//
+//            final ImageButton searchButton = new ImageButton(getActivity());
+//            searchButton.setId('1');
+//            searchButton.setBackgroundColor(getResources().getColor(R.color.transparent));
+//            searchButton.setImageResource(R.drawable.ic_search_white_48dp);
+//            searchButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    // Launch Fragment
+//                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+//                    fragmentTransaction.replace(R.id.container, new SearchFragment());
+//                    fragmentTransaction.addToBackStack(null);
+//                    fragmentTransaction.commit();
+//                }
+//            });
+//
+//            final TextView searchText = new TextView(getActivity());
+//            searchText.setId('0');
+//            searchText.setText("Search");
+//            searchText.setTextColor(getResources().getColor(R.color.white));
+//            searchText.setTextSize(24.f);
+////            searchText.setTypeface(null, Typeface.BOLD);
+//
+//
+//            RelativeLayout rootLayout = (RelativeLayout)getActivity().findViewById(R.id.root);
+//            rootLayout.setGravity(Gravity.CENTER);
+//            rootLayout.addView(searchButton);
+//            rootLayout.addView(searchText);
+//
+//            RelativeLayout.LayoutParams layoutParamsSearchButton = (RelativeLayout.LayoutParams) searchButton.getLayoutParams();
+//
+//            layoutParamsSearchButton.addRule(RelativeLayout.ABOVE, searchText.getId());
+//            layoutParamsSearchButton.addRule(RelativeLayout.CENTER_IN_PARENT);
+//            searchButton.setLayoutParams(layoutParamsSearchButton);
+//
+//            RelativeLayout.LayoutParams layoutParamsSearchText = (RelativeLayout.LayoutParams) searchText.getLayoutParams();
+//            layoutParamsSearchText.addRule(RelativeLayout.CENTER_IN_PARENT);
+//            searchText.setLayoutParams(layoutParamsSearchText);
+//        }
+//    }
 
     class ListAdapter extends BaseAdapter {
 
@@ -313,6 +331,7 @@ public class FavoriteCrowdsFragment extends Fragment {
                     mAppPrefs.removeFav_crowd(crowd);
                     notifyDataSetChanged();
                     // Debug
+                    Log.d(TAG, crowd.toString());
                     if (mAppPrefs.getFav_crowds() != null) {
                         for (String element : mAppPrefs.getFav_crowds()) {
                             Log.i(TAG, element);
@@ -323,7 +342,7 @@ public class FavoriteCrowdsFragment extends Fragment {
                                 @Override
                                 public void onClick(View v) {
                                     crowdsList.add(position, crowd);
-//                                    mAppPrefs.setFav_crowd(crowd);
+                                    mAppPrefs.setFav_crowd(crowd);
                                     notifyDataSetChanged();
                                     // Debug
                                     if (mAppPrefs.getFav_crowds() != null) {
