@@ -33,7 +33,7 @@ public class FavoriteCityFragment extends Fragment {
     private String mCity;
 
     // Adapter which loads crowds
-    private LiveCrowdRowAdapterv2 mLiveCrowdRowAdapterv2;
+    private LiveCrowdListAdapter mLiveCrowdListAdapter;
     // ListView that will hold the crowds
     private ListView mListView;
     // Spinner which shows while adapter loads crowds
@@ -179,18 +179,18 @@ public class FavoriteCityFragment extends Fragment {
      */
     private void displayCrowds() {
 
-        new GetCrowdsv2(new GetCrowdsv2.AsyncResponse() {
+        new GetCrowds(new GetCrowds.AsyncResponse() {
             @Override
-            public void onAsyncTaskFinish(LiveCrowdRow[] crowds) {
+            public void onAsyncTaskFinish(LiveCrowd[] crowds) {
 
                 mProgressBar = (ProgressBar) getActivity().findViewById(R.id.spinner);
                 mProgressBar.setVisibility(View.VISIBLE);
                 mListView = (ListView) getActivity().findViewById(R.id.crowds_listview);
 
-                mLiveCrowdRowAdapterv2 = new LiveCrowdRowAdapterv2(getActivity(), R.layout.row, crowds);
-                mLiveCrowdRowAdapterv2.notifyDataSetChanged();
-                if (!mLiveCrowdRowAdapterv2.isEmpty()) mProgressBar.setVisibility(View.GONE);
-                mListView.setAdapter(mLiveCrowdRowAdapterv2);
+                mLiveCrowdListAdapter = new LiveCrowdListAdapter(getActivity(), R.layout.row, crowds);
+                mLiveCrowdListAdapter.notifyDataSetChanged();
+                if (!mLiveCrowdListAdapter.isEmpty()) mProgressBar.setVisibility(View.GONE);
+                mListView.setAdapter(mLiveCrowdListAdapter);
                 mSwipeRefreshLayout.setRefreshing(false);
 
             }

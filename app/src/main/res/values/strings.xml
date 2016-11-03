@@ -11,7 +11,7 @@
     <string name="or">(or)</string>
     <string name="btnUploadToServer">Upload to Server</string>
     <string name="image_view_camera">This is a camera image</string>
-    <string name="city_hint">Enter City, e.g. Geneva</string>
+    <string name="city_hint">Enter City, e.g. Brooklyn</string>
     <string name="company_name">CrowdZeeker, LLC.</string>
     <string name="title_activity_mountain_view_ca">Mountain View, CA</string>
     <string name="title_activity_capture_image">Capture Image</string>

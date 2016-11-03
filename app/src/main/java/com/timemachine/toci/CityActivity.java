@@ -19,7 +19,7 @@ public class CityActivity extends AppCompatActivity {
 
     private static String mCity;
 
-    private LiveCrowdRowAdapterv2 adapter;
+    private LiveCrowdListAdapter adapter;
     private ProgressBar spinner;
     private ListView crowdList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -97,16 +97,6 @@ public class CityActivity extends AppCompatActivity {
                 mSwipeRefreshLayout.setRefreshing(true);
                 displayCrowds();
                 return true;
-//            case R.id.action_favorite:
-//                mAppPrefs.setFavorite_city(mCity);
-//                if (mAppPrefs.getFavorite_cities() != null) {
-//                    for (String city : mAppPrefs.getFavorite_cities()) {
-//                        Log.i(TAG, city);
-//                    }
-//                }
-//                Snackbar.make(findViewById(android.R.id.content), "Pinned To Home Menu", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//                return true;
             default:
                 return super.onOptionsItemSelected(item);
 
@@ -115,15 +105,15 @@ public class CityActivity extends AppCompatActivity {
 
     private void displayCrowds() {
 
-        new GetCrowdsv2(new GetCrowdsv2.AsyncResponse() {
+        new GetCrowds(new GetCrowds.AsyncResponse() {
             @Override
-            public void onAsyncTaskFinish(LiveCrowdRow[] crowds) {
+            public void onAsyncTaskFinish(LiveCrowd[] crowds) {
 
                 spinner = (ProgressBar) findViewById(R.id.spinner);
                 spinner.setVisibility(View.VISIBLE);
                 crowdList = (ListView) findViewById(R.id.crowds_listview);
 
-                adapter = new LiveCrowdRowAdapterv2(CityActivity.this, R.layout.row, crowds);
+                adapter = new LiveCrowdListAdapter(CityActivity.this, R.layout.row, crowds);
                 adapter.notifyDataSetChanged();
                 if (!adapter.isEmpty()) spinner.setVisibility(View.GONE);
                 crowdList.setAdapter(adapter);

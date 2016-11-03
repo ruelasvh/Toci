@@ -37,8 +37,6 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
         void onAsyncTaskFinish(LiveCrowd[] crowds);
     }
 
-    Context context;
-
     public AsyncResponse delegate = null;
 
     public GetCrowds(AsyncResponse delegate) {

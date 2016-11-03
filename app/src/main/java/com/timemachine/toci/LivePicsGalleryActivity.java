@@ -98,8 +98,12 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
      * File url to store image/video
      */
     private Uri fileUri;
-
     long totalSize = 0;
+
+    /**
+     * Variable to hold crowd passed from CityActivity
+     */
+    private static LiveCrowd thisLiveCrowd;
 
     /**
      * String array to hold picture urls passed from previous activity
@@ -118,8 +122,9 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         super.onCreate(savedInstanceState);
         setContentView(R.layout.livepics_gallery);
 
-        // Get picture urls array from previous activity
-        picUrls = (HashMap<Integer, ArrayList<String>>)getIntent().getSerializableExtra("picUrls");
+        // Get crowd from CityActivity->LiveCrowdListAdapter
+        thisLiveCrowd = SerializeLiveCrowd.fromJson(getIntent().getExtras().getString("crowd"));
+        picUrls = thisLiveCrowd.getPicUrls();
 
         // Create the adapter that will return a fragment for each of the five
         // primary sections of the activity.
@@ -141,9 +146,11 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
             }
         });
 
-        // Setup up preferences resources
+        // Set up preferences resources
         mContext = getApplicationContext();
         mAppPrefs = new AppPrefs(mContext);
+
+        Log.d(TAG, thisLiveCrowd.getPicUrls().toString());
     }
 
 
@@ -177,7 +184,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
             case R.id.action_favorite:
                 // Save to favorites
-                saveToFavs();
+                saveToFavs(thisLiveCrowd);
                 Toast.makeText(this, "Added To Favorites", Toast.LENGTH_SHORT).show();
                 return true;
 
@@ -186,55 +193,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
         }
     }
-
-    /**
-     * Launching camera app for capturing image
-     */
-
-    private void captureImage() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-        startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
-    }
-
-    /**
-     * Helper Methods for handling pictures taken
-     */
-
-    // Creating file uri to store image/video
-    public Uri getOutputMediaFileUri(int type) {
-        return Uri.fromFile(getOutputMediaFile(type));
-    }
-
-    // returning image/video
-    private static File getOutputMediaFile(int type) {
-        // External sdcard location
-        File mediaStorageDir = new File(
-                Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_PICTURES), Config.IMAGE_DIRECTORY_NAME);
-
-        // Create the storage directory if it doesn't exist
-        if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                Log.d(TAG, "Failed to create " + Config.IMAGE_DIRECTORY_NAME + " directory");
-                return null;
-            }
-        }
-
-        // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
-                Locale.getDefault()).format(new Date());
-        File mediaFile;
-        if (type == MEDIA_TYPE_IMAGE) {
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator
-                    + "IMG_" + timeStamp + ".jpg");
-        } else {
-            return null;
-        }
-        return mediaFile;
-    }
-
 
     // Store the file url as it will be null after returning from camera app
     @Override
@@ -277,59 +235,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         }
     }
 
-
-    /**
-     * Helper methods to format information about a place nicely.
-     */
-    public static Spanned formatPlaceDetails(Resources res, CharSequence name,
-                                             CharSequence address) {
-        return Html.fromHtml(res.getString(R.string.place_details_exist, name, address));
-    }
-
-    // Get short address for displaying in the details container
-    private static String getShortAddress(CharSequence address) {
-
-        String short_address = "";
-        boolean[] separators = new boolean[address.length()];
-        int[] separatorIndices = new int[5];
-        int counter = 0;
-
-        for(int j = 0; j < address.length(); j++)
-            separators[j] = false;
-
-        for(int i = 0; i < address.length(); i++) {
-            if(address.charAt(i) == ',') {
-                separators[i] = true;
-            }
-        }
-
-        for(int k = 0; k < separators.length; k++) {
-            if(separators[k]) {
-                separatorIndices[counter] = k;
-                counter++;
-            }
-        }
-        short_address = address.subSequence(0, separatorIndices[2]).toString();
-
-        return short_address;
-    }
-
-
-
-    /**
-     * Methods which builds google places api.
-     */
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(this)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(this /* AppCompatActivity */,
-                        this /* OnConnectionFailedListener */ )
-                .build();
-
-    }
-
     // Method to connect to the google places api
     @Override
     protected void onStart() {
@@ -354,6 +259,163 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     public void onConnectionFailed(ConnectionResult result) {
 
     }
+
+
+    /**
+     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+     * one of the sections/tabs/pages.
+     */
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        public SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            // getItem is called to instantiate the fragment for the given page.
+            // Return a PlaceholderFragment (defined as a static inner class below).
+            return PlaceholderFragment.newInstance(position + 1);
+        }
+
+        @Override
+        public int getCount() {
+
+            // Show total pages.
+            int num_pages = picUrls.size();
+//            int num_pages = SerializeLiveCrowd.fromJson(getIntent().getExtras().getString("crowd")).getPicUrls().size();
+            return num_pages;
+        }
+    }
+
+    /**
+     * A placeholder fragment containing a simple view.
+     */
+    public static class PlaceholderFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String ARG_SECTION_NUMBER = "section_number";
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static PlaceholderFragment newInstance(int sectionNumber) {
+            PlaceholderFragment fragment = new PlaceholderFragment();
+            Bundle args = new Bundle();
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        public PlaceholderFragment() {
+        }
+
+        public int getPageNum() {
+            return getArguments().getInt(ARG_SECTION_NUMBER, 0);
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_livepiclayout, container, false);
+            final ImageView liveImageView = (ImageView) rootView.findViewById(R.id.livePic);
+            final TextView timeStampView = (TextView) getDetailsContainer().findViewById(R.id.timestamp);
+
+            /* Set up behavior to toggle toolbar and details container */
+            liveImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (getActionBar().isShowing()) {
+                        // Hide the actionbar/toolbar
+                        getActionBar().hide();
+                        // Animation fade out of the details container
+                        slideToBottom(getDetailsContainer());
+                    } else {
+                        // Show the actionbar/toolbar
+                        getActionBar().show();
+                        // Animation fade in of the details container
+                        slideToTop(getDetailsContainer());
+                    }
+                }
+            });
+
+            /* Load pictures in pager */
+            switch (this.getPageNum()) {
+                case 1:
+                    Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-1 ).get(0) )
+                            .into( liveImageView );
+//                    timeStampView.setText( picUrls.get( picUrls.size()-1 ).get(1));
+//                    timeStampView.setText("First image");
+                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("First image");
+                    break;
+                case 2:
+                    Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-2 ).get(0) )
+                            .into(liveImageView);
+//                    timeStampView.setText( picUrls.get( picUrls.size()-2 ).get(1) );
+//                    timeStampView.setText("Second image");
+                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("Second image");
+                    break;
+                case 3:
+                    Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-3 ).get(0) )
+                            .into(liveImageView);
+//                    timeStampView.setText( picUrls.get( picUrls.size()-3 ).get(1) );
+//                    timeStampView.setText("Third image");
+                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("Third image");
+                    break;
+                case 4:
+                    Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-4 ).get(0) )
+                            .into( liveImageView );
+//                    timeStampView.setText( picUrls.get( picUrls.size()-4 ).get(1) );
+//                    timeStampView.setText("Fourth image");
+                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("Fourth image");
+                    break;
+                case 5:
+                    Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-5 ).get(0) )
+                            .into( liveImageView );
+//                    timeStampView.setText( picUrls.get( picUrls.size()-5 ).get(1) );
+//                    timeStampView.setText("Fifth image");
+                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("Fifth image");
+                    break;
+
+            }
+
+            return rootView;
+
+        }
+
+        /**
+         * Helper methods to hide actionbar/toolbar, get the details container from activity,
+         * and animate the details container
+         */
+        private android.support.v7.app.ActionBar getActionBar() {
+            return ((LivePicsGalleryActivity) getActivity()).getSupportActionBar();
+        }
+
+        private RelativeLayout getDetailsContainer() {
+            return ((LivePicsGalleryActivity) getActivity()).mDetailsLayout;
+        }
+
+        // To animate details container from bottom to top
+        public void slideToBottom(View view){
+            view.setAlpha(1.0f);
+            view.animate()
+                    .translationY(view.getHeight())
+                    .alpha(0.0f);
+        }
+
+        // To animate details container slide out from bottom to top
+        public void slideToTop(View view){
+            view.setVisibility(View.VISIBLE);
+            view.setAlpha(0.0f);
+            view.animate()
+                    .translationY(0)
+                    .alpha(1.0f);
+        }
+    } // End of PlaceHolderFragment
+
 
     /**
      * Uploading the file to server on a different thread than the main UI tread.
@@ -435,9 +497,9 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
                 entity.addPart("image", new FileBody(resizedFile));
                 entity.addPart("id",
-                        new StringBody(getIntent().getExtras().getString("id")));
+                        new StringBody(thisLiveCrowd.getId()));
                 entity.addPart("city",
-                        new StringBody(getIntent().getExtras().getString("city")));
+                        new StringBody(thisLiveCrowd.getCity()));
                 totalSize = entity.getContentLength();
                 httppost.setEntity(entity);
 
@@ -473,6 +535,104 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
     }
 
+    /**
+     * Launching camera app for capturing image
+     */
+
+    private void captureImage() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+        startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
+    }
+
+    /**
+     * Helper Methods for handling pictures taken
+     */
+
+    // Creating file uri to store image/video
+    public Uri getOutputMediaFileUri(int type) {
+        return Uri.fromFile(getOutputMediaFile(type));
+    }
+
+    // returning image/video
+    private static File getOutputMediaFile(int type) {
+        // External sdcard location
+        File mediaStorageDir = new File(
+                Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_PICTURES), Config.IMAGE_DIRECTORY_NAME);
+
+        // Create the storage directory if it doesn't exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d(TAG, "Failed to create " + Config.IMAGE_DIRECTORY_NAME + " directory");
+                return null;
+            }
+        }
+
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
+                Locale.getDefault()).format(new Date());
+        File mediaFile;
+        if (type == MEDIA_TYPE_IMAGE) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator
+                    + "IMG_" + timeStamp + ".jpg");
+        } else {
+            return null;
+        }
+        return mediaFile;
+    }
+
+    /**
+     * Helper methods to format information about a place nicely.
+     */
+    public static Spanned formatPlaceDetails(Resources res, CharSequence name,
+                                             CharSequence address) {
+        return Html.fromHtml(res.getString(R.string.place_details_exist, name, address));
+    }
+
+    // Get short address for displaying in the details container
+    private static String getShortAddress(CharSequence address) {
+
+        String short_address = "";
+        boolean[] separators = new boolean[address.length()];
+        int[] separatorIndices = new int[5];
+        int counter = 0;
+
+        for(int j = 0; j < address.length(); j++)
+            separators[j] = false;
+
+        for(int i = 0; i < address.length(); i++) {
+            if(address.charAt(i) == ',') {
+                separators[i] = true;
+            }
+        }
+
+        for(int k = 0; k < separators.length; k++) {
+            if(separators[k]) {
+                separatorIndices[counter] = k;
+                counter++;
+            }
+        }
+        short_address = address.subSequence(0, separatorIndices[2]).toString();
+
+        return short_address;
+    }
+
+    /**
+     * Methods which builds google places api.
+     */
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(this /* AppCompatActivity */,
+                        this /* OnConnectionFailedListener */ )
+                .build();
+
+    }
+
     // returning image/video
     private static File getOutputMediaFile() {
         // External sdcard location
@@ -500,205 +660,14 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     }
 
     // Helper method for saving individual crowd to shared preferences
-    public void saveToFavs() {
-        String id = getIntent().getExtras().getString("id");
-        String name = getIntent().getExtras().getString("name");
-        String city = getIntent().getExtras().getString("city");
-        String timeago = getIntent().getExtras().getString("timeAgo");
-        String distance = "";
-        HashMap<Integer, ArrayList<String>> picurls = (HashMap<Integer, ArrayList<String>>)getIntent().getSerializableExtra("picUrls");
-
-        LiveCrowdRow crowd = new LiveCrowdRow(
-                id,
-                name,
-                city,
-                timeago,
-                distance,
-                picurls);
-
-        mAppPrefs.setFav_crowds(crowd);
+    public void saveToFavs(LiveCrowd liveCrowd) {
+        mAppPrefs.setFav_crowd(liveCrowd);
 
         // Debug
         if (mAppPrefs.getFav_crowds() != null) {
             for (String element : mAppPrefs.getFav_crowds()) {
                 Log.i(TAG, element);
             }
-        }
-    }
-
-//    public void saveToFavsv4() {
-//        String id = getIntent().getExtras().getString("id");
-//        String name = getIntent().getExtras().getString("name");
-//        String city = getIntent().getExtras().getString("city");
-//        String timeago = getIntent().getExtras().getString("timeAgo");
-//        String distance = "";
-//        HashMap<Integer, ArrayList<String>> picurls = (HashMap<Integer, ArrayList<String>>)getIntent().getSerializableExtra("picUrls");
-//
-//        LiveCrowdRow crowd = new LiveCrowdRow(
-//                id,
-//                name,
-//                city,
-//                timeago,
-//                distance,
-//                picurls);
-//
-//        mAppPrefs.setFav_crowdsv4(crowd);
-//
-//        // Debug
-//        if (mAppPrefs.getFav_crowdsv4() != null) {
-//            Log.i(TAG, mAppPrefs.getFav_crowdsv4());
-//        }
-//    }
-
-
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
-        }
-
-        @Override
-        public int getCount() {
-            // Show total pages.
-            int num_pages = picUrls.size();
-            return num_pages;
-        }
-    }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        public int getPageNum() {
-            return getArguments().getInt(ARG_SECTION_NUMBER, 0);
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_livepiclayout, container, false);
-            final ImageView liveImageView = (ImageView) rootView.findViewById(R.id.livePic);
-            final TextView timeStampView = (TextView) getDetailsContainer().findViewById(R.id.timestamp);
-            liveImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (getActionBar().isShowing()) {
-                        // Hide the actionbar/toolbar
-                        getActionBar().hide();
-                        // Animation fade out of the details container
-                        slideToBottom(getDetailsContainer());
-                    } else {
-                        // Show the actionbar/toolbar
-                        getActionBar().show();
-                        // Animation fade in of the details container
-                        slideToTop(getDetailsContainer());
-                    }
-                }
-            });
-
-
-            switch (this.getPageNum()) {
-                case 1:
-                    Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-1 ).get(0) )
-                            .into( liveImageView );
-//                    timeStampView.setText( picUrls.get( picUrls.size()-1 ).get(1));
-//                    timeStampView.setText("First image");
-                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("First image");
-                    break;
-                case 2:
-                    Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-2 ).get(0) )
-                            .into(liveImageView);
-//                    timeStampView.setText( picUrls.get( picUrls.size()-2 ).get(1) );
-//                    timeStampView.setText("Second image");
-                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("Second image");
-                    break;
-                case 3:
-                    Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-3 ).get(0) )
-                            .into(liveImageView);
-//                    timeStampView.setText( picUrls.get( picUrls.size()-3 ).get(1) );
-//                    timeStampView.setText("Third image");
-                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("Third image");
-                    break;
-                case 4:
-                    Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-4 ).get(0) )
-                            .into( liveImageView );
-//                    timeStampView.setText( picUrls.get( picUrls.size()-4 ).get(1) );
-//                    timeStampView.setText("Fourth image");
-                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("Fourth image");
-                    break;
-                case 5:
-                    Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-5 ).get(0) )
-                            .into( liveImageView );
-//                    timeStampView.setText( picUrls.get( picUrls.size()-5 ).get(1) );
-//                    timeStampView.setText("Fifth image");
-                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("Fifth image");
-                    break;
-
-            }
-
-            return rootView;
-
-        }
-
-        /**
-         * Helper methods to hide actionbar/toolbar, get the details container from activity,
-         * and animate the details container
-         */
-        private android.support.v7.app.ActionBar getActionBar() {
-            return ((LivePicsGalleryActivity) getActivity()).getSupportActionBar();
-        }
-
-        private RelativeLayout getDetailsContainer() {
-            return ((LivePicsGalleryActivity) getActivity()).mDetailsLayout;
-        }
-
-        // To animate details container from bottom to top
-        public void slideToBottom(View view){
-            view.setAlpha(1.0f);
-            view.animate()
-                    .translationY(view.getHeight())
-                    .alpha(0.0f);
-        }
-
-        // To animate details container slide out from bottom to top
-        public void slideToTop(View view){
-            view.setVisibility(View.VISIBLE);
-            view.setAlpha(0.0f);
-            view.animate()
-                    .translationY(0)
-                    .alpha(1.0f);
         }
     }
 

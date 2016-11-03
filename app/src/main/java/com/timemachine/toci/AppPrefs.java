@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
-import com.google.gson.Gson;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -115,10 +113,6 @@ public class AppPrefs {
     }
 
 
-    public String getFav_crowdsv4() {
-        return appSharedPrefs.getString(fav_crowds, null);
-    }
-
     // Setter methods
     public void setFavorite_city(String _favorite_city) {
         out = appSharedPrefs.getStringSet(fav_cities, new HashSet<String>());
@@ -136,23 +130,20 @@ public class AppPrefs {
         }
     }
 
-    public void setFav_crowds(LiveCrowdRow liveCrowdRow) {
+    public void setFav_crowd(LiveCrowd liveCrowd) {
         crowds_out = appSharedPrefs.getStringSet(fav_crowds, new HashSet<String>());
         crowds_in = new HashSet<>(crowds_out);
-        crowds_in.add(SerializeLiveCrowdRow.toJson(liveCrowdRow));
+        crowds_in.add(SerializeLiveCrowd.toJson(liveCrowd));
         prefsEditor.putStringSet(fav_crowds, crowds_in);
         prefsEditor.commit();
     }
 
-    public void setFav_crowdsv4(LiveCrowdRow liveCrowdRow) {
-        Gson gson = new Gson();
-        String json = gson.toJson(liveCrowdRow);
-        prefsEditor.putString(fav_crowds, json);
-        prefsEditor.commit();
-    }
 
+    /**
+     * Methods to remove favorites
+     * @param _favorite_city
+     */
 
-    // Methods to remove favorites
     public void removeFavorite_city(String _favorite_city) {
         out = appSharedPrefs.getStringSet(fav_cities, new HashSet<String>());
         in = new HashSet<>(out);
@@ -161,12 +152,16 @@ public class AppPrefs {
         prefsEditor.commit();
     }
 
+    /**
+     * Methods to remove favorites
+     * @param liveCrowd
+     */
 
-    public void removeFavorite_crowd(String _favorite_crowd) {
-        out = appSharedPrefs.getStringSet(fav_crowds, new HashSet<String>());
-        in = new HashSet<>(out);
-        in.remove(_favorite_crowd);
-        prefsEditor.putStringSet(fav_crowds, in);
+    public void removeFav_crowd(LiveCrowd liveCrowd) {
+        crowds_out = appSharedPrefs.getStringSet(fav_crowds, new HashSet<String>());
+        crowds_in = new HashSet<>(crowds_out);
+        crowds_in.remove(SerializeLiveCrowd.toJson(liveCrowd));
+        prefsEditor.putStringSet(fav_crowds, crowds_in);
         prefsEditor.commit();
     }
 

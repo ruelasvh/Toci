@@ -3,6 +3,7 @@ package com.timemachine.toci;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -55,25 +56,21 @@ public class LiveCrowdListAdapter extends ArrayAdapter<LiveCrowd> {
             Picasso.with(context).cancelRequest(viewHolder.livepic);
         }
 
-        final LiveCrowd crowdRow = crowds.get(position);
-        viewHolder.title.setText(crowdRow.getTitle());
-        viewHolder.timeago.setText(crowdRow.getTimeago());
-        viewHolder.distance.setText(crowdRow.getDistance());
+        final LiveCrowd crowd = crowds.get(position);
+        viewHolder.title.setText(crowd.getTitle());
+        viewHolder.timeago.setText(crowd.getTimeago());
+        viewHolder.distance.setText(crowd.getDistance());
         viewHolder.livepic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                Intent intent = new Intent(context, crowdRow.getDetailedCrowd());
                 Intent intent = new Intent(context, LivePicsGalleryActivity.class);
-                intent.putExtra("id", crowdRow.getId());
-                intent.putExtra("name", crowdRow.getTitle());
-                intent.putExtra("city", crowdRow.getCity());
-                intent.putExtra("timeAgo", crowdRow.getTimeago());
-                intent.putExtra("picUrls", crowdRow.getPicUrls());
+                intent.putExtra("crowd", SerializeLiveCrowd.toJson(crowd));
                 context.startActivity(intent);
             }
         });
 
-        Picasso.with(context).load( crowdRow.getPicUrls().get( crowdRow.getPicUrls().size() - 1).get(0) )
+        Picasso.with(context).load( crowd.getPicUrls().get( crowd.getPicUrls().size() - 1).get(0) )
                 .into( viewHolder.livepic);
 
         return rowView;

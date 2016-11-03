@@ -33,97 +33,51 @@ public class GetFavCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
 
     private final static String TAG = GetFavCrowds.class.getSimpleName();
 
-    public interface AsyncResponse {
-        void onAsyncTaskFinish(LiveCrowd[] crowds);
+    // Helper fields to help store favorite settings
+    private Context mContext;
+    AppPrefs mAppPrefs;
+
+
+    public GetFavCrowds(Context context) {
+        mContext = context;
     }
 
-    Context context;
-
-    public AsyncResponse delegate = null;
-
-    public GetFavCrowds(AsyncResponse delegate) {
-        this.delegate = delegate;
+    @Override
+    protected void onPreExecute() {
+        mAppPrefs = new AppPrefs(mContext);
     }
 
     @Override
     protected LiveCrowd[] doInBackground (String...params){
 
-        JSONArray result;
+        LiveCrowd[] crowds = SerializeLiveCrowd.fromJson(new ArrayList<>(mAppPrefs.getFav_crowds()));
 
-        String fromCity = params[0];
+        try {
 
-        result = getList(fromCity);
-
-        LiveCrowd[] crowds = null;
-
-        if (result != null) {
-
-            crowds = new LiveCrowd[result.length()];
-            try {
-
-                for (int i = 0; i < result.length(); i++) {
-                    String crowdId = result.getJSONObject(i).getString("id");
-                    String crowdName = result.getJSONObject(i).getString("name");
-                    HashMap<Integer, ArrayList<String>> picUrls = getPicUrls(fromCity, crowdId);
-                    String timeAgo = picUrls.get(picUrls.size()-1).get(1);
-                    String distance = "";
-
-                    crowds[i] = new LiveCrowd(crowdId, crowdName,
-                            fromCity, timeAgo, distance, picUrls);
-                }
-
-                return crowds;
-
-            } catch (JSONException e) {
-                Log.d(TAG, "error getting id and name from server response");
-                e.printStackTrace();
+            for (int i = 0; i < crowds.length; i++) {
+                String crowdId = crowds[i].getId();
+                String crowdCity = crowds[i].getCity();
+                HashMap<Integer, ArrayList<String>> picUrls = getPicUrls(crowdCity, crowdId);
+                String timeAgo = picUrls.get(picUrls.size()-1).get(1);
+                crowds[i].setPicUrls(picUrls);
+                crowds[i].setTimeago(timeAgo);
             }
+
+            return crowds;
+
+        } catch (Exception e) {
+            Log.d(TAG, "Error getting favorite crowds pictures");
+            e.printStackTrace();
         }
 
         return crowds;
-
     }
 
     @Override
     protected void onPostExecute (LiveCrowd[] crowds) {
         super.onPostExecute(crowds);
 
-        delegate.onAsyncTaskFinish(crowds);
-
-    }
-
-
-    /**
-     * Helper method for getting list of crowds in a city
-     */
-    private JSONArray getList(String city) {
-
-        String response;
-
-        try {
-            String link = "http://crowdzeeker.com/AppCrowdZeeker/fetchcrowds.php?city=" + URLEncoder.encode(city) + "";
-            URI url = new URI(link);
-            HttpClient client = new DefaultHttpClient();
-            HttpGet request = new HttpGet();
-            request.setURI(url);
-            HttpResponse httpResponse = client.execute(request);
-            HttpEntity httpEntity = httpResponse.getEntity();
-            response = EntityUtils.toString(httpEntity);
-            Log.d(TAG, "GetCrowds.getList response is: " + response);
-            return new JSONArray(response);
-
-
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+//        Log.d(TAG, crowds.toString());
     }
 
     public static HashMap<Integer, ArrayList<String>> getPicUrls(String crowdCity, String crowdId) {
