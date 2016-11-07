@@ -8,19 +8,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 
 public class HomeMaterialActivity extends AppCompatActivity
         implements LoginFragment.OnFragmentInteractionListener, AboutUsFragment.OnFragmentInteractionListener,
-        AddNewCrowdFragment.OnFragmentInteractionListener, FavoriteCrowdsFragment.OnFragmentInteractionListener,
-        FavoriteCityFragment.OnFragmentInteractionListener,NavigationDrawerCallbacks {
+        AddNewCrowdFragment.OnFragmentInteractionListener, FavoriteCrowdsFragment.OnFragmentSelectedListener,
+        FavoriteCityFragment.OnFragmentInteractionListener, SearchFragment.OnFragmentSelectedListener ,NavigationDrawerCallbacks {
 
+    private static final String TAG = HomeMaterialActivity.class.getSimpleName();
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -204,5 +204,8 @@ public class HomeMaterialActivity extends AppCompatActivity
         // empty
     }
 
+    public void onNavDrawerItemSelected(int position) {
+        mNavigationDrawerFragment.setCurrentSelectedPosition(position);
+    }
 
 }

@@ -40,78 +40,9 @@ public class AppPrefs {
         return appSharedPrefs.getStringSet(fav_cities, null);
     }
 
-    public Set<String> getFav_crowds() {
-        return appSharedPrefs.getStringSet(fav_crowds, (new Set<String>() {
-            @Override
-            public boolean add(String s) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(Collection<? extends String> collection) {
-                return false;
-            }
-
-            @Override
-            public void clear() {
-
-            }
-
-            @Override
-            public boolean contains(Object o) {
-                return false;
-            }
-
-            @Override
-            public boolean containsAll(Collection<?> collection) {
-                return false;
-            }
-
-            @Override
-            public boolean isEmpty() {
-                return false;
-            }
-
-            @NonNull
-            @Override
-            public Iterator<String> iterator() {
-                return null;
-            }
-
-            @Override
-            public boolean remove(Object o) {
-                return false;
-            }
-
-            @Override
-            public boolean removeAll(Collection<?> collection) {
-                return false;
-            }
-
-            @Override
-            public boolean retainAll(Collection<?> collection) {
-                return false;
-            }
-
-            @Override
-            public int size() {
-                return 0;
-            }
-
-            @NonNull
-            @Override
-            public Object[] toArray() {
-                return new Object[0];
-            }
-
-            @NonNull
-            @Override
-            public <T> T[] toArray(T[] ts) {
-                return null;
-            }
-        }));
+    public Set<String> getFavorite_crowds() {
+        return appSharedPrefs.getStringSet(fav_crowds, new HashSet<String>());
     }
-
 
     // Setter methods
     public void setFavorite_city(String _favorite_city) {
@@ -130,39 +61,24 @@ public class AppPrefs {
         }
     }
 
-    public void setFav_crowd(LiveCrowd liveCrowd) {
+    public void setFavorite_crowd(String crowd) {
         crowds_out = appSharedPrefs.getStringSet(fav_crowds, new HashSet<String>());
         crowds_in = new HashSet<>(crowds_out);
-        crowds_in.add(SerializeLiveCrowd.toJson(liveCrowd));
-        prefsEditor.putStringSet(fav_crowds, crowds_in);
-        prefsEditor.commit();
+        crowds_in.add(crowd);
+        prefsEditor.putStringSet(fav_crowds, crowds_in).commit();
     }
 
 
     /**
      * Methods to remove favorites
-     * @param _favorite_city
+     * @param crowd
      */
 
-    public void removeFavorite_city(String _favorite_city) {
-        out = appSharedPrefs.getStringSet(fav_cities, new HashSet<String>());
-        in = new HashSet<>(out);
-        in.remove(_favorite_city);
-        prefsEditor.putStringSet(fav_cities, in);
-        prefsEditor.commit();
-    }
-
-    /**
-     * Methods to remove favorites
-     * @param liveCrowd
-     */
-
-    public void removeFav_crowd(LiveCrowd liveCrowd) {
+    public void removeFavorite_crowd(String crowd) {
         crowds_out = appSharedPrefs.getStringSet(fav_crowds, new HashSet<String>());
         crowds_in = new HashSet<>(crowds_out);
-        crowds_in.remove(SerializeLiveCrowd.toJson(liveCrowd));
-        prefsEditor.putStringSet(fav_crowds, crowds_in);
-        prefsEditor.commit();
+        crowds_in.remove(crowd);
+        prefsEditor.putStringSet(fav_crowds, crowds_in).commit();
     }
 
     /** Methods for dealing with user accounts **/

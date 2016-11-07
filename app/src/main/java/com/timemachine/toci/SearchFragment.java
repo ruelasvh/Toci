@@ -6,8 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,9 +39,9 @@ public class SearchFragment extends Fragment {
      * The fragment argument representing the section number for this
      * fragment.
      */
-    private static final String ARG_SECTION_TITLE = "SearchFragment";
+    private static final String SECTION_TITLE = "SearchFragment";
 
-
+    private OnFragmentSelectedListener mListener;
     /**
      * Returns a new instance of this fragment for the given section
      * number.
@@ -128,15 +126,20 @@ public class SearchFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        ((HomeMaterialActivity) context).onSectionAttached(
-                ARG_SECTION_TITLE);
+        ((HomeMaterialActivity) context).onSectionAttached(SECTION_TITLE);
 
+        try {
+            mListener = (OnFragmentSelectedListener) context;
+        } catch (ClassCastException e){
+            throw new ClassCastException(context.toString()
+                    + " must implement OnFragmentSelectedListener");
+        }
     }
 
     @Override
     public void onDetach() {
-        Log.d(TAG, "Detached");
         super.onDetach();
+        mListener = null;
     }
 
     /**
@@ -149,10 +152,9 @@ public class SearchFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-//    public interface OnFragmentInteractionListener {
-//        // TODO: Update argument type and name
-//        public void onFragmentInteraction(Uri uri);
-//    }
+    public interface OnFragmentSelectedListener {
+        void onNavDrawerItemSelected(int position);
+    }
 
     /**
      * AsyncTask which checks if city exists and returns boolean
@@ -199,14 +201,9 @@ public class SearchFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-
-//            Log.d(TAG, "Action detected");
-
-            // Lauch AddNewCrowdFragment
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.container, new AddNewCrowdFragment());
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
+            // Launch AddNewCrowdFragment
+            int addCrowdFragPosition = 2;
+            mListener.onNavDrawerItemSelected(addCrowdFragPosition);
         }
     }
 }

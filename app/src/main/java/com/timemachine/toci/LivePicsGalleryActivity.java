@@ -184,7 +184,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
             case R.id.action_favorite:
                 // Save to favorites
-                saveToFavs(thisLiveCrowd);
+                saveToFavs(thisLiveCrowd.getId());
                 Toast.makeText(this, "Added To Favorites", Toast.LENGTH_SHORT).show();
                 return true;
 
@@ -660,12 +660,12 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     }
 
     // Helper method for saving individual crowd to shared preferences
-    public void saveToFavs(LiveCrowd liveCrowd) {
-        mAppPrefs.setFav_crowd(liveCrowd);
+    public void saveToFavs(String crowdId) {
+        mAppPrefs.setFavorite_crowd(crowdId);
 
         // Debug
-        if (mAppPrefs.getFav_crowds() != null) {
-            for (String element : mAppPrefs.getFav_crowds()) {
+        if (mAppPrefs.getFavorite_crowds() != null) {
+            for (String element : mAppPrefs.getFavorite_crowds()) {
                 Log.i(TAG, element);
             }
         }

@@ -60,7 +60,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
     /**
      * A pointer to deliver content to host activity (HomeMaterialActivity)
      */
-//    private OnFragmentInteractionListener mListener;
+//    private OnFragmentSelectedListener mListener;
 
     /**
      * Helper component that ties the action bar to the navigation drawer.
@@ -132,6 +132,14 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
         mAdapter.notifyDataSetChanged();
         selectItem(mCurrentSelectedPosition);
         return view;
+    }
+
+    /**
+     * Method used in interface to change fragments
+     * @param position
+     */
+    public void setCurrentSelectedPosition(int position) {
+        selectItem(position);
     }
 
     public boolean isDrawerOpen() {
@@ -424,5 +432,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
                 mDivider.draw(c);
 //            }
         }
+
     }
+
 }

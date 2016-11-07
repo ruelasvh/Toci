@@ -235,7 +235,7 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
             mListener = (OnFragmentInteractionListener) context;
         } catch (ClassCastException e){
             throw new ClassCastException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnFragmentSelectedListener");
         }
     }
 

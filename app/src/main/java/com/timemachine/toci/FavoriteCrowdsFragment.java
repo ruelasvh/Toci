@@ -2,15 +2,14 @@ package com.timemachine.toci;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.SwipeDismissBehavior;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -57,12 +56,15 @@ public class FavoriteCrowdsFragment extends Fragment {
     private ProgressBar mProgressBar;
     // Widget used for pull-to-refresh ListView
     private SwipeRefreshLayout mSwipeRefreshLayout;
-
-    private OnFragmentInteractionListener mListener;
-
+    // Interface to help communicate up to the parent activity
+    private OnFragmentSelectedListener mListener;
+    // Variables used for showing link/icon to SearchFragment when crowds' list is empty
+    private ImageButton searchButton;
+    private TextView searchText;
     // Helper fields to help store favorite settings
     Context mContext;
     AppPrefs mAppPrefs;
+
 
     public FavoriteCrowdsFragment() {
         // Required empty public constructor
@@ -98,6 +100,9 @@ public class FavoriteCrowdsFragment extends Fragment {
         // Set up preferences
         mContext = getContext();
         mAppPrefs = new AppPrefs(mContext);
+
+        searchButton = new ImageButton(getActivity());
+        searchText = new TextView(getActivity());
     }
 
     @Override
@@ -157,10 +162,10 @@ public class FavoriteCrowdsFragment extends Fragment {
         ((HomeMaterialActivity) context).onSectionAttached(SECTION_TITLE);
 
         try {
-            mListener = (OnFragmentInteractionListener) context;
+            mListener = (OnFragmentSelectedListener) context;
         } catch (ClassCastException e){
             throw new ClassCastException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnFragmentSelectedListener");
         }
     }
 
@@ -180,91 +185,87 @@ public class FavoriteCrowdsFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    public interface OnFragmentSelectedListener {
+        void onNavDrawerItemSelected(int position);
     }
 
     private void displayCrowds() {
 
-        new GetFavCrowds(getContext(), new GetFavCrowds.AsyncResponse() {
-            @Override
-            public void onAsyncTaskFinish(LiveCrowd[] crowds) {
-                mProgressBar = (ProgressBar) getActivity().findViewById(R.id.spinner);
-                mProgressBar.setVisibility(View.VISIBLE);
-                mListView = (ListView) getActivity().findViewById(R.id.crowds_listview);
+        mProgressBar = (ProgressBar) getActivity().findViewById(R.id.spinner);
 
-                mListAdapter = new ListAdapter(crowds);
-                mListAdapter.notifyDataSetChanged();
-                if (!mListAdapter.isEmpty()) mProgressBar.setVisibility(View.GONE);
-                mListView.setAdapter(mListAdapter);
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        }).execute();
+        if (!mAppPrefs.getFavorite_crowds().isEmpty()) {
+            String crowdsIdString = TextUtils.join(",", mAppPrefs.getFavorite_crowds());
+
+            new GetCrowds(new GetCrowds.AsyncResponse() {
+                @Override
+                public void onAsyncTaskFinish(LiveCrowd[] crowds) {
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    mListView = (ListView) getActivity().findViewById(R.id.crowds_listview);
+
+                    mListAdapter = new ListAdapter(crowds);
+                    mListAdapter.notifyDataSetChanged();
+                    if (!mListAdapter.isEmpty()) mProgressBar.setVisibility(View.GONE);
+                    mListView.setAdapter(mListAdapter);
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
+            }).execute("favorites", crowdsIdString);
+        }
+        else {
+            mProgressBar.setVisibility(View.GONE);
+            mSwipeRefreshLayout.setRefreshing(false);
+
+            showSearchCrowds(true);
+
+        }
     }
 
-//    private void displayCrowds() {
-////        LiveCrowd[] crowds = SerializeLiveCrowd.fromJson(mParam1);
-//        LiveCrowd[] crowds = SerializeLiveCrowd.fromJson(new ArrayList<>(mAppPrefs.getFav_crowds()));
-//
-////        Log.d(TAG, Integer.toString(crowds.length));
-//
-//        mProgressBar = (ProgressBar) getActivity().findViewById(R.id.spinner);
-//
-//        if (crowds.length != 0) {
-//            mProgressBar.setVisibility(View.VISIBLE);
-//            mListView = (ListView) getActivity().findViewById(R.id.crowds_listview);
-//
-//            mListAdapter = new ListAdapter(crowds);
-//            mListAdapter.notifyDataSetChanged();
-//            if (!mListAdapter.isEmpty()) mProgressBar.setVisibility(View.GONE);
-//            mListView.setAdapter(mListAdapter);
-//            mSwipeRefreshLayout.setRefreshing(false);
-//
-//
-//        }
-//        else {
-//            mProgressBar.setVisibility(View.GONE);
-//
-//            final ImageButton searchButton = new ImageButton(getActivity());
-//            searchButton.setId('1');
-//            searchButton.setBackgroundColor(getResources().getColor(R.color.transparent));
-//            searchButton.setImageResource(R.drawable.ic_search_white_48dp);
-//            searchButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    // Launch Fragment
-//                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-//                    fragmentTransaction.replace(R.id.container, new SearchFragment());
-//                    fragmentTransaction.addToBackStack(null);
-//                    fragmentTransaction.commit();
-//                }
-//            });
-//
-//            final TextView searchText = new TextView(getActivity());
-//            searchText.setId('0');
-//            searchText.setText("Search");
-//            searchText.setTextColor(getResources().getColor(R.color.white));
-//            searchText.setTextSize(24.f);
-////            searchText.setTypeface(null, Typeface.BOLD);
-//
-//
-//            RelativeLayout rootLayout = (RelativeLayout)getActivity().findViewById(R.id.root);
-//            rootLayout.setGravity(Gravity.CENTER);
-//            rootLayout.addView(searchButton);
-//            rootLayout.addView(searchText);
-//
-//            RelativeLayout.LayoutParams layoutParamsSearchButton = (RelativeLayout.LayoutParams) searchButton.getLayoutParams();
-//
-//            layoutParamsSearchButton.addRule(RelativeLayout.ABOVE, searchText.getId());
-//            layoutParamsSearchButton.addRule(RelativeLayout.CENTER_IN_PARENT);
-//            searchButton.setLayoutParams(layoutParamsSearchButton);
-//
-//            RelativeLayout.LayoutParams layoutParamsSearchText = (RelativeLayout.LayoutParams) searchText.getLayoutParams();
-//            layoutParamsSearchText.addRule(RelativeLayout.CENTER_IN_PARENT);
-//            searchText.setLayoutParams(layoutParamsSearchText);
-//        }
-//    }
+    private void showSearchCrowds(boolean show) {
+
+        RelativeLayout rootLayout = (RelativeLayout)getActivity().findViewById(R.id.root);
+        rootLayout.removeView(searchButton);
+        rootLayout.removeView(searchText);
+
+        if (show) {
+            searchButton.setVisibility(View.VISIBLE);
+            searchButton.setId('1');
+            searchButton.setBackgroundColor(getResources().getColor(R.color.transparent));
+            searchButton.setImageResource(R.drawable.ic_search_white_48dp);
+            searchButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // Launch Fragment
+                    int searchFragPosition = 0;
+                    mListener.onNavDrawerItemSelected(searchFragPosition);
+                }
+            });
+
+            searchText.setVisibility(View.VISIBLE);
+            searchText.setId('0');
+            searchText.setText("Search");
+            searchText.setTextColor(getResources().getColor(R.color.white));
+            searchText.setTextSize(24.f);
+//            searchText.setTypeface(null, Typeface.BOLD);
+
+            rootLayout.setGravity(Gravity.CENTER);
+            rootLayout.addView(searchButton);
+            rootLayout.addView(searchText);
+
+            RelativeLayout.LayoutParams layoutParamsSearchButton = (RelativeLayout.LayoutParams) searchButton.getLayoutParams();
+
+            layoutParamsSearchButton.addRule(RelativeLayout.ABOVE, searchText.getId());
+            layoutParamsSearchButton.addRule(RelativeLayout.CENTER_IN_PARENT);
+            searchButton.setLayoutParams(layoutParamsSearchButton);
+
+            RelativeLayout.LayoutParams layoutParamsSearchText = (RelativeLayout.LayoutParams) searchText.getLayoutParams();
+            layoutParamsSearchText.addRule(RelativeLayout.CENTER_IN_PARENT);
+            searchText.setLayoutParams(layoutParamsSearchText);
+        }
+
+        if (!show) {
+            searchButton.setVisibility(View.GONE);
+            searchText.setVisibility(View.GONE);
+        }
+    }
 
     class ListAdapter extends BaseAdapter {
 
@@ -327,29 +328,25 @@ public class FavoriteCrowdsFragment extends Fragment {
 
                 @Override
                 public void onDismiss(final View view) {
+
                     crowdsList.remove(position);
-                    mAppPrefs.removeFav_crowd(crowd);
+                    mAppPrefs.removeFavorite_crowd(crowd.getId());
                     notifyDataSetChanged();
-                    // Debug
-                    Log.d(TAG, crowd.toString());
-                    if (mAppPrefs.getFav_crowds() != null) {
-                        for (String element : mAppPrefs.getFav_crowds()) {
-                            Log.i(TAG, element);
-                        }
-                    }                    Snackbar.make(getActivity().findViewById(R.id.crowds_listview),
+
+                    if (crowdsList.isEmpty()) {
+                        showSearchCrowds(true);
+                    }
+
+                    Snackbar.make(getActivity().findViewById(R.id.crowds_listview),
                             "Removed " + crowd.getTitle(), Snackbar.LENGTH_LONG)
                             .setAction("UNDO", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    showSearchCrowds(false);
                                     crowdsList.add(position, crowd);
-                                    mAppPrefs.setFav_crowd(crowd);
+                                    mAppPrefs.setFavorite_crowd(crowd.getId());
                                     notifyDataSetChanged();
-                                    // Debug
-                                    if (mAppPrefs.getFav_crowds() != null) {
-                                        for (String element : mAppPrefs.getFav_crowds()) {
-                                            Log.i(TAG, element);
-                                        }
-                                    }                                }
+                              }
                             })
                             .show();
                 }

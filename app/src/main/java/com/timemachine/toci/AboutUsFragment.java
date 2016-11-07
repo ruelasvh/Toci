@@ -102,7 +102,7 @@ public class AboutUsFragment extends Fragment {
             mListener = (OnFragmentInteractionListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnFragmentSelectedListener");
         }
     }
 

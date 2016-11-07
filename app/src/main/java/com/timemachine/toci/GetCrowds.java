@@ -48,9 +48,11 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
 
         JSONArray result;
 
-        String fromCity = params[0];
+        String filter = params[0];
 
-        result = getList(fromCity);
+        String query = params[1];
+
+        result = getList(filter, query);
 
         LiveCrowd[] crowds = null;
 
@@ -62,12 +64,13 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
                 for (int i = 0; i < result.length(); i++) {
                     String crowdId = result.getJSONObject(i).getString("id");
                     String crowdName = result.getJSONObject(i).getString("name");
-                    HashMap<Integer, ArrayList<String>> picUrls = getPicUrls(fromCity, crowdId);
+                    String crowdCity = result.getJSONObject(i).getString("city");
+                    HashMap<Integer, ArrayList<String>> picUrls = getPicUrls(crowdCity, crowdId);
                     String timeAgo = picUrls.get(picUrls.size()-1).get(1);
                     String distance = "";
 
                     crowds[i] = new LiveCrowd(crowdId, crowdName,
-                            fromCity, timeAgo, distance, picUrls);
+                            crowdCity, timeAgo, distance, picUrls);
                 }
 
                 return crowds;
@@ -94,33 +97,61 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
     /**
      * Helper method for getting list of crowds in a city
      */
-    private JSONArray getList(String city) {
+    private JSONArray getList(String filter, String query) {
 
         String response;
 
-        try {
-            String link = "http://crowdzeeker.com/AppCrowdZeeker/fetchcrowds.php?city=" + URLEncoder.encode(city) + "";
-            URI url = new URI(link);
-            HttpClient client = new DefaultHttpClient();
-            HttpGet request = new HttpGet();
-            request.setURI(url);
-            HttpResponse httpResponse = client.execute(request);
-            HttpEntity httpEntity = httpResponse.getEntity();
-            response = EntityUtils.toString(httpEntity);
-            Log.d(TAG, "GetCrowds.getList response is: " + response);
-            return new JSONArray(response);
+        if (filter.equals("all")) {
+            try {
+                String link = "http://crowdzeeker.com/AppCrowdZeeker/fetchcrowds.php?city=" + URLEncoder.encode(query) + "";
+                URI url = new URI(link);
+                HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet();
+                request.setURI(url);
+                HttpResponse httpResponse = client.execute(request);
+                HttpEntity httpEntity = httpResponse.getEntity();
+                response = EntityUtils.toString(httpEntity);
+                Log.d(TAG, "GetCrowds.getList response type: " + filter + ", and query response: " + response);
 
+                return new JSONArray(response);
 
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        if (filter.equals("favorites")) {
+            try {
+                String link = "http://crowdzeeker.com/AppCrowdZeeker/fetchcrowdsbyid.php?ids=" + query + "";
+                Log.d(TAG + " url: ", link);
+                URI url = new URI(link);
+                HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet();
+                request.setURI(url);
+                HttpResponse httpResponse = client.execute(request);
+                HttpEntity httpEntity = httpResponse.getEntity();
+                response = EntityUtils.toString(httpEntity);
+                Log.d(TAG, "GetCrowds.getList response type: " + filter + ", and query response: " + response);
+
+                return new JSONArray(response);
+
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
+        // If filter is invalid return null
         return null;
     }
 

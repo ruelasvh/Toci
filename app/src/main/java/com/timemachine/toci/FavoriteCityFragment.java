@@ -147,7 +147,7 @@ public class FavoriteCityFragment extends Fragment {
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnFragmentSelectedListener");
         }
     }
 
@@ -194,7 +194,7 @@ public class FavoriteCityFragment extends Fragment {
                 mSwipeRefreshLayout.setRefreshing(false);
 
             }
-        }).execute(mCity);
+        }).execute("all", mCity);
     }
 
     public void setFragmentTitle(Context context, String title) {

@@ -120,7 +120,7 @@ public class CityActivity extends AppCompatActivity {
                 mSwipeRefreshLayout.setRefreshing(false);
 
             }
-        }).execute(mCity);
+        }).execute("all", mCity);
     }
 
 }
