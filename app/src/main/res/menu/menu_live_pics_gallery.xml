@@ -3,9 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.timemachine.toci.LivePicsGalleryActivity">
 
+    <!--<item-->
+        <!--android:id="@+id/action_favorite"-->
+        <!--android:icon="@drawable/ic_action_goldstar"-->
+        <!--android:title="Add To Favorites"-->
+        <!--app:showAsAction="ifRoom" />-->
+
     <item
-        android:id="@+id/action_favorite"
-        android:icon="@drawable/ic_action_goldstar"
+        android:id="@+id/action_favorite_toggle"
         android:title="Add To Favorites"
         app:showAsAction="ifRoom" />
 

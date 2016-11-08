@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Set;
 
 
 public class LivePicsGalleryActivity extends AppCompatActivity implements OnConnectionFailedListener {
@@ -161,6 +162,11 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_live_pics_gallery, menu);
+        if (mAppPrefs.getFavorite_crowds().contains(thisLiveCrowd.getId())) {
+            menu.findItem(R.id.action_favorite_toggle).setIcon(R.drawable.ic_action_star_on);
+        } else {
+            menu.findItem(R.id.action_favorite_toggle).setIcon(R.drawable.ic_action_star_off);
+        }
         return true;
     }
 
@@ -182,10 +188,22 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 captureImage();
                 return true;
 
-            case R.id.action_favorite:
+//            case R.id.action_favorite:
+//                // Save to favorites
+//                saveToFavs(thisLiveCrowd.getId());
+//                return true;
+
+            case R.id.action_favorite_toggle:
                 // Save to favorites
-                saveToFavs(thisLiveCrowd.getId());
-                Toast.makeText(this, "Added To Favorites", Toast.LENGTH_SHORT).show();
+                if (mAppPrefs.getFavorite_crowds().contains(thisLiveCrowd.getId())) {
+                    item.setIcon(R.drawable.ic_action_star_off);
+                    item.setTitle("Remove From Favorites");
+                    saveToFavs(thisLiveCrowd.getId());
+                } else {
+                    item.setIcon(R.drawable.ic_action_star_on);
+                    item.setTitle("Add To Favorites");
+                    saveToFavs(thisLiveCrowd.getId());
+                }
                 return true;
 
             default:
@@ -661,7 +679,15 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
     // Helper method for saving individual crowd to shared preferences
     public void saveToFavs(String crowdId) {
-        mAppPrefs.setFavorite_crowd(crowdId);
+        final Set<String> favCrowds = mAppPrefs.getFavorite_crowds();
+
+        if (favCrowds.contains(crowdId)) {
+            mAppPrefs.removeFavorite_crowd(crowdId);
+            Toast.makeText(this, "Removed From Favorites", Toast.LENGTH_SHORT).show();
+        } else {
+            mAppPrefs.setFavorite_crowd(crowdId);
+            Toast.makeText(this, "Added To Favorites", Toast.LENGTH_SHORT).show();
+        }
 
         // Debug
         if (mAppPrefs.getFavorite_crowds() != null) {
@@ -669,6 +695,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 Log.i(TAG, element);
             }
         }
+
     }
 
 }
