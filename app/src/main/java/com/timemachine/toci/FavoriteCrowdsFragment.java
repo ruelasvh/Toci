@@ -65,6 +65,19 @@ public class FavoriteCrowdsFragment extends Fragment {
     Context mContext;
     AppPrefs mAppPrefs;
 
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p/>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentSelectedListener {
+        void onNavDrawerItemSelected(int position);
+    }
 
     public FavoriteCrowdsFragment() {
         // Required empty public constructor
@@ -122,20 +135,26 @@ public class FavoriteCrowdsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Populate the view with list of crowds
-        displayCrowds();
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 displayCrowds();
             }
         });
+
     }
+
+//    @Override
+//    public void onActivityCreated(Bundle savedInstanceState) {
+//        super.onActivityCreated(savedInstanceState);
+//
+//        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                displayCrowds();
+//            }
+//        });
+//    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -170,28 +189,29 @@ public class FavoriteCrowdsFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        Log.d("DEBUG", "onResume of FavoriteCrowdsFragment");
+        super.onResume();
+
+        displayCrowds();
+    }
+
+    @Override
+    public void onPause() {
+        Log.d("DEBUG", "OnPause of FavoriteCrowdsFragment");
+        super.onPause();
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentSelectedListener {
-        void onNavDrawerItemSelected(int position);
-    }
-
     private void displayCrowds() {
 
         mProgressBar = (ProgressBar) getActivity().findViewById(R.id.spinner);
+        mListView = (ListView) getActivity().findViewById(R.id.crowds_listview);
 
         if (!mAppPrefs.getFavorite_crowds().isEmpty()) {
             String crowdsIdString = TextUtils.join(",", mAppPrefs.getFavorite_crowds());
@@ -200,7 +220,6 @@ public class FavoriteCrowdsFragment extends Fragment {
                 @Override
                 public void onAsyncTaskFinish(LiveCrowd[] crowds) {
                     mProgressBar.setVisibility(View.VISIBLE);
-                    mListView = (ListView) getActivity().findViewById(R.id.crowds_listview);
 
                     mListAdapter = new ListAdapter(crowds);
                     mListAdapter.notifyDataSetChanged();
@@ -211,11 +230,11 @@ public class FavoriteCrowdsFragment extends Fragment {
             }).execute("favorites", crowdsIdString);
         }
         else {
+            mListView.setAdapter(null);
             mProgressBar.setVisibility(View.GONE);
             mSwipeRefreshLayout.setRefreshing(false);
 
             showSearchCrowds(true);
-
         }
     }
 

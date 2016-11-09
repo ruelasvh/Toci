@@ -196,6 +196,16 @@ public class HomeMaterialActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
     /**
      * Method to communicate with fragments
      * @param uri
