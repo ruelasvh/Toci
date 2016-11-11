@@ -138,7 +138,7 @@ public class FavoriteCrowdsFragment extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                displayCrowds();
+                refreshCrowds();
             }
         });
 
@@ -151,7 +151,7 @@ public class FavoriteCrowdsFragment extends Fragment {
 //        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 //            @Override
 //            public void onRefresh() {
-//                displayCrowds();
+//                refreshCrowds();
 //            }
 //        });
 //    }
@@ -166,7 +166,7 @@ public class FavoriteCrowdsFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.action_refresh:
                 mSwipeRefreshLayout.setRefreshing(true);
-                displayCrowds();
+                refreshCrowds();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -193,7 +193,7 @@ public class FavoriteCrowdsFragment extends Fragment {
         Log.d("DEBUG", "onResume of FavoriteCrowdsFragment");
         super.onResume();
 
-        displayCrowds();
+        refreshCrowds();
     }
 
     @Override
@@ -208,7 +208,7 @@ public class FavoriteCrowdsFragment extends Fragment {
         mListener = null;
     }
 
-    private void displayCrowds() {
+    private void refreshCrowds() {
 
         mProgressBar = (ProgressBar) getActivity().findViewById(R.id.spinner);
         mListView = (ListView) getActivity().findViewById(R.id.crowds_listview);

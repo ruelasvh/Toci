@@ -58,12 +58,12 @@ public class CityActivity extends AppCompatActivity {
                 R.color.PrimaryAccentColor, R.color.PrimaryAccentColor,
                 R.color.PrimaryAccentColor, R.color.PrimaryAccentColor);
 
-        displayCrowds();
+        refreshCrowds();
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                displayCrowds();
+                refreshCrowds();
             }
         });
     }
@@ -95,7 +95,7 @@ public class CityActivity extends AppCompatActivity {
 
             case R.id.action_refresh:
                 mSwipeRefreshLayout.setRefreshing(true);
-                displayCrowds();
+                refreshCrowds();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -103,7 +103,20 @@ public class CityActivity extends AppCompatActivity {
         }
     }
 
-    private void displayCrowds() {
+    @Override
+    public void onResume() {
+        super.onResume();
+
+//        mSwipeRefreshLayout.setRefreshing(true);
+        refreshCrowds();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    private void refreshCrowds() {
 
         new GetCrowds(new GetCrowds.AsyncResponse() {
             @Override
