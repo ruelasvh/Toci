@@ -41,6 +41,8 @@ import java.util.List;
 public class FavoriteCrowdsFragment extends Fragment {
     // Tag to be used for debugging
     private static final String TAG = FavoriteCrowdsFragment.class.getSimpleName();
+    // Filter crowds by id
+    private final static String ID_FILTER = "ID";
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -227,7 +229,7 @@ public class FavoriteCrowdsFragment extends Fragment {
                     mListView.setAdapter(mListAdapter);
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
-            }).execute("favorites", crowdsIdString);
+            }).execute(ID_FILTER, crowdsIdString);
         }
         else {
             mListView.setAdapter(null);

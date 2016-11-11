@@ -17,6 +17,9 @@ public class CityActivity extends AppCompatActivity {
     // helper in debugging
     private final static String TAG = CityActivity.class.getSimpleName();
 
+    // Filter crowds by city
+    private final static String CITY_FILTER = "CITY";
+
     private static String mCity;
 
     private LiveCrowdListAdapter adapter;
@@ -133,7 +136,7 @@ public class CityActivity extends AppCompatActivity {
                 mSwipeRefreshLayout.setRefreshing(false);
 
             }
-        }).execute("all", mCity);
+        }).execute(CITY_FILTER, mCity);
     }
 
 }

@@ -33,6 +33,10 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
 
     private final static String TAG = GetCrowds.class.getSimpleName();
 
+    private final static String CITY_FILTER = "CITY";
+
+    private final static String ID_FILTER = "ID";
+
     public interface AsyncResponse {
         void onAsyncTaskFinish(LiveCrowd[] crowds);
     }
@@ -101,7 +105,7 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
 
         String response;
 
-        if (filter.equals("all")) {
+        if (filter.equals(CITY_FILTER)) {
             try {
                 String link = "http://crowdzeeker.com/AppCrowdZeeker/fetchcrowds.php?city=" + URLEncoder.encode(query) + "";
                 URI url = new URI(link);
@@ -125,7 +129,7 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
                 e.printStackTrace();
             }
         }
-        if (filter.equals("favorites")) {
+        if (filter.equals(ID_FILTER)) {
             try {
                 String link = "http://crowdzeeker.com/AppCrowdZeeker/fetchcrowdsbyid.php?ids=" + query + "";
                 Log.d(TAG + " url: ", link);

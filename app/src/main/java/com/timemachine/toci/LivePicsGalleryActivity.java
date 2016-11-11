@@ -65,6 +65,11 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     private static final String TAG = LivePicsGalleryActivity.class.getSimpleName();
 
     /**
+     * Filter crowds by
+     */
+    private final static String ID_FILTER = "ID";
+
+    /**
      * Camera activity request codes
      */
     private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
@@ -370,35 +375,35 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                             .into( liveImageView );
 //                    timeStampView.setText( picUrls.get( picUrls.size()-1 ).get(1));
 //                    timeStampView.setText("First image");
-                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("First image");
+                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("1");
                     break;
                 case 2:
                     Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-2 ).get(0) )
                             .into(liveImageView);
 //                    timeStampView.setText( picUrls.get( picUrls.size()-2 ).get(1) );
 //                    timeStampView.setText("Second image");
-                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("Second image");
+                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("2");
                     break;
                 case 3:
                     Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-3 ).get(0) )
                             .into(liveImageView);
 //                    timeStampView.setText( picUrls.get( picUrls.size()-3 ).get(1) );
 //                    timeStampView.setText("Third image");
-                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("Third image");
+                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("3");
                     break;
                 case 4:
                     Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-4 ).get(0) )
                             .into( liveImageView );
 //                    timeStampView.setText( picUrls.get( picUrls.size()-4 ).get(1) );
 //                    timeStampView.setText("Fourth image");
-                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("Fourth image");
+                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("4");
                     break;
                 case 5:
                     Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-5 ).get(0) )
                             .into( liveImageView );
 //                    timeStampView.setText( picUrls.get( picUrls.size()-5 ).get(1) );
 //                    timeStampView.setText("Fifth image");
-                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("Fifth image");
+                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("5");
                     break;
 
             }
@@ -710,7 +715,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 mSectionsPagerAdapter.notifyDataSetChanged();
                 mViewPager.setAdapter(mSectionsPagerAdapter);
             }
-        }).execute("favorites", thisLiveCrowd.getId());
+        }).execute(ID_FILTER, thisLiveCrowd.getId());
     }
 
 }
