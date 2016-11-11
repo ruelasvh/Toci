@@ -137,6 +137,8 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
         // Set views for the crowds details
         mDetailsLayout = (RelativeLayout) findViewById(R.id.details_container);
+        final ImageView mNavigate = (ImageView) findViewById(R.id.navigate);
+
 
         // ImageView which takes up space so that onclicklistener from livepic is not triggered
         ImageView detailsView = (ImageView) findViewById(R.id.image_container);
@@ -151,7 +153,10 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         mContext = getApplicationContext();
         mAppPrefs = new AppPrefs(mContext);
 
-        Log.d(TAG, thisLiveCrowd.getPicUrls().toString());
+        // Set the actionbar title
+        setTitle(thisLiveCrowd.getTitle());
+
+//        Log.d(TAG, thisLiveCrowd.getPicUrls().toString());
     }
 
 
@@ -187,11 +192,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 // Bring up the camera
                 captureImage();
                 return true;
-
-//            case R.id.action_favorite:
-//                // Save to favorites
-//                saveToFavs(thisLiveCrowd.getId());
-//                return true;
 
             case R.id.action_favorite_toggle:
                 // Save to favorites
@@ -251,6 +251,9 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                         Toast.LENGTH_SHORT).show();
             }
         }
+
+        // Refresh crowd with new pictures
+        refreshCrowd();
     }
 
     // Method to connect to the google places api
@@ -696,6 +699,18 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
             }
         }
 
+    }
+
+    private void refreshCrowd() {
+        new GetCrowds(new GetCrowds.AsyncResponse() {
+            @Override
+            public void onAsyncTaskFinish(LiveCrowd[] crowds) {
+//                Log.d(TAG + "onAsyncFinish", crowds[0].getId());
+                picUrls = crowds[0].getPicUrls();
+                mSectionsPagerAdapter.notifyDataSetChanged();
+                mViewPager.setAdapter(mSectionsPagerAdapter);
+            }
+        }).execute("favorites", thisLiveCrowd.getId());
     }
 
 }

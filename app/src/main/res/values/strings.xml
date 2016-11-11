@@ -44,10 +44,11 @@
     <string name="title_section2">All Crowds</string>
     <string name="title_section3">Find Friends</string>
 
-    <!-- Example Swipe with Tabs -->
+    <!-- LivePicsGalleryActivity -->
 
     <string name="dummy_section_text">Section %1d is just a dummy section.</string>
     <string name="livepics_gallery">Live Feed</string>
+    <string name="report_photo">Report Photo</string>
 
     <!-- String from Material Navigation Drawer -->
 

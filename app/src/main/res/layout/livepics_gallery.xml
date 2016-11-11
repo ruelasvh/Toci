@@ -43,7 +43,7 @@
                 android:id="@+id/navigate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_menu_directions"
+                android:src="@drawable/ic_action_navigate"
                 android:layout_marginTop="8dp"
                 android:layout_marginRight="18dp"
                 android:layout_alignParentTop="true"
