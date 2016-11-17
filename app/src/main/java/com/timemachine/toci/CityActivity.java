@@ -26,11 +26,11 @@ public class CityActivity extends AppCompatActivity {
     private ProgressBar spinner;
     private ListView crowdList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private GetCrowds getCrowdsTask;
 
     // Helper fields to help store favorite settings
     Context mContext;
     AppPrefs mAppPrefs;
-    List<String> mCityFavorites;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,17 +42,9 @@ public class CityActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(mCity);
         setSupportActionBar(toolbar);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
         // BEGIN_INCLUDE (change_colors)
@@ -60,8 +52,6 @@ public class CityActivity extends AppCompatActivity {
         mSwipeRefreshLayout.setColorSchemeResources(
                 R.color.PrimaryAccentColor, R.color.PrimaryAccentColor,
                 R.color.PrimaryAccentColor, R.color.PrimaryAccentColor);
-
-        refreshCrowds();
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
