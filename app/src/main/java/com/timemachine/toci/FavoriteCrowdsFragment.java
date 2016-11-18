@@ -60,6 +60,8 @@ public class FavoriteCrowdsFragment extends Fragment {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     // Interface to help communicate up to the parent activity
     private OnFragmentSelectedListener mListener;
+    // AsyncTask to fetch crowds
+    private GetCrowds getCrowdsTask;
     // Variables used for showing link/icon to SearchFragment when crowds' list is empty
     private ImageButton searchButton;
     private TextView searchText;
@@ -146,17 +148,6 @@ public class FavoriteCrowdsFragment extends Fragment {
 
     }
 
-//    @Override
-//    public void onActivityCreated(Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-//
-//        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                refreshCrowds();
-//            }
-//        });
-//    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -192,7 +183,6 @@ public class FavoriteCrowdsFragment extends Fragment {
 
     @Override
     public void onResume() {
-        Log.d("DEBUG", "onResume of FavoriteCrowdsFragment");
         super.onResume();
 
         refreshCrowds();
@@ -200,8 +190,9 @@ public class FavoriteCrowdsFragment extends Fragment {
 
     @Override
     public void onPause() {
-        Log.d("DEBUG", "OnPause of FavoriteCrowdsFragment");
         super.onPause();
+
+        cancelRefreshCrowds();
     }
 
     @Override
@@ -218,7 +209,7 @@ public class FavoriteCrowdsFragment extends Fragment {
         if (!mAppPrefs.getFavorite_crowds().isEmpty()) {
             String crowdsIdString = TextUtils.join(",", mAppPrefs.getFavorite_crowds());
 
-            new GetCrowds(new GetCrowds.AsyncResponse() {
+            getCrowdsTask = new GetCrowds(new GetCrowds.AsyncResponse() {
                 @Override
                 public void onAsyncTaskFinish(LiveCrowd[] crowds) {
                     mProgressBar.setVisibility(View.VISIBLE);
@@ -229,7 +220,9 @@ public class FavoriteCrowdsFragment extends Fragment {
                     mListView.setAdapter(mListAdapter);
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
-            }).execute(ID_FILTER, crowdsIdString);
+            });
+
+            getCrowdsTask.execute(ID_FILTER, crowdsIdString);
         }
         else {
             mListView.setAdapter(null);
@@ -238,6 +231,10 @@ public class FavoriteCrowdsFragment extends Fragment {
 
             showSearchCrowds(true);
         }
+    }
+
+    private void cancelRefreshCrowds() {
+        getCrowdsTask.cancel(true);
     }
 
     private void showSearchCrowds(boolean show) {

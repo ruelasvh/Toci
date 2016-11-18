@@ -60,7 +60,7 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
 
         LiveCrowd[] crowds = null;
 
-        if (result != null) {
+        if (result != null ) {
 
             crowds = new LiveCrowd[result.length()];
             try {
@@ -75,6 +75,9 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
 
                     crowds[i] = new LiveCrowd(crowdId, crowdName,
                             crowdCity, timeAgo, distance, picUrls);
+
+                    // Escape early if cancel() is called
+                    if (isCancelled()) break;
                 }
 
                 return crowds;

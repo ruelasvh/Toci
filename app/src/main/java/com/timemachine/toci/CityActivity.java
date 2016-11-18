@@ -107,11 +107,12 @@ public class CityActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
+
+        cancelRefreshCrowds();
     }
 
     private void refreshCrowds() {
-
-        new GetCrowds(new GetCrowds.AsyncResponse() {
+        getCrowdsTask = new GetCrowds(new GetCrowds.AsyncResponse() {
             @Override
             public void onAsyncTaskFinish(LiveCrowd[] crowds) {
 
@@ -126,7 +127,12 @@ public class CityActivity extends AppCompatActivity {
                 mSwipeRefreshLayout.setRefreshing(false);
 
             }
-        }).execute(CITY_FILTER, mCity);
+        });
+
+        getCrowdsTask.execute(CITY_FILTER, mCity);
     }
 
+    private void cancelRefreshCrowds() {
+        getCrowdsTask.cancel(true);
+    }
 }
