@@ -117,6 +117,16 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     private static HashMap<Integer, ArrayList<String>> picUrls;
 
     /**
+     * AsyncTask for retrieving latest pictures
+     */
+    private GetCrowds getCrowdsTask;
+
+    /**
+     * Helper class to discover network availability
+     */
+    private Network network;
+
+    /**
      * Helper fields to help store favorite settings
      */
     Context mContext;
@@ -161,6 +171,9 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         // Set the actionbar title
         setTitle(thisLiveCrowd.getTitle());
 
+        // Instantiate network helper class
+        network = new Network(this);
+
 //        Log.d(TAG, thisLiveCrowd.getPicUrls().toString());
     }
 
@@ -195,7 +208,12 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
             case R.id.action_camera:
                 // Bring up the camera
-                captureImage();
+                if (network.isOnline()) {
+                    captureImage();
+                } else {
+                    Toast.makeText(getApplicationContext(), "No Connection Available",
+                            Toast.LENGTH_SHORT).show();
+                }
                 return true;
 
             case R.id.action_favorite_toggle:
@@ -271,6 +289,13 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        cancelRefreshCrowd();
+    }
+
     // Method to disconnect from the google places api
     @Override
     protected void onStop() {
@@ -301,6 +326,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
+
             return PlaceholderFragment.newInstance(position + 1);
         }
 
@@ -309,7 +335,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
             // Show total pages.
             int num_pages = picUrls.size();
-//            int num_pages = SerializeLiveCrowd.fromJson(getIntent().getExtras().getString("crowd")).getPicUrls().size();
             return num_pages;
         }
     }
@@ -368,42 +393,39 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 }
             });
 
+            String pageNum = Integer.toString(this.getPageNum());
+
             /* Load pictures in pager */
             switch (this.getPageNum()) {
                 case 1:
                     Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-1 ).get(0) )
                             .into( liveImageView );
 //                    timeStampView.setText( picUrls.get( picUrls.size()-1 ).get(1));
-//                    timeStampView.setText("First image");
-                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("1");
+                    timeStampView.setText(pageNum);
                     break;
                 case 2:
                     Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-2 ).get(0) )
                             .into(liveImageView);
 //                    timeStampView.setText( picUrls.get( picUrls.size()-2 ).get(1) );
-//                    timeStampView.setText("Second image");
-                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("2");
+                    timeStampView.setText(pageNum);
                     break;
                 case 3:
                     Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-3 ).get(0) )
                             .into(liveImageView);
 //                    timeStampView.setText( picUrls.get( picUrls.size()-3 ).get(1) );
-//                    timeStampView.setText("Third image");
-                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("3");
+                    timeStampView.setText(pageNum);
                     break;
                 case 4:
                     Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-4 ).get(0) )
                             .into( liveImageView );
 //                    timeStampView.setText( picUrls.get( picUrls.size()-4 ).get(1) );
-//                    timeStampView.setText("Fourth image");
-                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("4");
+                    timeStampView.setText(pageNum);
                     break;
                 case 5:
                     Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-5 ).get(0) )
                             .into( liveImageView );
 //                    timeStampView.setText( picUrls.get( picUrls.size()-5 ).get(1) );
-//                    timeStampView.setText("Fifth image");
-                    ((TextView)getDetailsContainer().findViewById(R.id.timestamp)).setText("5");
+                    timeStampView.setText(pageNum);
                     break;
 
             }
@@ -707,15 +729,27 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     }
 
     private void refreshCrowd() {
-        new GetCrowds(new GetCrowds.AsyncResponse() {
-            @Override
-            public void onAsyncTaskFinish(LiveCrowd[] crowds) {
+        if (network.isOnline()) {
+            getCrowdsTask = new GetCrowds(new GetCrowds.AsyncResponse() {
+                @Override
+                public void onAsyncTaskFinish(LiveCrowd[] crowds) {
 //                Log.d(TAG + "onAsyncFinish", crowds[0].getId());
-                picUrls = crowds[0].getPicUrls();
-                mSectionsPagerAdapter.notifyDataSetChanged();
-                mViewPager.setAdapter(mSectionsPagerAdapter);
-            }
-        }).execute(ID_FILTER, thisLiveCrowd.getId());
+                    picUrls = crowds[0].getPicUrls();
+                    mSectionsPagerAdapter.notifyDataSetChanged();
+                    mViewPager.setAdapter(mSectionsPagerAdapter);
+                }
+            });
+            getCrowdsTask.execute(ID_FILTER, thisLiveCrowd.getId());
+        } else {
+            Toast.makeText(getApplicationContext(), "No Connection Available",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void cancelRefreshCrowd() {
+        if (getCrowdsTask != null) {
+            getCrowdsTask.cancel(true);
+        }
     }
 
 }

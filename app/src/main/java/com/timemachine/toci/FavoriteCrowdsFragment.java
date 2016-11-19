@@ -25,6 +25,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -65,6 +66,8 @@ public class FavoriteCrowdsFragment extends Fragment {
     // Variables used for showing link/icon to SearchFragment when crowds' list is empty
     private ImageButton searchButton;
     private TextView searchText;
+    // Class to check network status
+    private Network network;
     // Helper fields to help store favorite settings
     Context mContext;
     AppPrefs mAppPrefs;
@@ -113,6 +116,8 @@ public class FavoriteCrowdsFragment extends Fragment {
 //        if (getArguments() != null) {
 //            mParam1 = getArguments().getStringArrayList(ARG_PARAM1);
 //        }
+
+        network = new Network(getContext());
 
         // Set up preferences
         mContext = getContext();
@@ -202,27 +207,33 @@ public class FavoriteCrowdsFragment extends Fragment {
     }
 
     private void refreshCrowds() {
-
         mProgressBar = (ProgressBar) getActivity().findViewById(R.id.spinner);
         mListView = (ListView) getActivity().findViewById(R.id.crowds_listview);
 
         if (!mAppPrefs.getFavorite_crowds().isEmpty()) {
             String crowdsIdString = TextUtils.join(",", mAppPrefs.getFavorite_crowds());
 
-            getCrowdsTask = new GetCrowds(new GetCrowds.AsyncResponse() {
-                @Override
-                public void onAsyncTaskFinish(LiveCrowd[] crowds) {
-                    mProgressBar.setVisibility(View.VISIBLE);
+            if (network.isOnline()) {
+                getCrowdsTask = new GetCrowds(new GetCrowds.AsyncResponse() {
+                    @Override
+                    public void onAsyncTaskFinish(LiveCrowd[] crowds) {
+                        mProgressBar.setVisibility(View.VISIBLE);
 
-                    mListAdapter = new ListAdapter(crowds);
-                    mListAdapter.notifyDataSetChanged();
-                    if (!mListAdapter.isEmpty()) mProgressBar.setVisibility(View.GONE);
-                    mListView.setAdapter(mListAdapter);
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
-            });
+                        mListAdapter = new ListAdapter(crowds);
+                        mListAdapter.notifyDataSetChanged();
+                        if (!mListAdapter.isEmpty()) mProgressBar.setVisibility(View.GONE);
+                        mListView.setAdapter(mListAdapter);
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                });
 
-            getCrowdsTask.execute(ID_FILTER, crowdsIdString);
+                getCrowdsTask.execute(ID_FILTER, crowdsIdString);
+            } else {
+                mProgressBar.setVisibility(View.INVISIBLE);
+                Toast.makeText(getContext().getApplicationContext(), "No Connection Available",
+                        Toast.LENGTH_SHORT).show();
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
         }
         else {
             mListView.setAdapter(null);
@@ -234,7 +245,9 @@ public class FavoriteCrowdsFragment extends Fragment {
     }
 
     private void cancelRefreshCrowds() {
-        getCrowdsTask.cancel(true);
+        if (network.isOnline()) {
+            getCrowdsTask.cancel(true);
+        }
     }
 
     private void showSearchCrowds(boolean show) {

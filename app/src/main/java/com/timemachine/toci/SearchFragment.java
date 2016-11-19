@@ -2,6 +2,8 @@ package com.timemachine.toci;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -14,6 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -42,6 +45,9 @@ public class SearchFragment extends Fragment {
     private static final String SECTION_TITLE = "SearchFragment";
 
     private OnFragmentSelectedListener mListener;
+
+    // For checking if network is online
+    private Network network;
     /**
      * Returns a new instance of this fragment for the given section
      * number.
@@ -61,6 +67,7 @@ public class SearchFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        network = new Network(getContext());
     }
 
     @Override
@@ -88,22 +95,26 @@ public class SearchFragment extends Fragment {
                  * AsyncTask which makes call to server and returns
                  * true if city found, false if city not found.
                  */
-                new CheckCityTask() {
-                    @Override
-                    protected void onPostExecute(Boolean result) {
-                        if (result) {
+                if (network.isOnline()) {
+                    new CheckCityTask() {
+                        @Override
+                        protected void onPostExecute(Boolean result) {
+                            if (result) {
 
-                            StartCityActivity(desired_city);
+                                StartCityActivity(desired_city);
 
+                            } else {
+                                Snackbar mySnackbar = Snackbar.make(getActivity().findViewById(R.id.root_fragment_search),
+                                        "No City Found", Snackbar.LENGTH_LONG);
+                                mySnackbar.setAction("Add Crowd", new AddCrowdListener());
+                                mySnackbar.show();
+                            }
                         }
-                        else {
-                            Snackbar mySnackbar = Snackbar.make(getActivity().findViewById(R.id.root_fragment_search),
-                                    "No City Found", Snackbar.LENGTH_LONG);
-                            mySnackbar.setAction("Add Crowd", new AddCrowdListener());
-                            mySnackbar.show();
-                        }
-                    }
-                }.execute(desired_city);
+                    }.execute(desired_city);
+                } else {
+                    Toast.makeText(getContext().getApplicationContext(), "No Connection Available",
+                            Toast.LENGTH_SHORT).show();
+                }
 
             }
         });

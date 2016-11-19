@@ -61,6 +61,9 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
 
     private OnFragmentInteractionListener mListener;
 
+    // Helper class for determining network availability
+    private Network network;
+
     private GoogleMap mMap;
     private LatLng mLatLng;
 
@@ -93,6 +96,8 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
 //            mParam1 = getArguments().getString(ARG_PARAM1);
 //            mParam2 = getArguments().getString(ARG_PARAM2);
 //        }
+
+        network = new Network(getContext());
 
     }
 
@@ -133,20 +138,26 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
         public void onClick(View view) {
-                try {
-                    PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
-                    Intent intent = intentBuilder.build(getActivity());
-                    // Start the Intent by requesting a result, identified by a request code.
-                    startActivityForResult(intent, REQUEST_PLACE_PICKER);
+                if (network.isOnline()) {
+                    try {
+                        PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
+                        Intent intent = intentBuilder.build(getActivity());
+                        // Start the Intent by requesting a result, identified by a request code.
+                        startActivityForResult(intent, REQUEST_PLACE_PICKER);
 
-                } catch (GooglePlayServicesRepairableException e) {
-                    GooglePlayServicesUtil
-                            .getErrorDialog(e.getConnectionStatusCode(), getActivity(), 0);
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    Toast.makeText(getActivity(), "Google Play Services is not available.",
-                            Toast.LENGTH_LONG)
-                            .show();
+                    } catch (GooglePlayServicesRepairableException e) {
+                        GooglePlayServicesUtil
+                                .getErrorDialog(e.getConnectionStatusCode(), getActivity(), 0);
+                    } catch (GooglePlayServicesNotAvailableException e) {
+                        Toast.makeText(getActivity(), "Google Play Services is not available.",
+                                Toast.LENGTH_LONG)
+                                .show();
+                    }
+                } else {
+                    Toast.makeText(getContext().getApplicationContext(), "No Connection Available",
+                            Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
     }

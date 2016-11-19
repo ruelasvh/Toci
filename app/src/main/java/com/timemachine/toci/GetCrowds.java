@@ -124,8 +124,6 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
 
             } catch (URISyntaxException e) {
                 e.printStackTrace();
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (JSONException e) {

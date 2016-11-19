@@ -1,6 +1,8 @@
 package com.timemachine.toci;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -27,6 +30,7 @@ public class CityActivity extends AppCompatActivity {
     private ListView crowdList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private GetCrowds getCrowdsTask;
+    private Network network;
 
     // Helper fields to help store favorite settings
     Context mContext;
@@ -45,6 +49,8 @@ public class CityActivity extends AppCompatActivity {
         if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        network = new Network(this);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
         // BEGIN_INCLUDE (change_colors)
@@ -112,24 +118,30 @@ public class CityActivity extends AppCompatActivity {
     }
 
     private void refreshCrowds() {
-        getCrowdsTask = new GetCrowds(new GetCrowds.AsyncResponse() {
-            @Override
-            public void onAsyncTaskFinish(LiveCrowd[] crowds) {
+        if (network.isOnline()) {
+            getCrowdsTask = new GetCrowds(new GetCrowds.AsyncResponse() {
+                @Override
+                public void onAsyncTaskFinish(LiveCrowd[] crowds) {
 
-                spinner = (ProgressBar) findViewById(R.id.spinner);
-                spinner.setVisibility(View.VISIBLE);
-                crowdList = (ListView) findViewById(R.id.crowds_listview);
+                    spinner = (ProgressBar) findViewById(R.id.spinner);
+                    spinner.setVisibility(View.VISIBLE);
+                    crowdList = (ListView) findViewById(R.id.crowds_listview);
 
-                adapter = new LiveCrowdListAdapter(CityActivity.this, R.layout.row, crowds);
-                adapter.notifyDataSetChanged();
-                if (!adapter.isEmpty()) spinner.setVisibility(View.GONE);
-                crowdList.setAdapter(adapter);
-                mSwipeRefreshLayout.setRefreshing(false);
+                    adapter = new LiveCrowdListAdapter(CityActivity.this, R.layout.row, crowds);
+                    adapter.notifyDataSetChanged();
+                    if (!adapter.isEmpty()) spinner.setVisibility(View.GONE);
+                    crowdList.setAdapter(adapter);
+                    mSwipeRefreshLayout.setRefreshing(false);
 
-            }
-        });
+                }
+            });
 
-        getCrowdsTask.execute(CITY_FILTER, mCity);
+            getCrowdsTask.execute(CITY_FILTER, mCity);
+        } else {
+            Toast.makeText(getApplicationContext(), "No Connection Available",
+                    Toast.LENGTH_SHORT).show();
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     private void cancelRefreshCrowds() {
