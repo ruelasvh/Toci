@@ -40,6 +40,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
  */
 public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback {
 
+    // Identifier for debugging
+    private static final String TAG = AddNewCrowdFragment.class.getSimpleName();
+
     // used to set title to fragment when it's attached to the activity
     private static final String SECTION_TITLE = "AddNewCrowdFragment";
 
@@ -63,6 +66,9 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
 
     // Helper class for determining network availability
     private Network network;
+
+    // Floating bar action button
+    FloatingActionButton fab;
 
     private GoogleMap mMap;
     private LatLng mLatLng;
@@ -107,6 +113,36 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        // Floating bar action button
+        fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (network.isOnline()) {
+                    try {
+                        PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
+                        Intent intent = intentBuilder.build(getActivity());
+                        // Start the Intent by requesting a result, identified by a request code.
+                        startActivityForResult(intent, REQUEST_PLACE_PICKER);
+
+                    } catch (GooglePlayServicesRepairableException e) {
+                        GooglePlayServicesUtil
+                                .getErrorDialog(e.getConnectionStatusCode(), getActivity(), 0);
+                    } catch (GooglePlayServicesNotAvailableException e) {
+                        Toast.makeText(getActivity(), "Google Play Services is not available.",
+                                Toast.LENGTH_LONG)
+                                .show();
+                    }
+                } else {
+                    Toast.makeText(getContext().getApplicationContext(), "No Connection Available",
+                            Toast.LENGTH_SHORT).show();
+                }
+
+                // Disable button after first click
+                fab.setEnabled(false);
+            }
+        });
         return view;
     }
 
@@ -133,33 +169,6 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
 
-        // Floating bar action button
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-        public void onClick(View view) {
-                if (network.isOnline()) {
-                    try {
-                        PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
-                        Intent intent = intentBuilder.build(getActivity());
-                        // Start the Intent by requesting a result, identified by a request code.
-                        startActivityForResult(intent, REQUEST_PLACE_PICKER);
-
-                    } catch (GooglePlayServicesRepairableException e) {
-                        GooglePlayServicesUtil
-                                .getErrorDialog(e.getConnectionStatusCode(), getActivity(), 0);
-                    } catch (GooglePlayServicesNotAvailableException e) {
-                        Toast.makeText(getActivity(), "Google Play Services is not available.",
-                                Toast.LENGTH_LONG)
-                                .show();
-                    }
-                } else {
-                    Toast.makeText(getContext().getApplicationContext(), "No Connection Available",
-                            Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
     }
 
     /* Called after the autocomplete activity has finished to return its result. */
@@ -199,40 +208,12 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
 
     }
 
-    public void setLocation(LatLng latLng, String title) {
-        mLatLng = latLng;
-        // Add a marker in mLatLng and move the camera
-        mMap.addMarker(new MarkerOptions().position(mLatLng).title(title).snippet("Added To Your Crowds"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(mLatLng));
-    }
+    @Override
+    public void onResume() {
+        super.onResume();
 
-    private static String getCity(CharSequence address) {
-
-        String city = "";
-        boolean[] separators = new boolean[address.length()];
-        int[] separatorIndeces = new int[5];
-        int counter = 0;
-
-        for(int j = 0; j < address.length(); j++)
-            separators[j] = false;
-
-        for(int i = 0; i < address.length(); i++) {
-            if(address.charAt(i) == ',') {
-                separators[i] = true;
-            }
-
-        }
-
-        for(int k = 0; k < separators.length; k++) {
-            if(separators[k]) {
-                separatorIndeces[counter] = k;
-                counter++;
-            }
-        }
-
-        city = address.subSequence(separatorIndeces[0]+2, separatorIndeces[1]).toString();
-
-        return city;
+//        Log.d(TAG, "Resumed");
+        fab.setEnabled(true);
     }
 
     @Override
@@ -281,4 +262,41 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
         }
     }
 
+    public void setLocation(LatLng latLng, String title) {
+        mLatLng = latLng;
+        // Add a marker in mLatLng and move the camera
+        mMap.addMarker(new MarkerOptions().position(mLatLng).title(title).snippet("Added To Your Crowds"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(mLatLng));
+    }
+
+    private static String getCity(CharSequence address) {
+
+        String city = "";
+        boolean[] separators = new boolean[address.length()];
+        int[] separatorIndeces = new int[5];
+        int counter = 0;
+
+        for(int j = 0; j < address.length(); j++)
+            separators[j] = false;
+
+        for(int i = 0; i < address.length(); i++) {
+            if(address.charAt(i) == ',') {
+                separators[i] = true;
+            }
+
+        }
+
+        for(int k = 0; k < separators.length; k++) {
+            if(separators[k]) {
+                separatorIndeces[counter] = k;
+                counter++;
+            }
+        }
+
+        city = address.subSequence(separatorIndeces[0]+2, separatorIndeces[1]).toString();
+
+        return city;
+    }
+
+    // End of Fragment code
 }
