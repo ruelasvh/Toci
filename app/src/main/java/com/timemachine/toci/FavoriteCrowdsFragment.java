@@ -2,6 +2,7 @@ package com.timemachine.toci;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -163,8 +164,12 @@ public class FavoriteCrowdsFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                mSwipeRefreshLayout.setRefreshing(true);
-                refreshCrowds();
+                if (getCrowdsTask != null && getCrowdsTask.getStatus() == AsyncTask.Status.RUNNING) {
+                    return true;
+                } else {
+                    mSwipeRefreshLayout.setRefreshing(true);
+                    refreshCrowds();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -191,6 +196,11 @@ public class FavoriteCrowdsFragment extends Fragment {
         super.onResume();
 
         refreshCrowds();
+
+        // Disable swipe down to refresh if crowds are updating
+        if (network.isOnline() && getCrowdsTask.getStatus() == AsyncTask.Status.RUNNING) {
+            mSwipeRefreshLayout.setEnabled(false);
+        }
     }
 
     @Override
@@ -207,6 +217,7 @@ public class FavoriteCrowdsFragment extends Fragment {
     }
 
     private void refreshCrowds() {
+//        mSwipeRefreshLayout.setEnabled(false);
         mProgressBar = (ProgressBar) getActivity().findViewById(R.id.spinner);
         mListView = (ListView) getActivity().findViewById(R.id.crowds_listview);
 
@@ -223,6 +234,7 @@ public class FavoriteCrowdsFragment extends Fragment {
                         mListAdapter.notifyDataSetChanged();
                         if (!mListAdapter.isEmpty()) mProgressBar.setVisibility(View.GONE);
                         mListView.setAdapter(mListAdapter);
+                        mSwipeRefreshLayout.setEnabled(true);
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
                 });
@@ -245,7 +257,7 @@ public class FavoriteCrowdsFragment extends Fragment {
     }
 
     private void cancelRefreshCrowds() {
-        if (network.isOnline()) {
+        if (getCrowdsTask != null) {
             getCrowdsTask.cancel(true);
         }
     }

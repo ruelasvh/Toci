@@ -3,6 +3,7 @@ package com.timemachine.toci;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -93,8 +94,12 @@ public class CityActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_refresh:
-                mSwipeRefreshLayout.setRefreshing(true);
-                refreshCrowds();
+                if (getCrowdsTask.getStatus() == AsyncTask.Status.RUNNING) {
+                    return true;
+                } else {
+                    mSwipeRefreshLayout.setRefreshing(true);
+                    refreshCrowds();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -106,8 +111,12 @@ public class CityActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
 
-//        mSwipeRefreshLayout.setRefreshing(true);
         refreshCrowds();
+
+        // Disable swipe down to refresh if crowds are updating
+        if (network.isOnline() && getCrowdsTask.getStatus() == AsyncTask.Status.RUNNING) {
+            mSwipeRefreshLayout.setEnabled(false);
+        }
     }
 
     @Override
@@ -131,6 +140,7 @@ public class CityActivity extends AppCompatActivity {
                     adapter.notifyDataSetChanged();
                     if (!adapter.isEmpty()) spinner.setVisibility(View.GONE);
                     crowdList.setAdapter(adapter);
+                    mSwipeRefreshLayout.setEnabled(true);
                     mSwipeRefreshLayout.setRefreshing(false);
 
                 }
