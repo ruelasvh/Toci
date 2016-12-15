@@ -2,6 +2,7 @@ package com.timemachine.toci;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,12 +10,14 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -23,6 +26,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -32,6 +37,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.location.places.Places;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import org.apache.http.HttpEntity;
@@ -83,17 +89,17 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    SectionsPagerAdapter mSectionsPagerAdapter;
+    private SectionsPagerAdapter mSectionsPagerAdapter;
 
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    ViewPager mViewPager;
+    private ViewPager mViewPager;
 
     /**
      * Layout which holds details about crowds
      */
-    RelativeLayout mDetailsLayout;
+    private RelativeLayout mDetailsLayout;
 
     /**
      * The api client used in connecting to google places api
@@ -132,6 +138,18 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     Context mContext;
     AppPrefs mAppPrefs;
 
+    // Action buttons
+    private Boolean isFabMenuOpen = false;
+    private FloatingActionButton mNavigateButton;
+    private FloatingActionButton mCallButton;
+    private FloatingActionButton mRideUberButton;
+    private TextView mRideUberLabel;
+    private FloatingActionButton mRideLyftButton;
+    private TextView mRideLyftLabel;
+    private FloatingActionButton mRideGmapsButton;
+    private TextView mRideGmapsLabel;
+    private Animation fadeIn, fadeOut;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,17 +168,51 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        // Set views for the crowds details
-        mDetailsLayout = (RelativeLayout) findViewById(R.id.details_container);
-        final ImageView mNavigate = (ImageView) findViewById(R.id.navigate);
-
-
-        // ImageView which takes up space so that onclicklistener from livepic is not triggered
-        ImageView detailsView = (ImageView) findViewById(R.id.image_container);
-        detailsView.setOnClickListener(new View.OnClickListener() {
+        fadeIn = AnimationUtils.loadAnimation(this, R.anim.fab_menu_open);
+        fadeOut = AnimationUtils.loadAnimation(this, R.anim.fab_menu_close);
+        // Set up the navigate and call buttons
+        mNavigateButton = (FloatingActionButton) findViewById(R.id.fab_ride_crowd);
+        mCallButton = (FloatingActionButton) findViewById(R.id.fab_call_crowd);
+        mRideUberButton = (FloatingActionButton) findViewById(R.id.fab_ride_uber);
+        mRideUberLabel = (TextView) findViewById(R.id.uber_label);
+        mRideLyftButton = (FloatingActionButton) findViewById(R.id.fab_ride_lyft);
+        mRideLyftLabel = (TextView) findViewById(R.id.lyft_label);
+        mRideGmapsButton = (FloatingActionButton) findViewById(R.id.fab_ride_gmaps);
+        mRideGmapsLabel = (TextView) findViewById(R.id.gmpas_label);
+        mNavigateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Empty on purpose
+                // Toggle Fab Menu
+                toggleFabMenu();
+
+//                    try {
+//                        PackageManager pm = getActivity().getPackageManager();
+//                        pm.getPackageInfo("com.ubercab", PackageManager.GET_ACTIVITIES);
+//                        String UBER_CLIENT_ID = getString(R.string.uber_client_id);
+//                        String uri = "uber://?client_id=" + UBER_CLIENT_ID + "&action=setPickup&pickup=my_location&dropoff[latitude]=35.993253&dropoff[longitude]=-78.9070738&dropoff[nickname]=Coit%20Tower";
+//                        Intent intent = new Intent(Intent.ACTION_VIEW);
+//                        intent.setData(Uri.parse(uri));
+//                        startActivity(intent);
+//                    } catch (PackageManager.NameNotFoundException e) {
+//                        // No Uber app! Open mobile website.
+//                        String url = "https://m.uber.com/sign-up?client_id=<CLIENT_ID>";
+//                        Intent i = new Intent(Intent.ACTION_VIEW);
+//                        i.setData(Uri.parse(url));
+//                        startActivity(i);
+//                    }
+            }
+        });
+        mCallButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:016509966132"));
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "No Phone Number Available",
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -349,6 +401,11 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
 
+        private RelativeLayout mDetailsContainerv2;
+        private TextView mTimeStampView;
+        private ImageView mHelperView;
+
+
         /**
          * Returns a new instance of this fragment for the given section
          * number.
@@ -373,7 +430,19 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_livepiclayout, container, false);
             final ImageView liveImageView = (ImageView) rootView.findViewById(R.id.livePic);
-            final TextView timeStampView = (TextView) getDetailsContainer().findViewById(R.id.timestamp);
+//            final TextView timeStampView = (TextView) getDetailsContainer().findViewById(R.id.timestamp);
+            mDetailsContainerv2 = (RelativeLayout) rootView.findViewById(R.id.details_container);
+            mTimeStampView = (TextView) mDetailsContainerv2.findViewById(R.id.timestamp);
+            // ImageView which takes up space so that onclicklistener from livepic is not triggered
+            mHelperView = (ImageView) mDetailsContainerv2.findViewById(R.id.image_container);
+            mHelperView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // Empty on purpose
+                }
+            });
+
+
 
             /* Set up behavior to toggle toolbar and details container */
             liveImageView.setOnClickListener(new View.OnClickListener() {
@@ -382,50 +451,99 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                     if (getActionBar().isShowing()) {
                         // Hide the actionbar/toolbar
                         getActionBar().hide();
+                        ((LivePicsGalleryActivity) getActivity()).mNavigateButton.hide();
+                        ((LivePicsGalleryActivity) getActivity()).closeFabMenu();
                         // Animation fade out of the details container
-                        slideToBottom(getDetailsContainer());
+//                        slideToBottom(getDetailsContainer());
+//                        slideToBottom(mDetailsContainerv2);
                     } else {
                         // Show the actionbar/toolbar
                         getActionBar().show();
+                        ((LivePicsGalleryActivity) getActivity()).mNavigateButton.show();
                         // Animation fade in of the details container
-                        slideToTop(getDetailsContainer());
+//                        slideToTop(getDetailsContainer());
+//                        slideToTop(mDetailsContainerv2);
                     }
                 }
             });
-
-            String pageNum = Integer.toString(this.getPageNum());
 
             /* Load pictures in pager */
             switch (this.getPageNum()) {
                 case 1:
                     Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-1 ).get(0) )
-                            .into( liveImageView );
-//                    timeStampView.setText( picUrls.get( picUrls.size()-1 ).get(1));
-                    timeStampView.setText(pageNum);
+                            .into(liveImageView, new Callback() {
+                                @Override
+                                public void onSuccess() {
+//                                    timeStampView.setText( picUrls.get( picUrls.size()-1 ).get(1));
+                                    mTimeStampView.setText(picUrls.get( picUrls.size()-1 ).get(1));
+
+                                }
+
+                                @Override
+                                public void onError() {
+                                    // Silent Error
+                                }
+                            });
                     break;
                 case 2:
                     Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-2 ).get(0) )
-                            .into(liveImageView);
-//                    timeStampView.setText( picUrls.get( picUrls.size()-2 ).get(1) );
-                    timeStampView.setText(pageNum);
+                            .into(liveImageView, new Callback() {
+                                @Override
+                                public void onSuccess() {
+//                                    timeStampView.setText( picUrls.get( picUrls.size()-2 ).get(1) );
+                                    mTimeStampView.setText(picUrls.get( picUrls.size()-2 ).get(1));
+                                }
+
+                                @Override
+                                public void onError() {
+                                    // Silent Error
+                                }
+                            });
                     break;
                 case 3:
                     Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-3 ).get(0) )
-                            .into(liveImageView);
-//                    timeStampView.setText( picUrls.get( picUrls.size()-3 ).get(1) );
-                    timeStampView.setText(pageNum);
+                            .into(liveImageView, new Callback() {
+                                @Override
+                                public void onSuccess() {
+//                                    timeStampView.setText( picUrls.get( picUrls.size()-3 ).get(1) );
+                                    mTimeStampView.setText(picUrls.get( picUrls.size()-3 ).get(1));
+                                }
+
+                                @Override
+                                public void onError() {
+                                    // Silent Error
+                                }
+                            });
                     break;
                 case 4:
                     Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-4 ).get(0) )
-                            .into( liveImageView );
-//                    timeStampView.setText( picUrls.get( picUrls.size()-4 ).get(1) );
-                    timeStampView.setText(pageNum);
+                            .into( liveImageView, new Callback() {
+                                @Override
+                                public void onSuccess() {
+//                                    timeStampView.setText( picUrls.get( picUrls.size()-4 ).get(1) );
+                                    mTimeStampView.setText(picUrls.get( picUrls.size()-4 ).get(1));
+                                }
+
+                                @Override
+                                public void onError() {
+                                    // Silent Error
+                                }
+                            });
                     break;
                 case 5:
                     Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-5 ).get(0) )
-                            .into( liveImageView );
-//                    timeStampView.setText( picUrls.get( picUrls.size()-5 ).get(1) );
-                    timeStampView.setText(pageNum);
+                            .into( liveImageView, new Callback() {
+                                @Override
+                                public void onSuccess() {
+//                                    timeStampView.setText( picUrls.get( picUrls.size()-5 ).get(1) );
+                                    mTimeStampView.setText(picUrls.get( picUrls.size()-5 ).get(1));
+                                }
+
+                                @Override
+                                public void onError() {
+                                    // Silent Error
+                                }
+                            });
                     break;
 
             }
@@ -462,6 +580,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                     .translationY(0)
                     .alpha(1.0f);
         }
+
     } // End of PlaceHolderFragment
 
 
@@ -581,6 +700,61 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
             super.onPostExecute(result);
         }
 
+    }
+
+    // Helper method to show and hide FAB Menu
+    public void toggleFabMenu() {
+        if (isFabMenuOpen) {
+            mRideUberButton.setClickable(false);
+            mRideLyftButton.setClickable(false);
+            mRideGmapsButton.setClickable(false);
+            mRideUberButton.hide();
+            mRideUberLabel.startAnimation(fadeOut);
+            mRideUberLabel.setVisibility(View.INVISIBLE);
+            mRideLyftButton.hide();
+            mRideLyftLabel.startAnimation(fadeOut);
+            mRideLyftLabel.setVisibility(View.INVISIBLE);
+            mRideGmapsButton.hide();
+            mRideGmapsLabel.startAnimation(fadeOut);
+            mRideGmapsLabel.setVisibility(View.INVISIBLE);
+//                mCallButton.show();
+//                mCallButton.setClickable(true);
+            isFabMenuOpen = false;
+        } else {
+//                mCallButton.hide();
+//                mCallButton.setClickable(false);
+            mRideUberButton.setClickable(true);
+            mRideLyftButton.setClickable(true);
+            mRideGmapsButton.setClickable(true);
+            mRideUberButton.show();
+            mRideUberLabel.startAnimation(fadeIn);
+            mRideUberLabel.setVisibility(View.VISIBLE);
+            mRideLyftButton.show();
+            mRideLyftLabel.startAnimation(fadeIn);
+            mRideLyftLabel.setVisibility(View.VISIBLE);
+            mRideGmapsButton.show();
+            mRideGmapsLabel.startAnimation(fadeIn);
+            mRideGmapsLabel.setVisibility(View.VISIBLE);
+            isFabMenuOpen = true;
+        }
+    }
+
+    public void closeFabMenu() {
+        isFabMenuOpen = false;
+        mRideUberButton.setClickable(false);
+        mRideLyftButton.setClickable(false);
+        mRideGmapsButton.setClickable(false);
+        mRideUberButton.hide();
+        mRideUberLabel.startAnimation(fadeOut);
+        mRideUberLabel.setVisibility(View.INVISIBLE);
+        mRideLyftButton.hide();
+        mRideLyftLabel.startAnimation(fadeOut);
+        mRideLyftLabel.setVisibility(View.INVISIBLE);
+        mRideGmapsButton.hide();
+        mRideGmapsLabel.startAnimation(fadeOut);
+        mRideGmapsLabel.setVisibility(View.INVISIBLE);
+//                mCallButton.show();
+//                mCallButton.setClickable(true);
     }
 
     /**

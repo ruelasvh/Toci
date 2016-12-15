@@ -115,7 +115,7 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
         mapFragment.getMapAsync(this);
 
         // Floating bar action button
-        fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab = (FloatingActionButton) view.findViewById(R.id.fab_add_new_crowd);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
