@@ -50,19 +50,18 @@
                             android:layout_marginBottom="15dp"/>
             -->
             <AutoCompleteTextView
-                android:id="@+id/userEmail"
+                android:id="@+id/login_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Email"
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
-                android:singleLine="true"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="20dp"
                 android:textColorHint="@color/white"
                 android:textColor="@color/white" />
 
             <EditText
-                android:id="@+id/password"
+                android:id="@+id/login_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Password"
@@ -70,13 +69,12 @@
                 android:imeOptions="actionUnspecified"
                 android:inputType="textPassword"
                 android:maxLines="1"
-                android:singleLine="true"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="35dp"
                 android:textColorHint="@color/white"
                 android:textColor="@color/white" />
 
             <Button
-                android:id="@+id/btnSingIn"
+                android:id="@+id/login_button"
                 android:layout_width="match_parent"
                 android:layout_height="40dip"
                 android:layout_gravity="center_horizontal"
@@ -101,7 +99,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/btnRegister"
+            android:id="@+id/register_link_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

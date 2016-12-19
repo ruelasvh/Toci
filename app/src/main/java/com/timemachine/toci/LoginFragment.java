@@ -1,14 +1,23 @@
 package com.timemachine.toci;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 /**
@@ -21,6 +30,8 @@ import android.widget.TextView;
  */
 public class LoginFragment extends Fragment {
 
+    private static final String TAG = LoginFragment.class.getSimpleName();
+    private static final int REQUEST_SIGNUP = 0;
     private static final String ARG_SECTION_NUMBER = "section_number";
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -30,7 +41,10 @@ public class LoginFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private View rootView;
-    private TextView signUpTextView;
+    private AutoCompleteTextView mEmailText;
+    private EditText mPasswordText;
+    private Button mLoginButton;
+    private TextView mSignupLink;
 
     /**
      * Use this factory method to create a new instance of
@@ -59,6 +73,7 @@ public class LoginFragment extends Fragment {
 //        if (getArguments() != null) {
 //            mParam1 = getArguments().getString(ARG_SECTION_NUMBER);
 //        }
+
     }
 
 
@@ -67,6 +82,26 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_login, container, false);
+        mEmailText = (AutoCompleteTextView) rootView.findViewById(R.id.login_email);
+        mPasswordText = (EditText) rootView.findViewById(R.id.login_password);
+        mLoginButton = (Button) rootView.findViewById(R.id.login_button);
+        mSignupLink = (Button) rootView.findViewById(R.id.register_link_button);
+
+        mLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                login();
+            }
+        });
+
+        mSignupLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: start up the singup activity
+//                Intent intent = new Intent(getContext(), SingupActivity.class);
+//                startActivityForResult(intent, REQUEST_SIGNUP);
+            }
+        });
 
         //signUpTextView = (TextView) rootView.findViewById(R.id.signUpTextView);
         //signUpTextView.setPaintFlags(signUpTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -74,10 +109,19 @@ public class LoginFragment extends Fragment {
         return rootView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_SIGNUP) {
+            if (resultCode == Activity.RESULT_OK) {
+                // TODO: Implement successful signup logic here
+                // By default we just finish the Activity and log them in automatically
+//                this.finish();
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                // Indicates that the activity closed before a selection was made. For example if
+                // the user pressed the back button.
+            }
         }
     }
 
@@ -117,4 +161,72 @@ public class LoginFragment extends Fragment {
         public void onFragmentInteraction(Uri uri);
     }
 
+    /**
+     * Helper functions put here as to preserve the fragment's lifecycle methods in order
+     */
+    public void login() {
+        Log.d(TAG, "Login");
+
+        if (!validate()) {
+            onLoginFailed();
+            return;
+        }
+
+        mLoginButton.setEnabled(false);
+
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity(),
+                R.style.AppThemeMainDialogStyle);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Authenticating...");
+        progressDialog.show();
+
+        String email = mEmailText.getText().toString();
+        String password = mPasswordText.getText().toString();
+
+        // TODO: Implement authentication logic
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        // On complete call either onLoginSuccess or onLoginFailed
+                        onLoginSuccess();
+                        // onLoginFailed();
+                        progressDialog.dismiss();
+                    }
+                }, 3000
+        );
+    }
+
+    public void onLoginSuccess() {
+        mLoginButton.setEnabled(true);
+//        getActivity().finish();
+    }
+    public void onLoginFailed() {
+//        Toast.makeText(getContext(), "Login failed", Toast.LENGTH_LONG).show();
+
+        mLoginButton.setEnabled(true);
+    }
+
+    public boolean validate() {
+        boolean valid = true;
+
+        String email = mEmailText.getText().toString();
+        String password = mPasswordText.getText().toString();
+
+        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            mEmailText.setError("Enter a valid email address");
+            valid = false;
+        } else {
+            mEmailText.setError(null);
+        }
+
+        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
+            mPasswordText.setError("Between 4 and 10 alphanumeric characters");
+            valid = false;
+        } else {
+            mPasswordText.setError(null);
+        }
+
+        return valid;
+    }
 }

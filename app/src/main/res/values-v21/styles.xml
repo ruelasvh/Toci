@@ -23,6 +23,12 @@
         <item name="android:windowContentTransitions">true</item>
     </style>
 
+    <style name="AppThemeMainDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/PrimaryAccentColor</item>
+        <item name="android:textColorPrimary">@color/PrimaryTextPrimaryColor</item>
+        <item name="android:background">@color/white</item>
+    </style>
+
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">true</item>
         <item name="color">@android:color/white</item>
