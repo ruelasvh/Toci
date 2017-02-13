@@ -110,7 +110,7 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
 
         if (filter.equals(CITY_FILTER)) {
             try {
-                String link = "http://crowdzeeker.com/AppCrowdZeeker/fetchcrowds.php?city=" + URLEncoder.encode(query) + "";
+                String link = "http://crowdzeeker.com/AppCrowdZeeker/fetchcrowds.php?city=" + URLEncoder.encode(query, "UTF-8") + "";
                 URI url = new URI(link);
                 HttpClient client = new DefaultHttpClient();
                 HttpGet request = new HttpGet();
@@ -132,7 +132,7 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
         }
         if (filter.equals(ID_FILTER)) {
             try {
-                String link = "http://crowdzeeker.com/AppCrowdZeeker/fetchcrowdsbyid.php?ids=" + query + "";
+                String link = "http://crowdzeeker.com/AppCrowdZeeker/fetchcrowdsbyid.php?ids=" + URLEncoder.encode(query, "UTF-8") + "";
                 Log.d(TAG + " url: ", link);
                 URI url = new URI(link);
                 HttpClient client = new DefaultHttpClient();

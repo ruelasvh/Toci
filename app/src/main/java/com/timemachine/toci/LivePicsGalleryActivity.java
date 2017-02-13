@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -184,6 +186,12 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
             public void onClick(View view) {
                 // Toggle Fab Menu
                 toggleFabMenu();
+//                mNavigateButton.setSelected(!mNavigateButton.isSelected());
+//                mNavigateButton.setImageResource(mNavigateButton.isSelected() ? R.drawable.animated_car : R.drawable.animated_close);
+//                Drawable drawable = mNavigateButton.getDrawable();
+//                if (drawable instanceof Animatable) {
+//                    ((Animatable) drawable).start();
+//                }
 
 //                    try {
 //                        PackageManager pm = getActivity().getPackageManager();
@@ -719,6 +727,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
             mRideGmapsLabel.setVisibility(View.INVISIBLE);
 //                mCallButton.show();
 //                mCallButton.setClickable(true);
+            mNavigateButton.setImageResource(R.drawable.ic_directions_car_white);
             isFabMenuOpen = false;
         } else {
 //                mCallButton.hide();
@@ -735,26 +744,30 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
             mRideGmapsButton.show();
             mRideGmapsLabel.startAnimation(fadeIn);
             mRideGmapsLabel.setVisibility(View.VISIBLE);
+            mNavigateButton.setImageResource(R.drawable.ic_close_white);
             isFabMenuOpen = true;
         }
     }
 
     public void closeFabMenu() {
-        isFabMenuOpen = false;
-        mRideUberButton.setClickable(false);
-        mRideLyftButton.setClickable(false);
-        mRideGmapsButton.setClickable(false);
-        mRideUberButton.hide();
-        mRideUberLabel.startAnimation(fadeOut);
-        mRideUberLabel.setVisibility(View.INVISIBLE);
-        mRideLyftButton.hide();
-        mRideLyftLabel.startAnimation(fadeOut);
-        mRideLyftLabel.setVisibility(View.INVISIBLE);
-        mRideGmapsButton.hide();
-        mRideGmapsLabel.startAnimation(fadeOut);
-        mRideGmapsLabel.setVisibility(View.INVISIBLE);
+        if (isFabMenuOpen) {
+            mRideUberButton.setClickable(false);
+            mRideLyftButton.setClickable(false);
+            mRideGmapsButton.setClickable(false);
+            mRideUberButton.hide();
+            mRideUberLabel.startAnimation(fadeOut);
+            mRideUberLabel.setVisibility(View.INVISIBLE);
+            mRideLyftButton.hide();
+            mRideLyftLabel.startAnimation(fadeOut);
+            mRideLyftLabel.setVisibility(View.INVISIBLE);
+            mRideGmapsButton.hide();
+            mRideGmapsLabel.startAnimation(fadeOut);
+            mRideGmapsLabel.setVisibility(View.INVISIBLE);
 //                mCallButton.show();
 //                mCallButton.setClickable(true);
+            mNavigateButton.setImageResource(R.drawable.ic_directions_car_white);
+            isFabMenuOpen = false;
+        }
     }
 
     /**

@@ -3,6 +3,7 @@ package com.timemachine.toci;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -72,6 +73,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
     private LinearLayoutManager mLayoutManager;
     private View mFragmentContainerView;
     private NavigationDrawerAdapter mAdapter;
+    private TextView mLogoutLink;
 
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
@@ -131,6 +133,18 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
         mDrawerList.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
         selectItem(mCurrentSelectedPosition);
+
+        mLogoutLink = (TextView) view.findViewById(R.id.logoutLink);
+        mLogoutLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // set session in app prefs to false
+                mAppPrefs.setSessionStatus(false);
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
         return view;
     }
 
@@ -185,8 +199,6 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
                 getResources().getDrawable(R.drawable.navigation_drawer_item_empty)));
         // Add rest of fragments to app interaction
         items.add(new NavigationItem("Add Crowd",
-                getResources().getDrawable(R.drawable.navigation_drawer_item_empty)));
-        items.add(new NavigationItem("Log In",
                 getResources().getDrawable(R.drawable.navigation_drawer_item_empty)));
         items.add(new NavigationItem("About",
                 getResources().getDrawable(R.drawable.navigation_drawer_item_empty)));

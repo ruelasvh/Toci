@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId "com.timemachine.toci"
-        minSdkVersion 14
+        minSdkVersion 17
         targetSdkVersion 23
 //        minSdkVersion 16
 //        targetSdkVersion 21
@@ -71,6 +71,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-ads:8.4.0'
     compile 'com.google.code.gson:gson:2.7'
 }
+
 
 
 

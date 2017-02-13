@@ -98,8 +98,6 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // TODO: start up the singup activity
-//                Intent intent = new Intent(getContext(), SingupActivity.class);
-//                startActivityForResult(intent, REQUEST_SIGNUP);
             }
         });
 

@@ -24,6 +24,8 @@ public class AppPrefs {
     private String fav_crowds = "fav_crowds_prefs";
     private String user_name = "user_name_prefs";
     private String user_id = "user_id_prefs";
+    private String session_status = "session_status_prefs";
+    private Boolean isLoggedin = false;
     private Set<String> in;
     private Set<String> out;
     private Set<String> crowds_in;
@@ -82,6 +84,12 @@ public class AppPrefs {
     }
 
     /** Methods for dealing with user accounts **/
+    public boolean getSessionStatus() {
+        return  appSharedPrefs.getBoolean(session_status, false);
+    }
+    public void setSessionStatus(boolean _is_loggedin) {
+        prefsEditor.putBoolean(session_status, _is_loggedin).commit();
+    }
     public int getUser_id() {
         return appSharedPrefs.getInt(user_id, 0);
     }

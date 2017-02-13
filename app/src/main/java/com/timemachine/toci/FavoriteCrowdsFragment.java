@@ -119,6 +119,7 @@ public class FavoriteCrowdsFragment extends Fragment {
 //        }
 
         network = new Network(getContext());
+        getCrowdsTask = null;
 
         // Set up preferences
         mContext = getContext();
@@ -197,10 +198,14 @@ public class FavoriteCrowdsFragment extends Fragment {
 
         refreshCrowds();
 
-        // Disable swipe down to refresh if crowds are updating
-        if (network.isOnline() && getCrowdsTask.getStatus() == AsyncTask.Status.RUNNING) {
+        // Disable swipe down to refresh if not online
+        if (network.isOnline()) {
             mSwipeRefreshLayout.setEnabled(false);
         }
+        // Disable swipe down to refresh if crowds are updating
+//        if (getCrowdsTask != null) {
+//            if (getCrowdsTask.getStatus() == AsyncTask.Status.RUNNING) mSwipeRefreshLayout.setEnabled(false);
+//        }
     }
 
     @Override

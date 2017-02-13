@@ -106,7 +106,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:tint="@color/azure"
-        android:src="@drawable/navigate_logo"
+        android:src="@drawable/ic_directions_car_white"
         android:layout_marginBottom="16dp"
         android:layout_marginRight="16dp"
         android:layout_gravity="right|bottom" />

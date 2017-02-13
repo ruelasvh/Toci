@@ -116,6 +116,20 @@
     </style>
     <!-- Transparent ActionBar theme ends here -->
 
+    <!-- Login activity theme startes here -->
+    <style name="Theme.AppCompat.Light.NoActionBar.FullScreen" parent="@style/Theme.AppCompat.Light">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="colorPrimary">@color/PrimaryColor</item>
+        <item name="colorPrimaryDark">@color/PrimaryColor</item>
+        <item name="colorAccent">@color/PrimaryAccentColor</item>
+        <item name="android:colorControlNormal">@color/white</item>
+        <item name="android:colorControlActivated">@color/PrimaryAccentColor</item>
+        <item name="android:colorControlHighlight">@color/white</item>
+    </style>
+    <!-- Login activity theme ends here -->
+
     <style name="ImageTitleBottom">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">50dp</item>

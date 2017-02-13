@@ -1,6 +1,7 @@
 package com.timemachine.toci;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -33,9 +34,22 @@ public class HomeMaterialActivity extends AppCompatActivity
     AppPrefs mAppPrefs;
     List<String> mCityFavorites;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Used to retrieve user preferences
+        mContext = getApplicationContext();
+        mAppPrefs = new AppPrefs(mContext);
+        boolean isLoggedin = mAppPrefs.getSessionStatus();
+
+        // Put asynctask here to check server if logged in
+        if (!isLoggedin) {
+            Intent intent = new Intent(mContext, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         setContentView(R.layout.activity_home_material);
         mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
@@ -57,10 +71,6 @@ public class HomeMaterialActivity extends AppCompatActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
 
-        // Used to retrieve user preferences
-        mContext = getApplicationContext();
-        mAppPrefs = new AppPrefs(mContext);
-
         // update the main content by replacing fragments
         Fragment fragment = null;
 
@@ -75,9 +85,6 @@ public class HomeMaterialActivity extends AppCompatActivity
                 fragment = AddNewCrowdFragment.newInstance();
                 break;
             case 3:
-                fragment = new LoginFragment();
-                break;
-            case 4:
                 fragment = new AboutUsFragment();
         }
 
@@ -100,8 +107,6 @@ public class HomeMaterialActivity extends AppCompatActivity
 //            } else if (position == (totalCities+2)) {
 //                fragment = AddNewCrowdFragment.newInstance();
 //            } else if (position == (totalCities+3)) {
-//                fragment = new LoginFragment();
-//            } else if (position == (totalCities+4)) {
 //                fragment = new AboutUsFragment();
 //            }
 //        } else { // otherwise load basic list of fragments
@@ -116,9 +121,6 @@ public class HomeMaterialActivity extends AppCompatActivity
 //                    fragment = AddNewCrowdFragment.newInstance();
 //                    break;
 //                case 3:
-//                    fragment = new LoginFragment();
-//                    break;
-//                case 4:
 //                    fragment = new AboutUsFragment();
 //            }
 //        }
@@ -142,9 +144,6 @@ public class HomeMaterialActivity extends AppCompatActivity
                 break;
             case "FavoriteCrowdsFragment":
                 mTitle = "Favorite Crowds";
-                break;
-            case "LoginFragment":
-                mTitle = "Log In";
                 break;
             case "AboutUsFragment":
                 mTitle = "About Us";
