@@ -17,7 +17,7 @@ import java.util.List;
 
 
 public class HomeMaterialActivity extends AppCompatActivity
-        implements LoginFragment.OnFragmentInteractionListener, AboutUsFragment.OnFragmentInteractionListener,
+        implements AboutUsFragment.OnFragmentInteractionListener,
         AddNewCrowdFragment.OnFragmentInteractionListener, FavoriteCrowdsFragment.OnFragmentSelectedListener,
         FavoriteCityFragment.OnFragmentInteractionListener, SearchFragment.OnFragmentSelectedListener ,NavigationDrawerCallbacks {
 

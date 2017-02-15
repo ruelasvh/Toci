@@ -148,7 +148,7 @@ public class CityActivity extends AppCompatActivity {
 
             getCrowdsTask.execute(CITY_FILTER, mCity);
         } else {
-            Toast.makeText(getApplicationContext(), "No Connection Available",
+            Toast.makeText(getApplicationContext(), R.string.error_offline,
                     Toast.LENGTH_SHORT).show();
             mSwipeRefreshLayout.setRefreshing(false);
         }

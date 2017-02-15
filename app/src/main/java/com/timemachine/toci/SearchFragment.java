@@ -73,10 +73,11 @@ public class SearchFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_search, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_search, container, false);
 
         final EditText mainEditText = (EditText) rootView.findViewById(R.id.enter_city);
         final ImageView mainButton = (ImageView) rootView.findViewById(R.id.main_btn);
+
         mainButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,25 +85,28 @@ public class SearchFragment extends Fragment {
                 // Hide the keyboard
                 InputMethodManager inputManager = (InputMethodManager)
                         getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-
                 inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
                         InputMethodManager.HIDE_NOT_ALWAYS);
 
-
-                final String desired_city = mainEditText.getText().toString();
+                // Check network status
+                if (!network.isOnline()) {
+                    Toast.makeText(getContext().getApplicationContext(), R.string.error_offline,
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 /**
                  * AsyncTask which makes call to server and returns
                  * true if city found, false if city not found.
                  */
-                if (network.isOnline()) {
+                final String desired_city = mainEditText.getText().toString();
+
+                if (!desired_city.isEmpty()) {
                     new CheckCityTask() {
                         @Override
                         protected void onPostExecute(Boolean result) {
                             if (result) {
-
                                 StartCityActivity(desired_city);
-
                             } else {
                                 Snackbar mySnackbar = Snackbar.make(getActivity().findViewById(R.id.root_fragment_search),
                                         "No City Found", Snackbar.LENGTH_LONG);
@@ -111,11 +115,7 @@ public class SearchFragment extends Fragment {
                             }
                         }
                     }.execute(desired_city);
-                } else {
-                    Toast.makeText(getContext().getApplicationContext(), "No Connection Available",
-                            Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
 

@@ -271,7 +271,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 if (network.isOnline()) {
                     captureImage();
                 } else {
-                    Toast.makeText(getApplicationContext(), "No Connection Available",
+                    Toast.makeText(getApplicationContext(), R.string.error_offline,
                             Toast.LENGTH_SHORT).show();
                 }
                 return true;

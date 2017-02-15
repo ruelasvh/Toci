@@ -135,7 +135,7 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
                                 .show();
                     }
                 } else {
-                    Toast.makeText(getContext().getApplicationContext(), "No Connection Available",
+                    Toast.makeText(getContext().getApplicationContext(), R.string.error_offline,
                             Toast.LENGTH_SHORT).show();
                 }
 

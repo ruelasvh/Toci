@@ -1,5 +1,6 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/auth_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
@@ -78,10 +79,20 @@
                 android:padding="10dp"
                 android:text="@string/action_sign_in"
                 android:layout_margin="4dp"
+                android:layout_marginBottom="24dp"
                 android:textSize="15dp"
                 android:textColor="@color/white"
                 android:background="@drawable/custom_button_selector" />
 
+            <TextView android:id="@+id/link_signup"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="No account yet? Create one"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="16dip"/>
+
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+</FrameLayout>

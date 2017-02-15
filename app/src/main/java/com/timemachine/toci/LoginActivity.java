@@ -33,6 +33,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -54,7 +55,9 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>, SignupFragment.OnFragmentInteractionListener {
+public class LoginActivity extends AppCompatActivity implements
+        LoaderCallbacks<Cursor>,
+        SignupFragment.OnAccountCreatedListener {
 
     private final static String TAG = LoginActivity.class.getSimpleName();
 
@@ -83,11 +86,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private TextView mSignupLink;
+    // Class to check network status
+    private Network network;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        // For checking if app is connected
+        network = new Network(this);
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -114,6 +124,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        mSignupLink = (TextView) findViewById(R.id.link_signup);
+        mSignupLink.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment signupFragment = SignupFragment.newInstance(mEmailView.getText().toString());
+                if (signupFragment != null) {
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.auth_container, signupFragment)
+                            .addToBackStack(null).commit();
+                }
+            }
+        });
 
         // Used to retrieve user preferences
         mContext = getApplicationContext();
@@ -170,6 +193,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
+        if (!network.isOnline()) {
+            Toast.makeText(getApplicationContext(), R.string.error_offline,
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
         if (mAuthTask != null) {
             return;
         }
@@ -186,7 +215,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
+            cancel = true;
+        } else if (!isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
@@ -223,7 +256,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() > 7;
     }
 
     /**
@@ -318,10 +351,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     /**
      * Method to communicate with fragments
-     * @param uri
+     * @param email
      */
-    public void onFragmentInteraction(Uri uri) {
-        // empty
+    public void onAccountCreated(String email) {
+        // Set email passed from SignupFragment
+        mEmailView.setText(email);
     }
 
     /**

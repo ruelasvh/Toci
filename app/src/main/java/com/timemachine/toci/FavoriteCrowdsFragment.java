@@ -247,7 +247,7 @@ public class FavoriteCrowdsFragment extends Fragment {
                 getCrowdsTask.execute(ID_FILTER, crowdsIdString);
             } else {
                 mProgressBar.setVisibility(View.INVISIBLE);
-                Toast.makeText(getContext().getApplicationContext(), "No Connection Available",
+                Toast.makeText(getContext().getApplicationContext(), R.string.error_offline,
                         Toast.LENGTH_SHORT).show();
                 mSwipeRefreshLayout.setRefreshing(false);
             }
