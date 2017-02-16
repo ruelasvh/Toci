@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,7 +27,7 @@ public class SignupFragment extends Fragment {
 
     // TODO: Rename and change types of parameters
     private String mEmail;
-    private TextView mLoginLink;
+    private ImageButton mLoginLink;
     private EditText mEmailView;
 
     private OnAccountCreatedListener mListener;
@@ -66,7 +68,7 @@ public class SignupFragment extends Fragment {
         // Set up email
         mEmailView = (EditText) rootView.findViewById(R.id.input_email);
         mEmailView.setText(mEmail);
-        mLoginLink = (TextView) rootView.findViewById(R.id.link_login);
+        mLoginLink = (ImageButton) rootView.findViewById(R.id.link_login);
         mLoginLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,6 +79,13 @@ public class SignupFragment extends Fragment {
         onLoginLinkPressed(mEmail);
 
         return rootView;
+    }
+
+    public void myFragmentDataFromActivity(String data) {
+
+        Toast.makeText(getActivity(), data,
+                Toast.LENGTH_LONG).show();
+
     }
 
     // Pass email back to LoginActivity

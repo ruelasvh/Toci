@@ -12,11 +12,21 @@
     android:background="@color/PrimaryColor"
     tools:context="com.timemachine.toci.LoginActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:paddingTop="18dp"
+        android:paddingLeft="10dp"
+        android:textColor="@color/PrimaryAccentColor"
+        android:textSize="30dip"
+        android:fontFamily="sans-serif-black"
+        android:text="@string/welcome_message"/>
 
     <!-- Login progress -->
     <ProgressBar
         android:id="@+id/login_progress"
         style="?android:attr/progressBarStyleLarge"
+        android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="120dp"
@@ -34,6 +44,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:orientation="vertical">
+
 
             <android.support.design.widget.TextInputLayout
                 android:textColorHint="@color/white"
@@ -74,8 +85,9 @@
 
             <Button
                 android:id="@+id/email_sign_in_button"
-                android:layout_width="match_parent"
-                android:layout_height="40dip"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="250dip"
+                android:layout_height="50dip"
                 android:padding="10dp"
                 android:text="@string/action_sign_in"
                 android:layout_margin="4dp"

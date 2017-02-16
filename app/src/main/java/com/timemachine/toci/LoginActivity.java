@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -131,8 +132,12 @@ public class LoginActivity extends AppCompatActivity implements
             public void onClick(View view) {
                 Fragment signupFragment = SignupFragment.newInstance(mEmailView.getText().toString());
                 if (signupFragment != null) {
+                    // Reset errors.
+                    mEmailView.setError(null);
+                    mPasswordView.setError(null);
+                    mPasswordView.clearComposingText();
                     FragmentManager fragmentManager = getSupportFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.auth_container, signupFragment)
+                    fragmentManager.beginTransaction().replace(R.id.auth_container, signupFragment, "signupFragment")
                             .addToBackStack(null).commit();
                 }
             }
@@ -355,7 +360,17 @@ public class LoginActivity extends AppCompatActivity implements
      */
     public void onAccountCreated(String email) {
         // Set email passed from SignupFragment
-        mEmailView.setText(email);
+//        mEmailView.setText(email);
+//        Toast.makeText(getApplicationContext(), email,
+//                Toast.LENGTH_LONG).show();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                SignupFragment signupFragment = (SignupFragment) getSupportFragmentManager().findFragmentByTag("signupFragment");
+                signupFragment.myFragmentDataFromActivity("fakenews@gmail.com");
+            }
+        }, 5000);
     }
 
     /**
