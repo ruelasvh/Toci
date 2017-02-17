@@ -78,6 +78,8 @@ public class SignupFragment extends Fragment {
 
         onLoginLinkPressed(mEmail);
 
+        onRegistrationButtonPressed("fakenews", "fakenews@gmail.com", "fakepassword");
+
         return rootView;
     }
 
@@ -92,6 +94,13 @@ public class SignupFragment extends Fragment {
     public void onLoginLinkPressed(String email) {
         if (mListener != null) {
             mListener.onAccountCreated(email);
+        }
+    }
+
+    // Pass username, email, password to activity to attempt registration
+    public void onRegistrationButtonPressed(String username, String email, String password) {
+        if (mListener != null) {
+            mListener.onAttemptRegistration(username, email, password);
         }
     }
 
@@ -125,5 +134,7 @@ public class SignupFragment extends Fragment {
     public interface OnAccountCreatedListener {
         // Pass email back to LoginActivity
         void onAccountCreated(String email);
+
+        void onAttemptRegistration(String username, String email, String password);
     }
 }

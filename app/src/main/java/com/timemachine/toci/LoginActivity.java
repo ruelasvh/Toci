@@ -38,9 +38,13 @@ import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
@@ -78,6 +82,7 @@ public class LoginActivity extends AppCompatActivity implements
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
+    private UserRegistrationTask mRegisTask = null;
     // Helper fields to help store favorite settings
     Context mContext;
     AppPrefs mAppPrefs;
@@ -193,7 +198,7 @@ public class LoginActivity extends AppCompatActivity implements
 
 
     /**
-     * Attempts to sign in or register the account specified by the login form.
+     * Attempts to sign in the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
@@ -219,7 +224,7 @@ public class LoginActivity extends AppCompatActivity implements
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
+        // Check for a valid password.
         if (TextUtils.isEmpty(password)) {
             mPasswordView.setError(getString(R.string.error_field_required));
             focusView = mPasswordView;
@@ -252,6 +257,22 @@ public class LoginActivity extends AppCompatActivity implements
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
         }
+    }
+
+    /**
+     * Attempts to register the account specified by the register form.
+     * If there are form errors (invalid email, missing fields, etc.), the
+     * errors are presented and no actual login attempt is made.
+     */
+    private void attemptRegistration(String username, String email, String password) {
+        if (!network.isOnline()) {
+            Toast.makeText(getApplicationContext(), R.string.error_offline,
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        mRegisTask = new UserRegistrationTask(username, email, password);
+        mRegisTask.execute((Void) null);
     }
 
     private boolean isEmailValid(String email) {
@@ -363,18 +384,90 @@ public class LoginActivity extends AppCompatActivity implements
 //        mEmailView.setText(email);
 //        Toast.makeText(getApplicationContext(), email,
 //                Toast.LENGTH_LONG).show();
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                SignupFragment signupFragment = (SignupFragment) getSupportFragmentManager().findFragmentByTag("signupFragment");
-                signupFragment.myFragmentDataFromActivity("fakenews@gmail.com");
-            }
-        }, 5000);
+//        Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                SignupFragment signupFragment = (SignupFragment) getSupportFragmentManager().findFragmentByTag("signupFragment");
+//                signupFragment.myFragmentDataFromActivity("fakenews@gmail.com");
+//            }
+//        }, 5000);
     }
 
     /**
-     * Represents an asynchronous login/registration task used to authenticate
+     * Method to communicate with fragments
+     * @param username
+     * @param email
+     * @param password
+     */
+    public void onAttemptRegistration(String username, String email, String password) {
+        attemptRegistration(username, email, password);
+    }
+
+    /**
+     * Represents an asynchronous registration task used to authenticate
+     * the user.
+     */
+    public class UserRegistrationTask extends AsyncTask<Void, Void, String> {
+
+        private final String mUsername;
+        private final String mEmail;
+        private final String mPassword;
+
+        UserRegistrationTask(String username, String email, String password) {
+            mUsername = username;
+            mEmail = email;
+            mPassword = password;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            List<NameValuePair> valuePairs = new ArrayList<>();
+            valuePairs.add(new BasicNameValuePair("username", mUsername));
+            valuePairs.add(new BasicNameValuePair("email", mEmail));
+            valuePairs.add(new BasicNameValuePair("password", mPassword));
+
+            try {
+                HttpClient httpClient = new DefaultHttpClient();
+                HttpPost httpPost = new HttpPost(
+                        "http://crowdzeeker.com/AppCrowdZeeker/registration.php"
+                );
+                httpPost.setEntity(new UrlEncodedFormEntity(valuePairs));
+
+                HttpResponse httpResponse = httpClient.execute(httpPost);
+                HttpEntity httpEntity = httpResponse.getEntity();
+                String response = EntityUtils.toString(httpEntity);
+                Log.d(TAG, "server post call response: " + response);
+
+                return response;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return "Error in account registration";
+        }
+
+        @Override
+        protected void onPostExecute(final String response) {
+            //TODO: set the instance of this class to null, disable progress bar
+
+//            Toast.makeText(getApplicationContext(), response,
+//                Toast.LENGTH_LONG).show();
+
+            SignupFragment signupFragment = (SignupFragment) getSupportFragmentManager().findFragmentByTag("signupFragment");
+            signupFragment.myFragmentDataFromActivity(response);
+        }
+
+        @Override
+        protected void onCancelled() {
+            //TODO: set the instance of this class to null, disable progress bar
+
+        }
+    }
+
+    /**
+     * Represents an asynchronous login task used to authenticate
      * the user.
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
@@ -418,19 +511,6 @@ public class LoginActivity extends AppCompatActivity implements
                 e.printStackTrace();
             }
 
-//            for (String credential : DUMMY_CREDENTIALS) {
-//                String[] pieces = credential.split(":");
-//                if (pieces[0].equals(mEmail)) {
-//                    // Account exists, return true if the password matches.
-//                    mAppPrefs.setSessionStatus(pieces[1].equals(mPassword));
-//                    return pieces[1].equals(mPassword);
-//                }
-//            }
-
-            // TODO: register the new account here.
-            // Start the Signup activity
-//            Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
-//            startActivityForResult(intent, REQUEST_SIGNUP);
             return false;
         }
 
