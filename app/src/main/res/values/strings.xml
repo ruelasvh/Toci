@@ -114,7 +114,7 @@
     <string name="uber_client_id">3YHteScZ7o9lznBKuSWBYa9KLyiCiMRr</string>
     <string name="title_activity_login">Sign in</string>
 
-    <!-- Strings related to login -->
+    <!-- Strings related to authentication and registration -->
     <string name="welcome_message">Welcome to Toci.</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -124,14 +124,21 @@
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_invalid_username">This username is too short</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="regis_progress_message">Churning the server gears...</string>
+    <string name="error_unavaiable_username">This username is already taken</string>
+    <string name="error_registered_email">This email is already registered</string>
+    <string name="error_account_exists">Account already exists</string>
+    <string name="successful_regis">Registration successful</string>
+    <string name="error_regis">Something went wrong</string>
     <string name="error_offline">No internet connection</string>
     <string name="user_name_signup">Pick your username</string>
     <string name="promp_email_signup">Enter an email</string>
     <string name="promp_password_signup">Choose a password</string>
     <string name="prompt_password_confirm">Confirm password</string>
-    <string name="error_passwords_match">Passwords don\u2026t match</string>
+    <string name="error_passwords_match">Passwords don\u2019t match</string>
 </resources>

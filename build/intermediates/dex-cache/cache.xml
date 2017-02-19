@@ -97,7 +97,7 @@
         jumboMode="true"
         optimize="true"
         revision="23.0.2"
-        sha1="54b14a16111e03535afcafe5c3e89b6f4058fee8">
+        sha1="05b6e0604bec7a21ce7325b4823d2476e746fc55">
         <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_abb7d78a2fe41e8a6d941fa4cba275832a2b8d81/classes.dex" />
     </item>
     <item
@@ -212,7 +212,7 @@
         jumboMode="true"
         optimize="true"
         revision="23.0.2"
-        sha1="f0d564a5b3f8208dcc8c96b3cddd6ef622f0554a">
+        sha1="7cc58423602a5a457c3c50048de45bc906a7e0a2">
         <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_c78a0ca57b0f2a96a76272013915392a11919397/classes.dex" />
     </item>
     <item

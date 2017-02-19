@@ -3,6 +3,7 @@ package com.timemachine.toci;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -53,6 +54,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -72,18 +74,12 @@ public class LoginActivity extends AppCompatActivity implements
     private static final int REQUEST_READ_CONTACTS = 0;
 
     /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "ruelasvh@gmail.com:hello", "bar@example.com:world"
-    };
-    /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
     private UserRegistrationTask mRegisTask = null;
-    // Helper fields to help store favorite settings
+
+    // User settings.
     Context mContext;
     AppPrefs mAppPrefs;
 
@@ -271,18 +267,26 @@ public class LoginActivity extends AppCompatActivity implements
             return;
         }
 
+        if (mRegisTask != null) {
+            return;
+        }
+
         mRegisTask = new UserRegistrationTask(username, email, password);
         mRegisTask.execute((Void) null);
     }
 
-    private boolean isEmailValid(String email) {
+    public static boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
         return email.contains("@");
     }
 
-    private boolean isPasswordValid(String password) {
+    public static boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
         return password.length() > 7;
+    }
+
+    public static boolean isUsernameValid(String username) {
+        return username.length() > 7;
     }
 
     /**
@@ -381,17 +385,7 @@ public class LoginActivity extends AppCompatActivity implements
      */
     public void onAccountCreated(String email) {
         // Set email passed from SignupFragment
-//        mEmailView.setText(email);
-//        Toast.makeText(getApplicationContext(), email,
-//                Toast.LENGTH_LONG).show();
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                SignupFragment signupFragment = (SignupFragment) getSupportFragmentManager().findFragmentByTag("signupFragment");
-//                signupFragment.myFragmentDataFromActivity("fakenews@gmail.com");
-//            }
-//        }, 5000);
+        mEmailView.setText(email);
     }
 
     /**
@@ -413,11 +407,21 @@ public class LoginActivity extends AppCompatActivity implements
         private final String mUsername;
         private final String mEmail;
         private final String mPassword;
+        private ProgressDialog regisProgressDialog;
 
         UserRegistrationTask(String username, String email, String password) {
             mUsername = username;
             mEmail = email;
             mPassword = password;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            regisProgressDialog = new ProgressDialog(LoginActivity.this,
+                    R.style.AuthenDialogStyle);
+            regisProgressDialog.setIndeterminate(true);
+            regisProgressDialog.setMessage(getString(R.string.regis_progress_message));
+            regisProgressDialog.show();
         }
 
         @Override
@@ -450,13 +454,32 @@ public class LoginActivity extends AppCompatActivity implements
 
         @Override
         protected void onPostExecute(final String response) {
-            //TODO: set the instance of this class to null, disable progress bar
+            mRegisTask = null;
+            regisProgressDialog.dismiss();
 
-//            Toast.makeText(getApplicationContext(), response,
-//                Toast.LENGTH_LONG).show();
-
+            final List<String> responseStream = Arrays.asList(response.split(" "));
             SignupFragment signupFragment = (SignupFragment) getSupportFragmentManager().findFragmentByTag("signupFragment");
-            signupFragment.myFragmentDataFromActivity(response);
+
+            Log.d(TAG, responseStream.toString());
+            final int finalResponse;
+
+            if (responseStream.contains("'username_2'\"")) {
+                finalResponse = R.string.error_unavaiable_username;
+            }
+            else if (responseStream.contains("'username'\"")) {
+                finalResponse = R.string.error_account_exists;
+            }
+            else if (responseStream.contains("'email'\"")) {
+                finalResponse = R.string.error_registered_email;
+            }
+            else if (responseStream.contains("\"Success:")) {
+                finalResponse = R.string.successful_regis;
+            }
+            else {
+                finalResponse = R.string.error_regis;
+            }
+
+            signupFragment.myFragmentDataFromActivity(finalResponse);
         }
 
         @Override
