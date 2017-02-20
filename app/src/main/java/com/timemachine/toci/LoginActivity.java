@@ -88,7 +88,6 @@ public class LoginActivity extends AppCompatActivity implements
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
-    private TextView mSignupLink;
     // Class to check network status
     private Network network;
 
@@ -127,7 +126,7 @@ public class LoginActivity extends AppCompatActivity implements
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
-        mSignupLink = (TextView) findViewById(R.id.link_signup);
+        Button mSignupLink = (Button) findViewById(R.id.link_signup);
         mSignupLink.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {

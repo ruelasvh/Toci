@@ -92,9 +92,9 @@
                 android:id="@+id/registration_form_submit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="70dp"
+                android:layout_marginTop="30dp"
                 android:layout_gravity="right"
-                android:background="@drawable/custom_button_register_selector"
+                android:background="@drawable/button_register_selector"
                 android:src="@drawable/ic_arrow_register"/>
 
         </LinearLayout>

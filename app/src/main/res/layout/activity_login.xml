@@ -92,18 +92,21 @@
                 android:text="@string/action_sign_in"
                 android:layout_margin="4dp"
                 android:layout_marginBottom="24dp"
+                android:textSize="16dp"
+                android:textColor="@color/PrimaryDarkColor"
+                android:background="@drawable/button_link_register_selector" />
+
+            <Button
+                android:id="@+id/link_signup"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="250dip"
+                android:layout_height="50dip"
+                android:padding="10dp"
+                android:text="@string/action_register"
+                android:layout_margin="14dp"
                 android:textSize="15dp"
                 android:textColor="@color/white"
-                android:background="@drawable/custom_button_selector" />
-
-            <TextView android:id="@+id/link_signup"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="No account yet? Create one"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:textSize="16dip"/>
+                android:background="@drawable/button_signin_selector" />
 
         </LinearLayout>
     </ScrollView>
