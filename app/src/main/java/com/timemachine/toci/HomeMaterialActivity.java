@@ -19,7 +19,7 @@ import java.util.List;
 public class HomeMaterialActivity extends AppCompatActivity
         implements AboutUsFragment.OnFragmentInteractionListener,
         AddNewCrowdFragment.OnFragmentInteractionListener, FavoriteCrowdsFragment.OnFragmentSelectedListener,
-        FavoriteCityFragment.OnFragmentInteractionListener, SearchFragment.OnFragmentSelectedListener ,NavigationDrawerCallbacks {
+        SearchFragment.OnFragmentSelectedListener ,NavigationDrawerCallbacks {
 
     private static final String TAG = HomeMaterialActivity.class.getSimpleName();
     /**

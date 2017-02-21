@@ -1,8 +1,6 @@
 package com.timemachine.toci;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,8 +13,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import java.util.List;
-
 public class CityActivity extends AppCompatActivity {
     // helper in debugging
     private final static String TAG = CityActivity.class.getSimpleName();
@@ -28,8 +24,8 @@ public class CityActivity extends AppCompatActivity {
 
     private LiveCrowdListAdapter adapter;
     private ProgressBar spinner;
-    private ListView crowdList;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private ListView crowdListView;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private GetCrowds getCrowdsTask;
     private Network network;
 
@@ -43,24 +39,27 @@ public class CityActivity extends AppCompatActivity {
         setContentView(R.layout.activity_city);
 
         mCity = getIntent().getStringExtra("city");
-
+        network = new Network(this);
+        spinner = (ProgressBar) findViewById(R.id.spinner);
+        crowdListView = (ListView) findViewById(R.id.crowds_listview);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        // Set up the tool bar and add city as title
         toolbar.setTitle(mCity);
         setSupportActionBar(toolbar);
         if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        network = new Network(this);
+        // Show spinner while crowds load
+        spinner.setVisibility(View.VISIBLE);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
-        // BEGIN_INCLUDE (change_colors)
         // Set the color scheme of the SwipeRefreshLayout by providing 4 color resource ids
-        mSwipeRefreshLayout.setColorSchemeResources(
+        swipeRefreshLayout.setColorSchemeResources(
                 R.color.PrimaryAccentColor, R.color.PrimaryAccentColor,
                 R.color.PrimaryAccentColor, R.color.PrimaryAccentColor);
-
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshCrowds();
@@ -94,10 +93,10 @@ public class CityActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_refresh:
-                if (getCrowdsTask.getStatus() == AsyncTask.Status.RUNNING) {
+                if (getCrowdsTask != null && getCrowdsTask.getStatus() == AsyncTask.Status.RUNNING) {
                     return true;
                 } else {
-                    mSwipeRefreshLayout.setRefreshing(true);
+                    swipeRefreshLayout.setRefreshing(true);
                     refreshCrowds();
                 }
                 return true;
@@ -110,19 +109,15 @@ public class CityActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-
+        // Resume with updating crowds
+        swipeRefreshLayout.setRefreshing(true);
         refreshCrowds();
-
-        // Disable swipe down to refresh if crowds are updating
-        if (network.isOnline() && getCrowdsTask.getStatus() == AsyncTask.Status.RUNNING) {
-            mSwipeRefreshLayout.setEnabled(false);
-        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
+        // Cancel updating crowds
         cancelRefreshCrowds();
     }
 
@@ -131,26 +126,23 @@ public class CityActivity extends AppCompatActivity {
             getCrowdsTask = new GetCrowds(new GetCrowds.AsyncResponse() {
                 @Override
                 public void onAsyncTaskFinish(LiveCrowd[] crowds) {
+                    spinner.setVisibility(View.GONE);
+                    swipeRefreshLayout.setRefreshing(false); // Dismiss pull-to-refresh dialog
 
-                    spinner = (ProgressBar) findViewById(R.id.spinner);
-                    spinner.setVisibility(View.VISIBLE);
-                    crowdList = (ListView) findViewById(R.id.crowds_listview);
-
-                    adapter = new LiveCrowdListAdapter(CityActivity.this, R.layout.row, crowds);
-                    adapter.notifyDataSetChanged();
-                    if (!adapter.isEmpty()) spinner.setVisibility(View.GONE);
-                    crowdList.setAdapter(adapter);
-                    mSwipeRefreshLayout.setEnabled(true);
-                    mSwipeRefreshLayout.setRefreshing(false);
-
+                    if (crowdListView.getAdapter() == null) {
+                        adapter = new LiveCrowdListAdapter(CityActivity.this, R.layout.row, crowds);
+                        crowdListView.setAdapter(adapter);
+                    } else {
+                        adapter.updateList(crowds);
+                        adapter.notifyDataSetChanged();
+                    }
                 }
             });
-
             getCrowdsTask.execute(CITY_FILTER, mCity);
         } else {
             Toast.makeText(getApplicationContext(), R.string.error_offline,
                     Toast.LENGTH_SHORT).show();
-            mSwipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 

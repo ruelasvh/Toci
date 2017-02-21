@@ -146,13 +146,15 @@ public class FavoriteCrowdsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Populate the view with list of crowds
+        mProgressBar = (ProgressBar) getActivity().findViewById(R.id.spinner);
+        mProgressBar.setVisibility(View.VISIBLE);
+        mListView = (ListView) getActivity().findViewById(R.id.crowds_listview);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshCrowds();
             }
         });
-
     }
 
 
@@ -195,23 +197,15 @@ public class FavoriteCrowdsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
+        // Resume with updating crowds
+        mSwipeRefreshLayout.setRefreshing(true);
         refreshCrowds();
-
-        // Disable swipe down to refresh if not online
-        if (network.isOnline()) {
-            mSwipeRefreshLayout.setEnabled(false);
-        }
-        // Disable swipe down to refresh if crowds are updating
-//        if (getCrowdsTask != null) {
-//            if (getCrowdsTask.getStatus() == AsyncTask.Status.RUNNING) mSwipeRefreshLayout.setEnabled(false);
-//        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
+        // Cancel updating crowds
         cancelRefreshCrowds();
     }
 
@@ -222,10 +216,6 @@ public class FavoriteCrowdsFragment extends Fragment {
     }
 
     private void refreshCrowds() {
-//        mSwipeRefreshLayout.setEnabled(false);
-        mProgressBar = (ProgressBar) getActivity().findViewById(R.id.spinner);
-        mListView = (ListView) getActivity().findViewById(R.id.crowds_listview);
-
         if (!mAppPrefs.getFavorite_crowds().isEmpty()) {
             String crowdsIdString = TextUtils.join(",", mAppPrefs.getFavorite_crowds());
 
@@ -233,20 +223,20 @@ public class FavoriteCrowdsFragment extends Fragment {
                 getCrowdsTask = new GetCrowds(new GetCrowds.AsyncResponse() {
                     @Override
                     public void onAsyncTaskFinish(LiveCrowd[] crowds) {
-                        mProgressBar.setVisibility(View.VISIBLE);
-
-                        mListAdapter = new ListAdapter(crowds);
-                        mListAdapter.notifyDataSetChanged();
-                        if (!mListAdapter.isEmpty()) mProgressBar.setVisibility(View.GONE);
-                        mListView.setAdapter(mListAdapter);
-                        mSwipeRefreshLayout.setEnabled(true);
+                        mProgressBar.setVisibility(View.GONE);
                         mSwipeRefreshLayout.setRefreshing(false);
+
+                        if (mListView.getAdapter() == null) {
+                            mListAdapter = new ListAdapter(crowds);
+                            mListView.setAdapter(mListAdapter);
+                        } else {
+                            mListAdapter.updateList(crowds);
+                            mListAdapter.notifyDataSetChanged();
+                        }
                     }
                 });
-
                 getCrowdsTask.execute(ID_FILTER, crowdsIdString);
             } else {
-                mProgressBar.setVisibility(View.INVISIBLE);
                 Toast.makeText(getContext().getApplicationContext(), R.string.error_offline,
                         Toast.LENGTH_SHORT).show();
                 mSwipeRefreshLayout.setRefreshing(false);
@@ -262,9 +252,7 @@ public class FavoriteCrowdsFragment extends Fragment {
     }
 
     private void cancelRefreshCrowds() {
-        if (getCrowdsTask != null) {
-            getCrowdsTask.cancel(true);
-        }
+        getCrowdsTask.cancel(true);
     }
 
     private void showSearchCrowds(boolean show) {
@@ -432,6 +420,10 @@ public class FavoriteCrowdsFragment extends Fragment {
                 timeago = (TextView) convertView.findViewById(R.id.timeago);
                 distance = (TextView) convertView.findViewById(R.id.distance);
             }
+        }
+
+        public void updateList(LiveCrowd[] crowds) {
+            this.crowdsList = new ArrayList<>(Arrays.asList(crowds));
         }
     }
 }

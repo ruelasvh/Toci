@@ -93,4 +93,8 @@ public class LiveCrowdListAdapter extends ArrayAdapter<LiveCrowd> {
             distance = (TextView) convertView.findViewById(R.id.distance);
         }
     }
+
+    public void updateList(LiveCrowd[] crowds) {
+        this.crowds = new ArrayList<>(Arrays.asList(crowds));
+    }
 }

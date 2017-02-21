@@ -81,6 +81,7 @@
         <activity
             android:name=".CityActivity"
             android:label="@string/title_activity_city"
+            android:screenOrientation="portrait"
             android:parentActivityName=".HomeMaterialActivity"
             android:theme="@style/AppThemeMain">
             <meta-data
