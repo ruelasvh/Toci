@@ -252,7 +252,9 @@ public class FavoriteCrowdsFragment extends Fragment {
     }
 
     private void cancelRefreshCrowds() {
-        getCrowdsTask.cancel(true);
+        if (getCrowdsTask != null) {
+            getCrowdsTask.cancel(true);
+        }
     }
 
     private void showSearchCrowds(boolean show) {

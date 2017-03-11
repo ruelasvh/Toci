@@ -179,7 +179,8 @@ public class SearchFragment extends Fragment {
             String city = params[0];
 
             try {
-                String link = "http://crowdzeeker.com/AppCrowdZeeker/checkcity.php?city=" + URLEncoder.encode(city) + "";
+                String link = Config.CHECK_CITY_FOR_CROWDS_URL +
+                        "?" + "city=" + URLEncoder.encode(city, "UTF-8");
                 URI url = new URI(link);
                 HttpClient client = new DefaultHttpClient();
                 HttpGet request = new HttpGet();

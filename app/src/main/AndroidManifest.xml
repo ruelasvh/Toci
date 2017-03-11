@@ -51,6 +51,7 @@
             android:name=".LivePicsGalleryActivity"
             android:label="@string/livepics_gallery"
             android:parentActivityName=".HomeMaterialActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/AppThemeTransparentActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

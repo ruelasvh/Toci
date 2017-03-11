@@ -3,48 +3,6 @@
 
     <item
         is-multidex="true"
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.4.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="8e673cdfadd8f2d98fdb2fda2285c30f6e449782">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-basement-8.4.0_76bbb372c7db3710ce9e23461d92be17ac173dc8/classes.dex" />
-    </item>
-    <item
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/fr.avianey.com.viewpagerindicator/library/2.4.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="86f452c126cb92a79e1dcf08efec5404529b698e">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/fr.avianey.com.viewpagerindicator-library-2.4.1_f3df2b2408dd870105a86c501cf3c236cae62e3f/classes.dex" />
-    </item>
-    <item
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.android.support/design/23.2.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="1aa5b025efe97f5006f5be16d6ca67c6c3c0c0d8">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-design-23.2.0_abc1503049aca1d1011c0cdbab727a98257b50f3/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-games/8.4.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="3a364cc6b698d1b3b2d284f64618daaa7fe77ddf">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-games-8.4.0_2fc0447163f0adb081d3967363748b7dcaf97665/classes.dex" />
-    </item>
-    <item
-        jar="/home/victorhugo/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpmime/4.3.5/1dd0d38df9c6d21e893f2e52403f1cd99e91cd81/httpmime-4.3.5.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="1dd0d38df9c6d21e893f2e52403f1cd99e91cd81">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/httpmime-4.3.5_ff2005cbaa36d601556f1accf657f57fb4a80c3d/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/8.4.0/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -81,51 +39,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-gcm/8.4.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="2d7fe76982677315c4dc4edfb459c8ca718a9d4c">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-gcm-8.4.0_9a87558063da2813a81667342b856d045a8b8476/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/8.4.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="a8412b654dab86d57bf90683367488211c8a81f1">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-location-8.4.0_4550f5b4e265379c706b10961d75b91098ad27fc/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/23.0.0/jars/libs/internal_impl-23.0.0.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="03d38bb042efe3e5ce27ba66b729a9523c36d8fe">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-23.0.0_e61bb86c3fc308fa99a55f554d638b474f87b771/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="613298b7aa012f121ce542881c0a599ebd8078f2">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-measurement-8.4.0_5da7b62b08be8b0aee6b9bf1e3623eee2fab2b38/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/de.hdodenhof/circleimageview/1.2.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="4b868b833b0887aa48c4e581558eef4f1196f6a2">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/de.hdodenhof-circleimageview-1.2.1_4735ca3c1a66f8636a928e97dfba90f6fafa2b40/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/home/victorhugo/.gradle/caches/modules-2/files-2.1/com.squareup.picasso/picasso/2.5.2/7446d06ec8d4f7ffcc53f1da37c95f200dcb9387/picasso-2.5.2.jar"
         jumboMode="true"
         optimize="true"
@@ -143,32 +56,6 @@
         <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-identity-8.4.0_4f584eb985d08a02350995593a1f069d45390e34/classes.dex" />
     </item>
     <item
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.mcxiaoke.volley/library-aar/1.0.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="e40b9a81989bd4a846018551c280f8c4d837bf2e">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.mcxiaoke.volley-library-aar-1.0.0_17aa5fce953a4a024cd4db4347a2bb0220b2eb90/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/8.4.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="1c9f35e952b212c843f7bd2c7eec8e82ad95602e">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-analytics-8.4.0_0b1d3e4705220f0c40ebd2b74c63ad33a63c6ff7/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.android.support/support-v13/23.2.0/jars/libs/internal_impl-23.2.0.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="58d0010cb4373696cfdc5894c4b23649af58ed18">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-23.2.0_ec7c89fbe1050cc672367fa6ac9ddca708c07d0b/classes.dex" />
-    </item>
-    <item
         is-multidex="true"
         jar="/home/victorhugo/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.4/b31526a230871fbe285fbcbe2813f9c0839ae9b0/httpcore-4.4.4.jar"
         jumboMode="true"
@@ -176,15 +63,6 @@
         revision="23.0.2"
         sha1="b31526a230871fbe285fbcbe2813f9c0839ae9b0">
         <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/httpcore-4.4.4_b660bab8fc7f71b04a6e2362e9328b7cacc80ef4/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/8.4.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="b5e7892fb0708e792e0e933c4c0a0ca0ac7831fb">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-ads-8.4.0_a9f52ca56eae00b198d56dcaf8eca62b17a726b1/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -206,24 +84,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/8.4.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="04de44f90606c77f3b28cf44861f306290505aac">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-maps-8.4.0_4fc6bdf18aae77291d466ea5537d6133e950f915/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/victorhugo/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpmime/4.3.5/1dd0d38df9c6d21e893f2e52403f1cd99e91cd81/httpmime-4.3.5.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="1dd0d38df9c6d21e893f2e52403f1cd99e91cd81">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/httpmime-4.3.5_ff2005cbaa36d601556f1accf657f57fb4a80c3d/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/8.4.0/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -237,17 +97,8 @@
         jumboMode="true"
         optimize="true"
         revision="23.0.2"
-        sha1="05b6e0604bec7a21ce7325b4823d2476e746fc55">
+        sha1="633064efa9f3da241c95470bb477f4b69564261c">
         <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_abb7d78a2fe41e8a6d941fa4cba275832a2b8d81/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-fitness/8.4.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="c54246475c1bb64ac6857d1320364bfbfeda2c46">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-fitness-8.4.0_5136cdc1cc61d5639684c5964bc09f3e09445692/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -339,30 +190,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/fr.avianey.com.viewpagerindicator/library/2.4.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="86f452c126cb92a79e1dcf08efec5404529b698e">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/fr.avianey.com.viewpagerindicator-library-2.4.1_f3df2b2408dd870105a86c501cf3c236cae62e3f/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.android.support/design/23.2.0/jars/classes.jar"
         jumboMode="true"
         optimize="true"
         revision="23.0.2"
         sha1="1aa5b025efe97f5006f5be16d6ca67c6c3c0c0d8">
         <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-design-23.2.0_abc1503049aca1d1011c0cdbab727a98257b50f3/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/victorhugo/Toci/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="962f460a0f63bbf4cb404a3318fc0ee32f27ca41">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_c78a0ca57b0f2a96a76272013915392a11919397/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -375,20 +208,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.android.support/multidex/1.0.1/jars/classes.jar"
+        jar="/home/victorhugo/Toci/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
         jumboMode="true"
         optimize="true"
         revision="23.0.2"
-        sha1="78ea232052df889856dcb7b7b542707c89bb3bfb">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-multidex-1.0.1_9a51d5424cd25fde9d7cc13404fdd372ae50d0b5/classes.dex" />
-    </item>
-    <item
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/8.4.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="f2df436a8f02ce7e4d7d209671fc45f97c470f0e">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-wallet-8.4.0_43d0017ae5710565b9ab2936f0f0249b3af91763/classes.dex" />
+        sha1="c73ac8fda21a4ac54cd2244bb1ea8fe8493f24bc">
+        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_c78a0ca57b0f2a96a76272013915392a11919397/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -409,21 +234,196 @@
     </item>
     <item
         is-multidex="true"
-        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/23.0.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="d358b3dd49a7c67844622dcbc9cf4339e13952ce">
-        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-mediarouter-v7-23.0.0_8fa3e70f3241f6e0c92cbff8c58082075a2f2021/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.2.0/jars/classes.jar"
         jumboMode="true"
         optimize="true"
         revision="23.0.2"
         sha1="bc599eb9531da9d18bc58ec4eb0b1a1d895f6839">
         <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-cardview-v7-23.2.0_fa96ad23d829d98497bc36e0e1bb61cd5d472931/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="8e673cdfadd8f2d98fdb2fda2285c30f6e449782">
+        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-basement-8.4.0_76bbb372c7db3710ce9e23461d92be17ac173dc8/classes.dex" />
+    </item>
+    <item
+        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/fr.avianey.com.viewpagerindicator/library/2.4.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="86f452c126cb92a79e1dcf08efec5404529b698e">
+        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/fr.avianey.com.viewpagerindicator-library-2.4.1_f3df2b2408dd870105a86c501cf3c236cae62e3f/classes.dex" />
+    </item>
+    <item
+        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.android.support/design/23.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="1aa5b025efe97f5006f5be16d6ca67c6c3c0c0d8">
+        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-design-23.2.0_abc1503049aca1d1011c0cdbab727a98257b50f3/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-games/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="3a364cc6b698d1b3b2d284f64618daaa7fe77ddf">
+        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-games-8.4.0_2fc0447163f0adb081d3967363748b7dcaf97665/classes.dex" />
+    </item>
+    <item
+        jar="/home/victorhugo/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpmime/4.3.5/1dd0d38df9c6d21e893f2e52403f1cd99e91cd81/httpmime-4.3.5.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="1dd0d38df9c6d21e893f2e52403f1cd99e91cd81">
+        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/httpmime-4.3.5_ff2005cbaa36d601556f1accf657f57fb4a80c3d/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-gcm/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="2d7fe76982677315c4dc4edfb459c8ca718a9d4c">
+        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-gcm-8.4.0_9a87558063da2813a81667342b856d045a8b8476/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="a8412b654dab86d57bf90683367488211c8a81f1">
+        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-location-8.4.0_4550f5b4e265379c706b10961d75b91098ad27fc/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/23.0.0/jars/libs/internal_impl-23.0.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="03d38bb042efe3e5ce27ba66b729a9523c36d8fe">
+        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-23.0.0_e61bb86c3fc308fa99a55f554d638b474f87b771/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="613298b7aa012f121ce542881c0a599ebd8078f2">
+        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-measurement-8.4.0_5da7b62b08be8b0aee6b9bf1e3623eee2fab2b38/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/de.hdodenhof/circleimageview/1.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="4b868b833b0887aa48c4e581558eef4f1196f6a2">
+        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/de.hdodenhof-circleimageview-1.2.1_4735ca3c1a66f8636a928e97dfba90f6fafa2b40/classes.dex" />
+    </item>
+    <item
+        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.mcxiaoke.volley/library-aar/1.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="e40b9a81989bd4a846018551c280f8c4d837bf2e">
+        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.mcxiaoke.volley-library-aar-1.0.0_17aa5fce953a4a024cd4db4347a2bb0220b2eb90/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="1c9f35e952b212c843f7bd2c7eec8e82ad95602e">
+        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-analytics-8.4.0_0b1d3e4705220f0c40ebd2b74c63ad33a63c6ff7/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.android.support/support-v13/23.2.0/jars/libs/internal_impl-23.2.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="58d0010cb4373696cfdc5894c4b23649af58ed18">
+        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-23.2.0_ec7c89fbe1050cc672367fa6ac9ddca708c07d0b/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="b5e7892fb0708e792e0e933c4c0a0ca0ac7831fb">
+        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-ads-8.4.0_a9f52ca56eae00b198d56dcaf8eca62b17a726b1/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="04de44f90606c77f3b28cf44861f306290505aac">
+        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-maps-8.4.0_4fc6bdf18aae77291d466ea5537d6133e950f915/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/victorhugo/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpmime/4.3.5/1dd0d38df9c6d21e893f2e52403f1cd99e91cd81/httpmime-4.3.5.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="1dd0d38df9c6d21e893f2e52403f1cd99e91cd81">
+        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/httpmime-4.3.5_ff2005cbaa36d601556f1accf657f57fb4a80c3d/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-fitness/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="c54246475c1bb64ac6857d1320364bfbfeda2c46">
+        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-fitness-8.4.0_5136cdc1cc61d5639684c5964bc09f3e09445692/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/fr.avianey.com.viewpagerindicator/library/2.4.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="86f452c126cb92a79e1dcf08efec5404529b698e">
+        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/fr.avianey.com.viewpagerindicator-library-2.4.1_f3df2b2408dd870105a86c501cf3c236cae62e3f/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.android.support/multidex/1.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="78ea232052df889856dcb7b7b542707c89bb3bfb">
+        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-multidex-1.0.1_9a51d5424cd25fde9d7cc13404fdd372ae50d0b5/classes.dex" />
+    </item>
+    <item
+        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="f2df436a8f02ce7e4d7d209671fc45f97c470f0e">
+        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-wallet-8.4.0_43d0017ae5710565b9ab2936f0f0249b3af91763/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/victorhugo/Toci/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/23.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="d358b3dd49a7c67844622dcbc9cf4339e13952ce">
+        <dex dex="/home/victorhugo/Toci/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-mediarouter-v7-23.0.0_8fa3e70f3241f6e0c92cbff8c58082075a2f2021/classes.dex" />
     </item>
     <item
         is-multidex="true"

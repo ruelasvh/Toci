@@ -1,6 +1,5 @@
 package com.timemachine.toci;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -110,7 +109,7 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
 
         if (filter.equals(CITY_FILTER)) {
             try {
-                String link = "http://crowdzeeker.com/AppCrowdZeeker/fetchcrowds.php?city=" + URLEncoder.encode(query, "UTF-8") + "";
+                String link = Config.FETCH_CROWDS_BY_CITY_URL + "?city=" + URLEncoder.encode(query, "UTF-8") + "";
                 URI url = new URI(link);
                 HttpClient client = new DefaultHttpClient();
                 HttpGet request = new HttpGet();
@@ -132,7 +131,7 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
         }
         if (filter.equals(ID_FILTER)) {
             try {
-                String link = "http://crowdzeeker.com/AppCrowdZeeker/fetchcrowdsbyid.php?ids=" + URLEncoder.encode(query, "UTF-8") + "";
+                String link = Config.FETCH_CROWDS_BY_ID_URL + "?ids=" + URLEncoder.encode(query, "UTF-8") + "";
                 Log.d(TAG + " url: ", link);
                 URI url = new URI(link);
                 HttpClient client = new DefaultHttpClient();
@@ -167,9 +166,9 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
         if (crowdId != null) {
 
             try {
-                String link = "http://crowdzeeker.com/AppCrowdZeeker/fetchlatestcrowdpics.php?" +
-                        "city=" + URLEncoder.encode(crowdCity) +
-                        "&id=" + URLEncoder.encode(crowdId) + "";
+                String link = Config.FETCH_LATEST_CROWD_PICS_URL + "?" +
+                        "city=" + URLEncoder.encode(crowdCity, "UTF-8") + "&" +
+                        "id=" + URLEncoder.encode(crowdId, "UTF-8") + "";
                 URI urlObj = new URI(link);
                 HttpClient thisApp = new DefaultHttpClient();
                 HttpGet request = new HttpGet();
@@ -185,8 +184,9 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
                  * Method to store picture urls and timestamps
                  */
                 HashMap<Integer, ArrayList<String>> picUrls = new HashMap<>();
+                // If no images, set the default image
                 picUrls.put(0, new ArrayList<String>() {{
-                    add("http://crowdzeeker.com/AppCrowdZeeker/AndroidFileUpload/placeholders/add_picture_place_holder_xxxhdpi.png");
+                    add(Config.DEFAULT_CROWD_PIC_URL);
                     add("");
                 }});
 

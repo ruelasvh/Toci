@@ -1,10 +1,8 @@
 package com.timemachine.toci;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -24,9 +22,9 @@ import java.util.List;
  * Created by Victor Ruelas on 3/17/16.
  * Copyright (c) 2016 CrowdZeeker, LLC. All rights reserved.
  */
-public class InsertToDatabase extends AsyncTask<String, Void, String> {
+public class AddCrowdToDatabase extends AsyncTask<String, Void, String> {
 
-    private static final String TAG = InsertToDatabase.class.getSimpleName();
+    private static final String TAG = AddCrowdToDatabase.class.getSimpleName();
 
     Context context;
 
@@ -45,8 +43,7 @@ public class InsertToDatabase extends AsyncTask<String, Void, String> {
 
         try {
             HttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(
-                    "http://crowdzeeker.com/AppCrowdZeeker/AndroidFileUpload/upload2database.php");
+            HttpPost httpPost = new HttpPost(Config.ADD_CROWD_TO_DATABASE_URL);
             httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
             HttpResponse response = httpClient.execute(httpPost);

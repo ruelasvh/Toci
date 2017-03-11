@@ -432,9 +432,7 @@ public class LoginActivity extends AppCompatActivity implements
 
             try {
                 HttpClient httpClient = new DefaultHttpClient();
-                HttpPost httpPost = new HttpPost(
-                        "http://crowdzeeker.com/AppCrowdZeeker/registration.php"
-                );
+                HttpPost httpPost = new HttpPost(Config.USER_REGISTRATION_URL);
                 httpPost.setEntity(new UrlEncodedFormEntity(valuePairs));
 
                 HttpResponse httpResponse = httpClient.execute(httpPost);
@@ -509,9 +507,9 @@ public class LoginActivity extends AppCompatActivity implements
             Boolean response;
 
             try {
-                String link = "http://crowdzeeker.com/AppCrowdZeeker/authentication.php?email=" +
-                        URLEncoder.encode(mEmail, "UTF-8") + "&password=" +
-                        URLEncoder.encode(mPassword, "UTF-8") + "";
+                String link = Config.USER_AUTHENTICATION_URL + "?" +
+                        "email=" + URLEncoder.encode(mEmail, "UTF-8") + "&" +
+                        "password=" + URLEncoder.encode(mPassword, "UTF-8");
                 Log.d(TAG, "POST link: " + link);
                 URI url = new URI(link);
                 HttpClient client = new DefaultHttpClient();

@@ -185,7 +185,7 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
                 final Place place = PlacePicker.getPlace(data, getActivity());
 
 //============= After selecting place insert to database immediately ========================//
-                new InsertToDatabase(){
+                new AddCrowdToDatabase(){
                     @Override
                     public void onPostExecute(String result) {
                         Snackbar.make(getActivity().findViewById(R.id.root_add_new_crowd),
