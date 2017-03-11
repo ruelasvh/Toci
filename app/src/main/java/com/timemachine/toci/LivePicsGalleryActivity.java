@@ -128,6 +128,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
      * AsyncTask for retrieving latest pictures
      */
     private GetCrowds getCrowdsTask;
+    private final String GET_CROWDS_TASK_RUNNING = "getCrowdsTaskRunning";
 
     /**
      * Helper class to discover network availability
@@ -302,6 +303,11 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
         // save file url in bundle as it will be null on screen orientation changes
         outState.putParcelable("file_uri", fileUri);
+
+        // save state of getCrowdsTask
+        if (isTaskRunning()) {
+            outState.putBoolean(GET_CROWDS_TASK_RUNNING, true);
+        }
     }
 
     @Override
@@ -310,6 +316,11 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
         // get the file url
         fileUri = savedInstanceState.getParcelable("file_uri");
+
+        // check if getCrowdsTask is running so it can be restarted
+        if (savedInstanceState.getBoolean(GET_CROWDS_TASK_RUNNING, false)) {
+            refreshCrowd();
+        }
     }
 
     /**
@@ -353,7 +364,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     public void onPause() {
         super.onPause();
 
-        cancelRefreshCrowd();
+//        cancelRefreshCrowd();
     }
 
     // Method to disconnect from the google places api
@@ -369,6 +380,13 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     @Override
     public void onConnectionFailed(ConnectionResult result) {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        cancelRefreshCrowd();
     }
 
 
@@ -937,6 +955,10 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         if (getCrowdsTask != null) {
             getCrowdsTask.cancel(true);
         }
+    }
+
+    private boolean isTaskRunning() {
+        return (getCrowdsTask != null) && (getCrowdsTask.getStatus() == AsyncTask.Status.RUNNING);
     }
 
 }
