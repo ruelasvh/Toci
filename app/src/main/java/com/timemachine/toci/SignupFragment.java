@@ -1,8 +1,10 @@
 package com.timemachine.toci;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -133,8 +135,7 @@ public class SignupFragment extends Fragment {
                 cancel = true;
                 break;
             case R.string.successful_regis:
-                Toast.makeText(getActivity(), R.string.successful_regis,
-                        Toast.LENGTH_LONG).show();
+                showRegistrationSuccessDialog(getString(R.string.successful_regis));
                 // Pass email back to LoginActivity on successful registration
                 handleEmailToActivity(mEmailView.getText().toString());
                 getActivity().getSupportFragmentManager().popBackStack();
@@ -156,6 +157,27 @@ public class SignupFragment extends Fragment {
             // form field with an error.
             focusView.requestFocus();
         }
+    }
+
+    // Show AlertDialog on successful registration
+    public void showRegistrationSuccessDialog(String message) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity(),
+                R.style.AuthenDialogStyle);
+        dialogBuilder.setMessage(message);
+        dialogBuilder.setCancelable(true);
+
+        dialogBuilder.setPositiveButton(
+                "OK",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                }
+        );
+
+        AlertDialog registrationSuccessDialog = dialogBuilder.create();
+        registrationSuccessDialog.show();
     }
 
     // Pass email back to LoginActivity
