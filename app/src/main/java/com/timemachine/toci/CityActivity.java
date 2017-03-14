@@ -110,7 +110,9 @@ public class CityActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         // Resume with updating crowds
-        swipeRefreshLayout.setRefreshing(true);
+        if (spinner.getVisibility() != View.VISIBLE) {
+            swipeRefreshLayout.setRefreshing(true);
+        }
         refreshCrowds();
     }
 

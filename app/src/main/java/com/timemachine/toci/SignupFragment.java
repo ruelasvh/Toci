@@ -163,7 +163,7 @@ public class SignupFragment extends Fragment {
     public void showRegistrationSuccessDialog(String message) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity(),
                 R.style.AuthenDialogStyle);
-        dialogBuilder.setMessage(message);
+        dialogBuilder.setMessage(message + ".");
         dialogBuilder.setCancelable(true);
 
         dialogBuilder.setPositiveButton(

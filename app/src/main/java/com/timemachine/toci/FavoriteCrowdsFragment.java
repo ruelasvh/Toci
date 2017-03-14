@@ -198,7 +198,9 @@ public class FavoriteCrowdsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         // Resume with updating crowds
-        mSwipeRefreshLayout.setRefreshing(true);
+        if (mProgressBar.getVisibility() != View.VISIBLE) {
+            mSwipeRefreshLayout.setRefreshing(true);
+        }
         refreshCrowds();
     }
 
