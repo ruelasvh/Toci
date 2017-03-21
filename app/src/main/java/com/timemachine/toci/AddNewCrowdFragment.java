@@ -191,8 +191,14 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
                         Snackbar.make(getActivity().findViewById(R.id.root_add_new_crowd),
                                 result, Snackbar.LENGTH_LONG).setAction("UNDO", new InsertDatabaseListener()).show();
                     }
-                }.execute(place.getId(),
-                        place.getName().toString(), getCity(place.getAddress()));
+                }.execute(
+                        place.getId(),
+                        place.getName().toString(),
+                        place.getAddress().toString(),
+                        cleanLatLng(place.getLatLng().toString()),
+                        getCity(place.getAddress())
+                );
+
 
                 setLocation(place.getLatLng(), place.getName().toString());
 
@@ -265,7 +271,9 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
     public void setLocation(LatLng latLng, String title) {
         mLatLng = latLng;
         // Add a marker in mLatLng and move the camera
-        mMap.addMarker(new MarkerOptions().position(mLatLng).title(title).snippet("Added To Your Crowds"));
+        mMap.addMarker(
+                new MarkerOptions().position(mLatLng).title(title).snippet("Added To Your Crowds")
+        ).showInfoWindow();
         mMap.moveCamera(CameraUpdateFactory.newLatLng(mLatLng));
     }
 
@@ -296,6 +304,12 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
         city = address.subSequence(separatorIndeces[0]+2, separatorIndeces[1]).toString();
 
         return city;
+    }
+
+    // Get short address for displaying in the details container
+    private static String cleanLatLng(String latLng) {
+
+        return latLng.substring(latLng.indexOf("(")+1, latLng.indexOf(")"));
     }
 
     // End of Fragment code
