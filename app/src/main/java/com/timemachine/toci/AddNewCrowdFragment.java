@@ -152,18 +152,22 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
 
         if ( ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION ) == PackageManager.PERMISSION_GRANTED ) {
             mMap.setMyLocationEnabled(true);
+
+            // Get current location
+            LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+            Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
+            LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+            // Move map to current location
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+
+            // Disable Toolbar i.e. Directions and Google Maps buttons
+            mMap.getUiSettings().setMapToolbarEnabled(false);
+        } else {
+            Toast.makeText(getActivity(), "Enable GPS and location services.",
+                    Toast.LENGTH_LONG)
+                    .show();
         }
-
-        // Get current location
-        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
-        LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-
-        // Move map to current location
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
-
-        // Disable Toolbar i.e. Directions and Google Maps buttons
-        mMap.getUiSettings().setMapToolbarEnabled(false);
     }
 
     @Override

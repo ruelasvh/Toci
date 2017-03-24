@@ -1,8 +1,16 @@
 package com.timemachine.toci;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.support.v4.content.ContextCompat;
 import android.text.format.DateUtils;
 import android.util.Log;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -15,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
@@ -36,14 +45,30 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
 
     private final static String ID_FILTER = "ID";
 
+    private Location currentLocation;
+
+    private Context context;
+
     public interface AsyncResponse {
         void onAsyncTaskFinish(LiveCrowd[] crowds);
     }
 
     public AsyncResponse delegate = null;
 
-    public GetCrowds(AsyncResponse delegate) {
+    public GetCrowds(Context context, AsyncResponse delegate) {
+        this.context = context;
         this.delegate = delegate;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        // get last know location
+        if ( ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION ) == PackageManager.PERMISSION_GRANTED ) {
+            LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+            currentLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
+//            LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+//            Log.d(TAG, "current location: " + currentLocation.toString());
+        }
     }
 
     @Override
@@ -67,17 +92,28 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
                 for (int i = 0; i < result.length(); i++) {
                     String crowdId = result.getJSONObject(i).getString("id");
                     String crowdName = result.getJSONObject(i).getString("name");
+                    String crowdAddress = result.getJSONObject(i).getString("address");
+                    String crowdLatLng = result.getJSONObject(i).getString("latlng");
                     String crowdCity = result.getJSONObject(i).getString("city");
                     HashMap<Integer, ArrayList<String>> picUrls = getPicUrls(crowdCity, crowdId);
                     String timeAgo = picUrls.get(picUrls.size()-1).get(1);
-                    String distance = "";
+                    // Create instance of location for crowd
+                    Location crowdLocation = new Location("");
+                    String[] latlng = crowdLatLng.split(",");
+                    double latitude = Double.parseDouble(latlng[0]);
+                    double longitude = Double.parseDouble(latlng[1]);
+                    crowdLocation.setLatitude(latitude);
+                    crowdLocation.setLongitude(longitude);
+                    float distanceTo = round(currentLocation.distanceTo(crowdLocation)/((float)1609.34),2);
 
-                    crowds[i] = new LiveCrowd(crowdId, crowdName,
-                            crowdCity, timeAgo, distance, picUrls);
+                    crowds[i] = new LiveCrowd(crowdId, crowdName, crowdAddress,
+                            crowdLatLng, crowdCity, timeAgo, distanceTo, picUrls);
 
                     // Escape early if cancel() is called
                     if (isCancelled()) break;
                 }
+
+                sortCrowdsByClosest(crowds);
 
                 return crowds;
 
@@ -99,7 +135,37 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
 
     }
 
+    /** Helper method to sort crowds by closest to user **/
+    public void sortCrowdsByClosest(LiveCrowd[] crowds) {
+        try {
+            int listLength = crowds.length;
+            for (int i = 1; i < listLength; i++) {
+                float distance = crowds[i].getDistance();
+                LiveCrowd tempCrowd = crowds[i];
+                int j = i - 1;
+                while ( j >= 0 && crowds[j].getDistance() > distance) {
+                    crowds[j+1] = crowds[j];
+                    j = j - 1;
+                }
+                crowds[j+1] = tempCrowd;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    /**
+     * Round to certain number of decimals
+     *
+     * @param d
+     * @param decimalPlace
+     * @return
+     */
+    public static float round(float d, int decimalPlace) {
+        BigDecimal bd = new BigDecimal(Float.toString(d));
+        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+        return bd.floatValue();
+    }
     /**
      * Helper method for getting list of crowds in a city
      */

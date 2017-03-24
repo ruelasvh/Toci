@@ -10,9 +10,11 @@ public class LiveCrowd {
 
     private String id;
     private String title;
+    private String address;
+    private String latlng;
     private String city;
     private String timeago;
-    private String distance;
+    private float distance;
     private HashMap<Integer, ArrayList<String>> picUrls;
 
     /**
@@ -26,16 +28,20 @@ public class LiveCrowd {
      * LiveCrowd constructor
      * @param id
      * @param title
+     * @param address
+     * @param latlng
      * @param city
      * @param timeago
      * @param distance
      * @param picUrls
      */
-    public LiveCrowd(String id, String title, String city, String timeago,
-                     String distance, HashMap picUrls) {
+    public LiveCrowd(String id, String title, String address, String latlng, String city,
+                     String timeago, float distance, HashMap picUrls) {
         super();
         this.id = id;
         this.title = title;
+        this.address = address;
+        this.latlng = latlng;
         this.city = city;
         this.timeago = timeago;
         this.distance = distance;
@@ -59,6 +65,22 @@ public class LiveCrowd {
     }
 
     /**
+     * Return LiveCrowd's address
+     * @return
+     */
+    public String getAddress() {
+        return this.address;
+    }
+
+    /**
+     * Return LiveCrowd's latitude and longitude
+     * @return
+     */
+    public String getLatlng() {
+        return this.latlng;
+    }
+
+    /**
      * Return LiveCrowd's city
      * @return
      */
@@ -78,7 +100,7 @@ public class LiveCrowd {
      * Return distance to LiveCrowd from current location
      * @return
      */
-    public String getDistance() {
+    public float getDistance() {
         return this.distance;
     }
 
@@ -110,7 +132,7 @@ public class LiveCrowd {
      * Set distance
      * @param distance
      */
-    public void setDistance(String distance) {
+    public void setDistance(float distance) {
         this.distance = distance;
     }
 
@@ -144,8 +166,8 @@ public class LiveCrowd {
      */
     @Override
     public String toString() {
-        return "LiveCrowd [id=" + id + ", title=" + title + ", " +
-                "city=" + city + ", timeago=" + timeago + ", " +
-                "distance=" + distance + ", picUrls=" + picUrls + "]";
+        return "LiveCrowd [id=" + id + ", title=" + title + ", " + "address=" + address +
+                ", latlng="+ latlng + ", city=" + city + ", timeago=" + timeago +
+                ", distance=" + distance + ", picUrls=" + picUrls + "]";
     }
 }

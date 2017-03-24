@@ -59,7 +59,7 @@ public class LiveCrowdListAdapter extends ArrayAdapter<LiveCrowd> {
         final LiveCrowd crowd = crowds.get(position);
         viewHolder.title.setText(crowd.getTitle());
         viewHolder.timeago.setText(crowd.getTimeago());
-        viewHolder.distance.setText(crowd.getDistance());
+        viewHolder.distance.setText(Float.toString(crowd.getDistance()) + " mi");
         viewHolder.livepic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

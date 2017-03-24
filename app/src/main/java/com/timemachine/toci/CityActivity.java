@@ -1,17 +1,25 @@
 package com.timemachine.toci;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.google.android.gms.maps.model.LatLng;
 
 public class CityActivity extends AppCompatActivity {
     // helper in debugging
@@ -125,12 +133,11 @@ public class CityActivity extends AppCompatActivity {
 
     private void refreshCrowds() {
         if (network.isOnline()) {
-            getCrowdsTask = new GetCrowds(new GetCrowds.AsyncResponse() {
+            getCrowdsTask = new GetCrowds(this, new GetCrowds.AsyncResponse() {
                 @Override
                 public void onAsyncTaskFinish(LiveCrowd[] crowds) {
                     spinner.setVisibility(View.GONE);
                     swipeRefreshLayout.setRefreshing(false); // Dismiss pull-to-refresh dialog
-
                     if (crowdListView.getAdapter() == null) {
                         adapter = new LiveCrowdListAdapter(CityActivity.this, R.layout.row, crowds);
                         crowdListView.setAdapter(adapter);

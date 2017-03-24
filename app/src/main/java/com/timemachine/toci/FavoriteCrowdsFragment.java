@@ -222,7 +222,7 @@ public class FavoriteCrowdsFragment extends Fragment {
             String crowdsIdString = TextUtils.join(",", mAppPrefs.getFavorite_crowds());
 
             if (network.isOnline()) {
-                getCrowdsTask = new GetCrowds(new GetCrowds.AsyncResponse() {
+                getCrowdsTask = new GetCrowds(getActivity(), new GetCrowds.AsyncResponse() {
                     @Override
                     public void onAsyncTaskFinish(LiveCrowd[] crowds) {
                         mProgressBar.setVisibility(View.GONE);
@@ -346,7 +346,7 @@ public class FavoriteCrowdsFragment extends Fragment {
             final LiveCrowd crowd = crowdsList.get(position);
             viewHolder.title.setText(crowd.getTitle());
             viewHolder.timeago.setText(crowd.getTimeago());
-            viewHolder.distance.setText(crowd.getDistance());
+            viewHolder.distance.setText(Float.toString(crowd.getDistance()) + " mi");
             viewHolder.livepic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

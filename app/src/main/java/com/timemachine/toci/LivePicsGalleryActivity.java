@@ -935,7 +935,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
     private void refreshCrowd() {
         if (network.isOnline()) {
-            getCrowdsTask = new GetCrowds(new GetCrowds.AsyncResponse() {
+            getCrowdsTask = new GetCrowds(this, new GetCrowds.AsyncResponse() {
                 @Override
                 public void onAsyncTaskFinish(LiveCrowd[] crowds) {
 //                Log.d(TAG + "onAsyncFinish", crowds[0].getId());

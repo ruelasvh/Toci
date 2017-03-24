@@ -27,7 +27,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
+            android:text="Crowd Title"
             android:textColor="@color/white"
             android:textSize="18dp"
             android:textStyle="bold"
@@ -37,18 +37,18 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
+            android:text="0.04 mi"
             android:textColor="@color/white"
-            android:id="@+id/timeago" />
+            android:id="@+id/distance" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
+            android:text="6 minutes ago, 10:26 PM"
             android:textSize="10dp"
             android:textStyle="bold"
-            android:textColor="@color/light_grey"
-            android:id="@+id/distance"/>
+            android:textColor="@color/white"
+            android:id="@+id/timeago"/>
 
     </LinearLayout>
 
