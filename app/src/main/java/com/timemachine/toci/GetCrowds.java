@@ -41,9 +41,9 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
 
     private final static String TAG = GetCrowds.class.getSimpleName();
 
-    private final static String CITY_FILTER = "CITY";
+    private final static String BY_CITY = "BY_CITY";
 
-    private final static String ID_FILTER = "ID";
+    private final static String BY_ID = "BY_ID";
 
     private Location currentLocation;
 
@@ -173,7 +173,7 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
 
         String response;
 
-        if (filter.equals(CITY_FILTER)) {
+        if (filter.equals(BY_CITY)) {
             try {
                 String link = Config.FETCH_CROWDS_BY_CITY_URL + "?city=" + URLEncoder.encode(query, "UTF-8") + "";
                 URI url = new URI(link);
@@ -195,7 +195,7 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
                 e.printStackTrace();
             }
         }
-        if (filter.equals(ID_FILTER)) {
+        if (filter.equals(BY_ID)) {
             try {
                 String link = Config.FETCH_CROWDS_BY_ID_URL + "?ids=" + URLEncoder.encode(query, "UTF-8") + "";
                 Log.d(TAG + " url: ", link);

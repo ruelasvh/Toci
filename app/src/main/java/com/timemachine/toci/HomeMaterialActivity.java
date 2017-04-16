@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -18,7 +17,7 @@ import java.util.List;
 
 public class HomeMaterialActivity extends AppCompatActivity
         implements AboutUsFragment.OnFragmentInteractionListener,
-        AddNewCrowdFragment.OnFragmentInteractionListener, FavoriteCrowdsFragment.OnFragmentSelectedListener,
+        AddNewCrowdFragment.OnFragmentInteractionListener, ShowCrowdsFragment.OnFragmentSelectedListener,
         SearchFragment.OnFragmentSelectedListener ,NavigationDrawerCallbacks {
 
     private static final String TAG = HomeMaterialActivity.class.getSimpleName();
@@ -79,7 +78,7 @@ public class HomeMaterialActivity extends AppCompatActivity
                 fragment = new SearchFragment();
                 break;
             case 1:
-                fragment = FavoriteCrowdsFragment.newInstance();
+                fragment = ShowCrowdsFragment.newInstance("BY_ID");
                 break;
             case 2:
                 fragment = AddNewCrowdFragment.newInstance();
@@ -103,7 +102,7 @@ public class HomeMaterialActivity extends AppCompatActivity
 //                }
 //            }
 //            if (position == (totalCities+1)) {
-//                fragment = FavoriteCrowdsFragment.newInstance(mAppPrefs.getFav_crowds());
+//                fragment = ShowCrowdsFragment.newInstance(mAppPrefs.getFav_crowds());
 //            } else if (position == (totalCities+2)) {
 //                fragment = AddNewCrowdFragment.newInstance();
 //            } else if (position == (totalCities+3)) {
@@ -115,7 +114,7 @@ public class HomeMaterialActivity extends AppCompatActivity
 //                    fragment = new SearchFragment();
 //                    break;
 //                case 1:
-//                    fragment = FavoriteCrowdsFragment.newInstance(mAppPrefs.getFav_crowds());
+//                    fragment = ShowCrowdsFragment.newInstance(mAppPrefs.getFav_crowds());
 //                    break;
 //                case 2:
 //                    fragment = AddNewCrowdFragment.newInstance();
@@ -142,7 +141,7 @@ public class HomeMaterialActivity extends AppCompatActivity
             case "AddNewCrowdFragment":
                 mTitle = "Add New Crowd";
                 break;
-            case "FavoriteCrowdsFragment":
+            case "ShowCrowdsFragment":
                 mTitle = "Favorite Crowds";
                 break;
             case "AboutUsFragment":
