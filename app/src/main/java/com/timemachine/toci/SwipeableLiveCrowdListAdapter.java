@@ -180,7 +180,7 @@ public class SwipeableLiveCrowdListAdapter extends BaseAdapter {
             searchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // Launch Fragment
+                    // Launch SearchFragment and select it in NavDrawer
                     int searchFragPosition = 0;
                     mListener.onNavDrawerItemSelected(searchFragPosition);
 

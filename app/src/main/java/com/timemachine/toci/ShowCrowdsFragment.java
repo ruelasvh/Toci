@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -150,6 +151,11 @@ public class ShowCrowdsFragment extends Fragment {
                     refreshCrowds();
                 }
                 return true;
+            case R.id.action_show_map:
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                Fragment mapFragment = new ShowCrowdsMapFragment();
+                fragmentManager.beginTransaction().replace(R.id.container, mapFragment)
+                        .addToBackStack(null).commit();
             default:
                 return super.onOptionsItemSelected(item);
         }
