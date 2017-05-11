@@ -2,12 +2,9 @@ package com.timemachine.toci;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Animatable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -19,7 +16,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.PopupMenu;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -75,7 +71,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     /**
      * Filter crowds by
      */
-    private final static String ID_FILTER = "ID";
+    private final static String FETCH_CROWDS_FILTER = "BY_ID";
 
     /**
      * Camera activity request codes
@@ -938,13 +934,12 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
             getCrowdsTask = new GetCrowds(this, new GetCrowds.AsyncResponse() {
                 @Override
                 public void onAsyncTaskFinish(LiveCrowd[] crowds) {
-//                Log.d(TAG + "onAsyncFinish", crowds[0].getId());
                     picUrls = crowds[0].getPicUrls();
                     mSectionsPagerAdapter.notifyDataSetChanged();
                     mViewPager.setAdapter(mSectionsPagerAdapter);
                 }
             });
-            getCrowdsTask.execute(ID_FILTER, thisLiveCrowd.getId());
+            getCrowdsTask.execute(FETCH_CROWDS_FILTER, thisLiveCrowd.getId());
         } else {
             Toast.makeText(getApplicationContext(), "No Connection Available",
                     Toast.LENGTH_SHORT).show();
