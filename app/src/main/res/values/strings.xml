@@ -89,7 +89,7 @@
         Website: %4$s
     ]]>
     </string>
-        <string name="place_details_exist">
+    <string name="place_details_exist">
     <![CDATA[
         <b>%1$s</b>
         <br/>

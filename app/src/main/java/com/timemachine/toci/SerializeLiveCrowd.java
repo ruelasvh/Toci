@@ -23,21 +23,24 @@ public class SerializeLiveCrowd {
         return liveCrowd;
     }
 
-    public static LiveCrowd[] fromJson(ArrayList<String> list) {
-        if (list != null) {
+    public static ArrayList<String> toJson(LiveCrowd[] crowds){
+        ArrayList<String> list = new ArrayList<>();
 
-            ArrayList<LiveCrowd> crowds = new ArrayList<>();
-
-            for (String element : list) {
-                crowds.add(fromJson(element));
-            }
-
-            return (crowds.toArray(new LiveCrowd[crowds.size()]));
-
-        } else {
-
-            return null;
-
+        for (int i = 0; i < crowds.length; i++) {
+            list.add(toJson(crowds[i]));
         }
+
+        return list;
+    }
+
+    public static LiveCrowd[] fromJson(ArrayList<String> list) {
+        ArrayList<LiveCrowd> crowds = new ArrayList<>();
+
+        for (String element : list) {
+            crowds.add(fromJson(element));
+        }
+
+        return (crowds.toArray(new LiveCrowd[crowds.size()]));
+
     }
 }

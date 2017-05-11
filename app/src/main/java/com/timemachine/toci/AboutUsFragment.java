@@ -16,7 +16,6 @@ import android.widget.ScrollView;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link AboutUsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link AboutUsFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -28,8 +27,6 @@ public class AboutUsFragment extends Fragment {
     private String mParam1;
     // Used for setting Fragment's title in parent activity
     private static final String SECTION_TITLE = "AboutUsFragment";
-
-    private OnFragmentInteractionListener mListener;
 
     protected ScrollView mScrollView;
     private ImageView vicBubble;
@@ -94,38 +91,14 @@ public class AboutUsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         // Set Fragment's title in parent activity
         ((HomeMaterialActivity) context).onSectionAttached(SECTION_TITLE);
-
-        try {
-            mListener = (OnFragmentInteractionListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement OnFragmentSelectedListener");
-        }
     }
 
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
     }
 
 }

@@ -3,9 +3,7 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/PrimaryColor"
-    tools:context="com.timemachine.toci.CityActivityFragment"
-    tools:showIn="@layout/activity_city">
+    android:background="@color/PrimaryColor">
 
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"

@@ -36,7 +36,7 @@ public class SwipeableLiveCrowdListAdapter extends BaseAdapter {
     AppPrefs mAppPrefs;
     ImageButton searchButton;
     TextView searchText;
-    private ShowCrowdsFragment.OnFragmentSelectedListener mListener;
+    private ShowCrowdsListFragment.OnFragmentInteractionListener mListener;
 
     public SwipeableLiveCrowdListAdapter(Context context, int layoutResourceId, LiveCrowd[] crowds) {
         this.context = context;
@@ -45,7 +45,7 @@ public class SwipeableLiveCrowdListAdapter extends BaseAdapter {
         this.mAppPrefs = new AppPrefs(context);
         this.searchButton = new ImageButton(context);
         this.searchText = new TextView(context);
-        this.mListener = (ShowCrowdsFragment.OnFragmentSelectedListener) context;
+        this.mListener = (ShowCrowdsListFragment.OnFragmentInteractionListener) context;
 
         if (this.crowdsList.isEmpty()) showSearchCrowds(true);
     }
@@ -182,7 +182,7 @@ public class SwipeableLiveCrowdListAdapter extends BaseAdapter {
                 public void onClick(View view) {
                     // Launch SearchFragment and select it in NavDrawer
                     int searchFragPosition = 0;
-                    mListener.onNavDrawerItemSelected(searchFragPosition);
+                    mListener.onFragmentInteraction(searchFragPosition);
 
                 }
             });

@@ -6,10 +6,14 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.format.DateUtils;
 import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.apache.http.HttpEntity;
@@ -37,7 +41,9 @@ import java.util.HashMap;
  * Created by Victor Ruelas on 3/17/16.
  * Copyright (c) 2016 CrowdZeeker, LLC. All rights reserved.
  */
-public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
+public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> implements
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private final static String TAG = GetCrowds.class.getSimpleName();
 
@@ -45,6 +51,9 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
 
     private final static String BY_ID = "BY_ID";
 
+    private GoogleApiClient mGoogleApiClient;
+
+    private Location mLastLocation;
     private Location currentLocation;
 
     private Context context;
@@ -62,17 +71,14 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
 
     @Override
     protected void onPreExecute() {
-        // get last know location
-        if ( ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION ) == PackageManager.PERMISSION_GRANTED ) {
-            LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-            currentLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
-//            LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-//            Log.d(TAG, "current location: " + currentLocation.toString());
-        }
+        // Create instance of GoogleApiClient
+        buildGoogleLocationApi(context);
     }
 
     @Override
     protected LiveCrowd[] doInBackground (String...params){
+        // Connect to Location API
+        mGoogleApiClient.connect();
 
         JSONArray result;
 
@@ -104,7 +110,7 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
                     double longitude = Double.parseDouble(latlng[1]);
                     crowdLocation.setLatitude(latitude);
                     crowdLocation.setLongitude(longitude);
-                    float distanceTo = round(currentLocation.distanceTo(crowdLocation)/((float)1609.34),2);
+                    float distanceTo = round(mLastLocation.distanceTo(crowdLocation)/((float)1609.34),2);
 
                     crowds[i] = new LiveCrowd(crowdId, crowdName, crowdAddress,
                             crowdLatLng, crowdCity, timeAgo, distanceTo, picUrls);
@@ -130,9 +136,40 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
     @Override
     protected void onPostExecute (LiveCrowd[] crowds) {
         super.onPostExecute(crowds);
-
+        // Send crowds to interface
         delegate.onAsyncTaskFinish(crowds);
+        // Disconnect from Location API
+        mGoogleApiClient.disconnect();
+    }
 
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        if ( ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION ) == PackageManager.PERMISSION_GRANTED ) {
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                    mGoogleApiClient);
+            if (mLastLocation != null) {
+                Log.d(this.getClass().getSimpleName(),String.valueOf(mLastLocation.getLatitude()));
+                Log.d(this.getClass().getSimpleName(),String.valueOf(mLastLocation.getLongitude()));
+            }
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        // An unresolvable error has occurred and a connection to Google APIs
+        // could not be established. Display an error message, or handle
+        // the failure silently
+
+        // ...
+    }
+
+    @Override
+    public void onConnectionSuspended(int cause) {
+        // An unresolvable error has occurred and a connection to Google APIs
+        // could not be established. Display an error message, or handle
+        // the failure silently
+
+        // ...
     }
 
     /** Helper method to sort crowds by closest to user **/
@@ -322,5 +359,16 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> {
                 .insert(16, ":");
 
         return extractedTimeStamp.toString();
+    }
+
+    public void buildGoogleLocationApi(Context context) {
+        // Create instance of GoogleApiClient
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(context)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
     }
 }

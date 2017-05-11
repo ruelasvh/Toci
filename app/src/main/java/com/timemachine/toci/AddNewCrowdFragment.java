@@ -19,10 +19,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.location.places.ui.PlacePicker;
@@ -38,7 +41,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
  * Created by Victor Ruelas on 3/16/16.
  * Copyright (c) 2016 CrowdZeeker, LLC. All rights reserved.
  */
-public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback {
+public class AddNewCrowdFragment extends Fragment
+        implements
+        OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     // Identifier for debugging
     private static final String TAG = AddNewCrowdFragment.class.getSimpleName();
@@ -62,8 +69,6 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
 //    private String mParam1;
 //    private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
-
     // Helper class for determining network availability
     private Network network;
 
@@ -72,6 +77,9 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
 
     private GoogleMap mMap;
     private LatLng mLatLng;
+    private GoogleApiClient mGoogleApiClient;
+    private Location mLastLocation;
+    private Context mContext;
 
     public AddNewCrowdFragment() {
         // Required empty public constructor
@@ -103,8 +111,12 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
 //            mParam2 = getArguments().getString(ARG_PARAM2);
 //        }
 
-        network = new Network(getContext());
+        // Instantiate Network helper class
+        mContext = getContext();
+        network = new Network(mContext);
 
+        // Instantiate Google Location API
+        buildGoogleLocationApi();
     }
 
     @Override
@@ -147,20 +159,23 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
     }
 
     @Override
+    public void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
         if ( ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION ) == PackageManager.PERMISSION_GRANTED ) {
             mMap.setMyLocationEnabled(true);
-
-            // Get current location
-            LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-            Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
-            LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-
-            // Move map to current location
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
-
             // Disable Toolbar i.e. Directions and Google Maps buttons
             mMap.getUiSettings().setMapToolbarEnabled(false);
         } else {
@@ -171,8 +186,39 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
     }
 
     @Override
-    public void onViewCreated(final View view, Bundle savedInstanceState) {
+    public void onConnected(Bundle connectionHint) {
+        if ( ContextCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_COARSE_LOCATION ) == PackageManager.PERMISSION_GRANTED ) {
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                    mGoogleApiClient);
+            if (mLastLocation != null) {
+//                Log.d(this.getClass().getSimpleName(),String.valueOf(mLastLocation.getLatitude()));
+//                Log.d(this.getClass().getSimpleName(),String.valueOf(mLastLocation.getLongitude()));
+                LatLng currentLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+            }
+        } else {
+            Toast.makeText(getActivity(), "Enable GPS and location services.",
+                    Toast.LENGTH_LONG)
+                    .show();
+        }
+    }
 
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        // An unresolvable error has occurred and a connection to Google APIs
+        // could not be established. Display an error message, or handle
+        // the failure silently
+
+        // ...
+    }
+
+    @Override
+    public void onConnectionSuspended(int cause) {
+        // An unresolvable error has occurred and a connection to Google APIs
+        // could not be established. Display an error message, or handle
+        // the failure silently
+
+        // ...
     }
 
     /* Called after the autocomplete activity has finished to return its result. */
@@ -229,37 +275,13 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         // Set Fragment's title in parent activity
         ((HomeMaterialActivity) context).onSectionAttached(SECTION_TITLE);
-
-        try {
-            mListener = (OnFragmentInteractionListener) context;
-        } catch (ClassCastException e){
-            throw new ClassCastException(context.toString()
-                    + " must implement OnFragmentSelectedListener");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 
     public class InsertDatabaseListener implements View.OnClickListener {
@@ -314,6 +336,17 @@ public class AddNewCrowdFragment extends Fragment implements OnMapReadyCallback 
     private static String cleanLatLng(String latLng) {
 
         return latLng.substring(latLng.indexOf("(")+1, latLng.indexOf(")"));
+    }
+
+    public void buildGoogleLocationApi() {
+        // Create instance of GoogleApiClient
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(mContext)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
     }
 
     // End of Fragment code

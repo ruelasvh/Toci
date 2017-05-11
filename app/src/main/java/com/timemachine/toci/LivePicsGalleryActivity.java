@@ -115,7 +115,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     long totalSize = 0;
 
     /**
-     * Variable to hold crowd passed from CityActivity
+     * Variable to hold crowd passed from pevious activity
      */
     private static LiveCrowd thisLiveCrowd;
 
@@ -159,7 +159,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         super.onCreate(savedInstanceState);
         setContentView(R.layout.livepics_gallery);
 
-        // Get crowd from CityActivity->LiveCrowdListAdapter
+        // Get crowd from previous activity
         thisLiveCrowd = SerializeLiveCrowd.fromJson(getIntent().getExtras().getString("crowd"));
         picUrls = thisLiveCrowd.getPicUrls();
 

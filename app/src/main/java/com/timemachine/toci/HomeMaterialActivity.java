@@ -2,13 +2,13 @@ package com.timemachine.toci;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -16,14 +16,15 @@ import java.util.List;
 
 
 public class HomeMaterialActivity extends AppCompatActivity
-        implements AboutUsFragment.OnFragmentInteractionListener,
-        AddNewCrowdFragment.OnFragmentInteractionListener,
-        ShowCrowdsFragment.OnFragmentSelectedListener,
-        ShowCrowdsMapFragment.OnFragmentSelectedListener,
-        SearchFragment.OnFragmentSelectedListener,
+        implements
+        ShowCrowdsListFragment.OnFragmentInteractionListener,
+        ShowCrowdsMapFragment.OnFragmentInteractionListener,
+        SearchFragment.OnFragmentInteractionListener,
         NavigationDrawerCallbacks {
 
     private static final String TAG = HomeMaterialActivity.class.getSimpleName();
+    private static final String FETCH_CROWDS_FILTER = "BY_ID";
+    private static String CROWDS;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -40,6 +41,7 @@ public class HomeMaterialActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home_material);
 
         // Used to retrieve user preferences
         mContext = getApplicationContext();
@@ -53,7 +55,6 @@ public class HomeMaterialActivity extends AppCompatActivity
             finish();
         }
 
-        setContentView(R.layout.activity_home_material);
         mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(mToolbar);
 
@@ -81,7 +82,8 @@ public class HomeMaterialActivity extends AppCompatActivity
                 fragment = new SearchFragment();
                 break;
             case 1:
-                fragment = ShowCrowdsFragment.newInstance("BY_ID");
+                CROWDS = TextUtils.join(",", mAppPrefs.getFavorite_crowds());
+                fragment = ShowCrowdsListFragment.newInstance(FETCH_CROWDS_FILTER, CROWDS);
                 break;
             case 2:
                 fragment = AddNewCrowdFragment.newInstance();
@@ -105,7 +107,7 @@ public class HomeMaterialActivity extends AppCompatActivity
 //                }
 //            }
 //            if (position == (totalCities+1)) {
-//                fragment = ShowCrowdsFragment.newInstance(mAppPrefs.getFav_crowds());
+//                fragment = ShowCrowdsListFragment.newInstance(mAppPrefs.getFav_crowds());
 //            } else if (position == (totalCities+2)) {
 //                fragment = AddNewCrowdFragment.newInstance();
 //            } else if (position == (totalCities+3)) {
@@ -117,7 +119,7 @@ public class HomeMaterialActivity extends AppCompatActivity
 //                    fragment = new SearchFragment();
 //                    break;
 //                case 1:
-//                    fragment = ShowCrowdsFragment.newInstance(mAppPrefs.getFav_crowds());
+//                    fragment = ShowCrowdsListFragment.newInstance(mAppPrefs.getFav_crowds());
 //                    break;
 //                case 2:
 //                    fragment = AddNewCrowdFragment.newInstance();
@@ -144,7 +146,7 @@ public class HomeMaterialActivity extends AppCompatActivity
             case "AddNewCrowdFragment":
                 mTitle = "Add New Crowd";
                 break;
-            case "ShowCrowdsFragment":
+            case "ShowCrowdsListFragment":
                 mTitle = "Favorite Crowds";
                 break;
             case "AboutUsFragment":
@@ -209,13 +211,9 @@ public class HomeMaterialActivity extends AppCompatActivity
 
     /**
      * Method to communicate with fragments
-     * @param uri
+     * @param position
      */
-    public void onFragmentInteraction(Uri uri) {
-        // empty
-    }
-
-    public void onNavDrawerItemSelected(int position) {
+    public void onFragmentInteraction(int position) {
         mNavigationDrawerFragment.setCurrentSelectedPosition(position);
     }
 

@@ -2,8 +2,6 @@ package com.timemachine.toci;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -44,10 +42,29 @@ public class SearchFragment extends Fragment {
      */
     private static final String SECTION_TITLE = "SearchFragment";
 
-    private OnFragmentSelectedListener mListener;
+    private OnFragmentInteractionListener mListener;
 
     // For checking if network is online
     private Network network;
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p/>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentInteractionListener {
+        void onFragmentInteraction(int position);
+    }
+
+    public SearchFragment() {
+        // Required empty public constructor
+    }
+
     /**
      * Returns a new instance of this fragment for the given section
      * number.
@@ -57,10 +74,6 @@ public class SearchFragment extends Fragment {
         // Could add some parameters here that we wish to initialize
         // during the instantiation of this fragment.
         return fragment;
-    }
-
-    public SearchFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -123,7 +136,7 @@ public class SearchFragment extends Fragment {
     }
 
     /**
-     * Method which starts the CityActivity and passes the city for
+     * Method which starts the Activity and passes the city for
      * loading the CityFragment.
      * @param city
      */
@@ -137,13 +150,14 @@ public class SearchFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
         ((HomeMaterialActivity) context).onSectionAttached(SECTION_TITLE);
 
         try {
-            mListener = (OnFragmentSelectedListener) context;
+            mListener = (OnFragmentInteractionListener) context;
         } catch (ClassCastException e){
             throw new ClassCastException(context.toString()
-                    + " must implement OnFragmentSelectedListener");
+                    + " must implement OnFragmentInteractionListener");
         }
     }
 
@@ -151,20 +165,6 @@ public class SearchFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentSelectedListener {
-        void onNavDrawerItemSelected(int position);
     }
 
     /**
@@ -215,7 +215,7 @@ public class SearchFragment extends Fragment {
         public void onClick(View v) {
             // Launch AddNewCrowdFragment
             int addCrowdFragPosition = 2;
-            mListener.onNavDrawerItemSelected(addCrowdFragPosition);
+            mListener.onFragmentInteraction(addCrowdFragPosition);
         }
     }
 }

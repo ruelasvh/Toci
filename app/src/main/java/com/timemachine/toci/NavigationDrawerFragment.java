@@ -61,7 +61,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
     /**
      * A pointer to deliver content to host activity (HomeMaterialActivity)
      */
-//    private OnFragmentSelectedListener mListener;
+//    private OnFragmentInteractionListener mListener;
 
     /**
      * Helper component that ties the action bar to the navigation drawer.
