@@ -21,9 +21,10 @@ public class Config {
     public static final String USER_AUTHENTICATION_URL = SERVER_ROOT + "authentication.php";
     // Add crowd to database url
     public static final String ADD_CROWD_TO_DATABASE_URL = SERVER_ROOT + "AndroidFileUpload/upload2database.php";
+    // Delete crowd from database url
+    public static final String REMOVE_CROWD_TO_DATABASE_URL = SERVER_ROOT + "AndroidFileUpload/removeFromDatabase.php";
     // Check city for crowds url
     public static final String CHECK_CITY_FOR_CROWDS_URL = SERVER_ROOT + "checkcity.php";
-
     // Directory name to store capture images and videos
     public static final String IMAGE_DIRECTORY_NAME = "Android File Upload";
 }

@@ -246,7 +246,18 @@ public class AddNewCrowdFragment extends Fragment
                     @Override
                     public void onPostExecute(String result) {
                         Snackbar.make(getActivity().findViewById(R.id.root_add_new_crowd),
-                                result, Snackbar.LENGTH_LONG).setAction("UNDO", new InsertDatabaseListener()).show();
+                                result, Snackbar.LENGTH_LONG)
+                                .setAction("UNDO", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        new RemoveCrowdFromDatabase() {
+                                            @Override
+                                            public void onPostExecute(String result) {
+                                                mMap.clear();
+                                            }
+                                        }.execute(place.getId(), getCity(place.getAddress()));
+                                    }
+                        }).show();
 
                         mGetCrowdsTask = new GetCrowds(getActivity(), new GetCrowds.AsyncResponse() {
                             @Override

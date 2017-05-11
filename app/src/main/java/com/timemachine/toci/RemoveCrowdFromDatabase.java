@@ -19,35 +19,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Victor Ruelas on 3/17/16.
- * Copyright (c) 2016 CrowdZeeker, LLC. All rights reserved.
+ * Created by Victor Ruelas on 5/11/17.
+ * Copyright (c) 2017 CrowdZeeker, LLC. All rights reserved.
  */
-public class AddCrowdToDatabase extends AsyncTask<String, Void, String> {
 
-    private static final String TAG = AddCrowdToDatabase.class.getSimpleName();
+public class RemoveCrowdFromDatabase extends AsyncTask<String, Void, String> {
+
+    private static final String TAG = RemoveCrowdFromDatabase.class.getSimpleName();
 
     Context context;
 
     @Override
     protected String doInBackground(String... params) {
         String paramPlaceId = params[0].replace("'","''");
-        String paramPlaceName = params[1].replace("'", "''");
-        String paramPlaceAddress = params[2].replace("'", "''");
-        String paramLatLng = params[3].replace("'", "''");
-        String paramPlaceCity = params[4].replace("'","''");
+        String paramPlaceCity = params[1].replace("'","''");
         Log.d(TAG, "parameters to insert to database: " + paramPlaceId
-                + ", " + paramPlaceName + ", " + paramPlaceCity);
+               + paramPlaceCity);
 
         List<NameValuePair> nameValuePairs = new ArrayList<>();
         nameValuePairs.add(new BasicNameValuePair("id", paramPlaceId));
-        nameValuePairs.add(new BasicNameValuePair("name", paramPlaceName));
-        nameValuePairs.add(new BasicNameValuePair("address", paramPlaceAddress));
-        nameValuePairs.add(new BasicNameValuePair("latlng", paramLatLng));
         nameValuePairs.add(new BasicNameValuePair("city", paramPlaceCity));
 
         try {
             HttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(Config.ADD_CROWD_TO_DATABASE_URL);
+            HttpPost httpPost = new HttpPost(Config.REMOVE_CROWD_TO_DATABASE_URL);
             httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
             HttpResponse response = httpClient.execute(httpPost);
@@ -55,12 +50,12 @@ public class AddCrowdToDatabase extends AsyncTask<String, Void, String> {
             Log.d(TAG, entity.toString());
 
         } catch (ClientProtocolException e) {
-            return "Failed to upload: ClientProtocolException.";
+            return "Failed to remove: ClientProtocolException.";
         } catch (IOException e) {
-            return "Failed to upload: IOException";
+            return "Failed to remove: IOException";
         }
 
-        return "Successfully added new LiveCrowd.";
+        return "Successfully removed crowd.";
     }
 
     @Override
