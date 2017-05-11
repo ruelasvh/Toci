@@ -4,10 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -34,7 +31,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -44,6 +45,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class AddNewCrowdFragment extends Fragment
         implements
         OnMapReadyCallback,
+        GoogleMap.OnInfoWindowClickListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
@@ -80,6 +82,10 @@ public class AddNewCrowdFragment extends Fragment
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
     private Context mContext;
+    // AsyncTask to fetch crowds
+    private GetCrowds mGetCrowdsTask;
+    private Map<Marker, LiveCrowd> mAllMarkersMap = new HashMap<>();
+
 
     public AddNewCrowdFragment() {
         // Required empty public constructor
@@ -114,6 +120,7 @@ public class AddNewCrowdFragment extends Fragment
         // Instantiate Network helper class
         mContext = getContext();
         network = new Network(mContext);
+        mGetCrowdsTask = null;
 
         // Instantiate Google Location API
         buildGoogleLocationApi();
@@ -240,6 +247,14 @@ public class AddNewCrowdFragment extends Fragment
                     public void onPostExecute(String result) {
                         Snackbar.make(getActivity().findViewById(R.id.root_add_new_crowd),
                                 result, Snackbar.LENGTH_LONG).setAction("UNDO", new InsertDatabaseListener()).show();
+
+                        mGetCrowdsTask = new GetCrowds(getActivity(), new GetCrowds.AsyncResponse() {
+                            @Override
+                            public void onAsyncTaskFinish(LiveCrowd[] crowds) {
+                                setMarker(crowds);
+                            }
+                        });
+                        mGetCrowdsTask.execute("BY_ID", place.getId());
                     }
                 }.execute(
                         place.getId(),
@@ -248,10 +263,6 @@ public class AddNewCrowdFragment extends Fragment
                         cleanLatLng(place.getLatLng().toString()),
                         getCity(place.getAddress())
                 );
-
-
-                setLocation(place.getLatLng(), place.getName().toString());
-
 
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(getActivity(), data);
@@ -294,13 +305,29 @@ public class AddNewCrowdFragment extends Fragment
         }
     }
 
-    public void setLocation(LatLng latLng, String title) {
-        mLatLng = latLng;
-        // Add a marker in mLatLng and move the camera
-        mMap.addMarker(
-                new MarkerOptions().position(mLatLng).title(title).snippet("Added To Your Crowds")
-        ).showInfoWindow();
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(mLatLng));
+    public void setMarker(LiveCrowd[] liveCrowds) {
+        for (int i = 0; i < liveCrowds.length; i++) {
+            String[] latLngParts = liveCrowds[i].getLatlng().split(",");
+            double lat = Double.parseDouble(latLngParts[0]);
+            double lng = Double.parseDouble(latLngParts[1]);
+
+            mLatLng = new LatLng(lat, lng);
+
+            Marker marker = mMap.addMarker(new MarkerOptions().position(mLatLng)
+                    .title(liveCrowds[i].getTitle()).snippet("Added To Your LiveCrowds"));
+            marker.showInfoWindow();
+            mAllMarkersMap.put(marker, liveCrowds[i]);
+            mMap.setOnInfoWindowClickListener(this);
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(mLatLng));
+        }
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        LiveCrowd liveCrowd = mAllMarkersMap.get(marker);
+        Intent intent = new Intent(mContext, LivePicsGalleryActivity.class);
+        intent.putExtra("crowd", SerializeLiveCrowd.toJson(liveCrowd));
+        mContext.startActivity(intent);
     }
 
     private static String getCity(CharSequence address) {
