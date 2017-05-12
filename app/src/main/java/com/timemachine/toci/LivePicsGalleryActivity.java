@@ -2,6 +2,7 @@ package com.timemachine.toci;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -53,6 +54,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,19 +66,10 @@ import java.util.Set;
 
 public class LivePicsGalleryActivity extends AppCompatActivity implements OnConnectionFailedListener {
 
-    /**
-     * Logcat tag
-     */
     private static final String TAG = LivePicsGalleryActivity.class.getSimpleName();
-
-    /**
-     * Filter crowds by
-     */
     private final static String FETCH_CROWDS_FILTER = "BY_ID";
-
-    /**
-     * Camera activity request codes
-     */
+    private String UBER_CLIENT_ID;
+    private String LYFT_CLIENT_ID;
     private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
     public static final int MEDIA_TYPE_IMAGE = 1;
 
@@ -114,6 +108,9 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
      * Variable to hold crowd passed from pevious activity
      */
     private static LiveCrowd thisLiveCrowd;
+    private String title;
+    private double latitude;
+    private double longitude;
 
     /**
      * String array to hold picture urls passed from previous activity
@@ -158,6 +155,17 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         // Get crowd from previous activity
         thisLiveCrowd = SerializeLiveCrowd.fromJson(getIntent().getExtras().getString("crowd"));
         picUrls = thisLiveCrowd.getPicUrls();
+        try {
+            title = URLEncoder.encode(thisLiveCrowd.getTitle(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            title = "";
+        }
+        String[] latlng = thisLiveCrowd.getLatlng().split(",");
+        latitude = Double.parseDouble(latlng[0]);
+        longitude = Double.parseDouble(latlng[1]);
+
+        // Get Uber and Lyft Client IDs
+        UBER_CLIENT_ID = getString(R.string.uber_client_id);
 
         // Create the adapter that will return a fragment for each of the five
         // primary sections of the activity.
@@ -189,22 +197,41 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 //                if (drawable instanceof Animatable) {
 //                    ((Animatable) drawable).start();
 //                }
-
-//                    try {
-//                        PackageManager pm = getActivity().getPackageManager();
-//                        pm.getPackageInfo("com.ubercab", PackageManager.GET_ACTIVITIES);
-//                        String UBER_CLIENT_ID = getString(R.string.uber_client_id);
-//                        String uri = "uber://?client_id=" + UBER_CLIENT_ID + "&action=setPickup&pickup=my_location&dropoff[latitude]=35.993253&dropoff[longitude]=-78.9070738&dropoff[nickname]=Coit%20Tower";
-//                        Intent intent = new Intent(Intent.ACTION_VIEW);
-//                        intent.setData(Uri.parse(uri));
-//                        startActivity(intent);
-//                    } catch (PackageManager.NameNotFoundException e) {
-//                        // No Uber app! Open mobile website.
-//                        String url = "https://m.uber.com/sign-up?client_id=<CLIENT_ID>";
-//                        Intent i = new Intent(Intent.ACTION_VIEW);
-//                        i.setData(Uri.parse(url));
-//                        startActivity(i);
-//                    }
+            }
+        });
+        mRideUberButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String packageId = "com.ubercab";
+                String uri = "uber://?client_id=" + UBER_CLIENT_ID +
+                        "&action=setPickup&pickup=my_location" +
+                        "&dropoff[latitude]=" + latitude +
+                        "&dropoff[longitude]=" + longitude +
+                        "8&dropoff[nickname]=" + title;
+                String signupLink = "https://uber.com/sign-up?client_id=" + UBER_CLIENT_ID;
+                openDeeplink(packageId, uri, signupLink);
+            }
+        });
+        mRideLyftButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String packageId = "me.lyft.android";
+                String uri = "lyft://ridetype?id=lyft" +
+                        "&partner=" + LYFT_CLIENT_ID +
+                        "&destination[latitude]=" + latitude +
+                        "&destination[longitude]=" + longitude;
+                String signupLink = "https://www.lyft.com/signup/SDKSIGNUP?clientId=" + LYFT_CLIENT_ID +
+                        "&sdkName=android_direct";
+                openDeeplink(packageId, uri, signupLink);
+            }
+        });
+        mRideGmapsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String packageId = "com.google.android.apps.maps";
+                String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?daddr=%f,%f (%s)", latitude, longitude, title);
+                String signupLink = "https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=7&cad=rja&uact=8&ved=0ahUKEwj08urXpevTAhVF7CYKHZbSDbEQFghHMAY&url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.google.android.apps.maps%26hl%3Den&usg=AFQjCNGh3toBm79BSodS6P_e6E3tOHtb9Q&sig2=qWa7rcnV2Y6drANuHz17mQ";
+                openDeeplink(packageId, uri, signupLink);
             }
         });
         mCallButton.setOnClickListener(new View.OnClickListener() {
@@ -233,7 +260,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
 //        Log.d(TAG, thisLiveCrowd.getPicUrls().toString());
     }
-
 
     /**
      * Inflate the menu.
@@ -385,6 +411,26 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         cancelRefreshCrowd();
     }
 
+    public void openDeeplink(String packageId, String uri, String signupLink) {
+        try {
+            PackageManager pm = getApplicationContext().getPackageManager();
+            pm.getPackageInfo(packageId, PackageManager.GET_ACTIVITIES);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            if (packageId.equals("me.lyft.android")) {
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            }
+            if (packageId.equals("com.google.android.apps.maps")) {
+                intent.setPackage(packageId);
+            }
+            intent.setData(Uri.parse(uri));
+            startActivity(intent);
+        } catch (PackageManager.NameNotFoundException e) {
+            // No app. Open mobile website for registering.
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(signupLink));
+            startActivity(i);
+        }
+    }
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -473,7 +519,13 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                     if (getActionBar().isShowing()) {
                         // Hide the actionbar/toolbar
                         getActionBar().hide();
-                        ((LivePicsGalleryActivity) getActivity()).mNavigateButton.hide();
+                        ((LivePicsGalleryActivity) getActivity()).mNavigateButton.hide(new FloatingActionButton.OnVisibilityChangedListener() {
+                            @Override
+                            public void onHidden(FloatingActionButton fab) {
+                                super.onHidden(fab);
+                                ((LivePicsGalleryActivity) getActivity()).mNavigateButton.setImageResource(R.drawable.ic_directions_car_white);
+                            }
+                        });
                         ((LivePicsGalleryActivity) getActivity()).closeFabMenu();
                         // Animation fade out of the details container
 //                        slideToBottom(getDetailsContainer());
@@ -779,7 +831,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
             mRideGmapsLabel.setVisibility(View.INVISIBLE);
 //                mCallButton.show();
 //                mCallButton.setClickable(true);
-            mNavigateButton.setImageResource(R.drawable.ic_directions_car_white);
             isFabMenuOpen = false;
         }
     }

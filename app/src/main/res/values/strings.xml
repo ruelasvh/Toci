@@ -113,6 +113,7 @@
 
     <!-- Services keys -->
     <string name="uber_client_id">3YHteScZ7o9lznBKuSWBYa9KLyiCiMRr</string>
+    <string name="lyft_client_id">bI8k8ztNo3Dg</string>
 
     <string name="title_activity_login">Sign in</string>
 
