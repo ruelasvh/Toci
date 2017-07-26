@@ -210,10 +210,10 @@ public class ShowCrowdsListFragment extends Fragment {
 
                     if (mListView.getAdapter() == null) {
                         if (mContext instanceof HomeMaterialActivity) {
-                            mListAdapter = new SwipeableLiveCrowdListAdapter(mContext, R.layout.rowv2, crowds);
+                            mListAdapter = new SwipeableLiveCrowdListAdapter(mContext, R.layout.card_swipable, crowds);
 
                         } else if (mContext instanceof CityActivity) {
-                            mListAdapter = new LiveCrowdListAdapter(mContext, R.layout.row, crowds);
+                            mListAdapter = new LiveCrowdListAdapter(mContext, R.layout.card, crowds);
                         }
                         mListView.setAdapter(mListAdapter);
                     } else {

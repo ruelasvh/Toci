@@ -18,7 +18,7 @@
             android:paddingBottom="@dimen/activity_vertical_margin"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin">
+            android:paddingTop="26px">
 
             <LinearLayout
                 android:id="@+id/textInfo"
@@ -37,7 +37,7 @@
                     android:id="@+id/about_us_title"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:text="About CrowdZeeker"
+                    android:text="@string/about_title"
                     android:textColor="@color/PrimaryAccentColor"
                     style="?android:textAppearanceLarge" />
 
@@ -45,27 +45,27 @@
                     android:id="@+id/about_us_desctiption"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:text="Our ZeekerCams will serve as the gateway connecting your web or mobile browser windows to all of your local hangouts, essentially giving you a panoramic perspective of the ambiance or 'crowd' currently posted at that particular location. An image is worth a thousand words. No longer will any special,fun plans be made based on subjective reviews, outdated recollections, or vague descriptions. You will now be able to see for yourself a quick glance of the current ambiance or environment of your potential destination, without having to cross your fingers in hopes that the atmosphere will be worth your invested time, money and drive. Crowdzeeker will facilitate planning and save users time that would otherwise be wasted driving around looking for their ideal hangout spot, while at the same time helping people find new friends with similar interests or taste. Let us worry about the hassle, just sit back, browse, and find your crowds. "
+                    android:text="@string/about_summary"
                     android:textColor="@color/white"
                     android:layout_marginTop="25dp" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:text="@string/about_author"
+                    android:textColor="@color/white"
+                    style="?android:textAppearanceSmall"
+                    android:layout_marginTop="25dp"
+                    android:textStyle="italic"/>
 
                 <TextView
                     android:id="@+id/about_us_contact"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:text="Contact us: ruelasvh@gmail.com"
+                    android:text="@string/about_contact"
                     android:textColor="@color/white"
                     style="?android:textAppearanceSmall"
-                    android:layout_marginTop="15dp" />
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:text="The Team"
-                    android:textColor="@color/white"
-                    style="?android:textAppearanceSmall"
-                    android:layout_marginTop="15dp"
-                    android:textStyle="italic"/>
+                    android:layout_marginTop="0dp" />
             </LinearLayout>
 
             <!--<ImageView-->

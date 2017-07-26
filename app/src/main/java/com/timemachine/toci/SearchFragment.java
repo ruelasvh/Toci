@@ -29,6 +29,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
+
 
 public class SearchFragment extends Fragment {
 
@@ -42,10 +46,15 @@ public class SearchFragment extends Fragment {
      */
     private static final String SECTION_TITLE = "SearchFragment";
 
+    private static final String SHOWCASE_ID = "custom example";
+
     private OnFragmentInteractionListener mListener;
 
     // For checking if network is online
     private Network network;
+
+    private EditText mainEditText;
+    private ImageView mainButton;
 
     /**
      * This interface must be implemented by activities that contain this
@@ -88,8 +97,8 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_search, container, false);
 
-        final EditText mainEditText = (EditText) rootView.findViewById(R.id.enter_city);
-        final ImageView mainButton = (ImageView) rootView.findViewById(R.id.main_btn);
+        mainEditText = (EditText) rootView.findViewById(R.id.enter_city);
+        mainButton = (ImageView) rootView.findViewById(R.id.main_btn);
 
         mainButton.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -131,6 +140,9 @@ public class SearchFragment extends Fragment {
                 }
             }
         });
+
+        // Search feature demo
+        presentShowCaseView();
 
         return rootView;
     }
@@ -217,5 +229,24 @@ public class SearchFragment extends Fragment {
             int addCrowdFragPosition = 2;
             mListener.onFragmentInteraction(addCrowdFragPosition);
         }
+    }
+
+    private void presentShowCaseView() {
+        // sequence example
+        int withDelay = 500;
+        ShowcaseConfig config = new ShowcaseConfig();
+        config.setDelay(withDelay); // half second between each showcase view
+
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(getActivity(), SHOWCASE_ID);
+
+        sequence.setConfig(config);
+
+        sequence.addSequenceItem(mainEditText,
+                "To search for RealCrowds near you, type the city you're interested in.", "GOT IT");
+
+        sequence.addSequenceItem(mainButton,
+                "Show me what's happening!", "GOT IT");
+
+        sequence.start();
     }
 }

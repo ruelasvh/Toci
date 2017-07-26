@@ -65,7 +65,7 @@ public class HomeMaterialActivity extends AppCompatActivity
         // Set up the drawer.
         mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mToolbar);
          //populate the navigation drawer
-        mNavigationDrawerFragment.setUserData(getResources().getString(R.string.cz_moto));
+        mNavigationDrawerFragment.setUserData(getResources().getString(R.string.rc_moto));
 //        mNavigationDrawerFragment.setUserData(getResources().getString(R.string.cz_moto),
 //                BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_pink));
 

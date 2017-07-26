@@ -325,7 +325,7 @@ public class AddNewCrowdFragment extends Fragment
             mLatLng = new LatLng(lat, lng);
 
             Marker marker = mMap.addMarker(new MarkerOptions().position(mLatLng)
-                    .title(liveCrowds[i].getTitle()).snippet("Added To Your LiveCrowds"));
+                    .title(liveCrowds[i].getTitle()));
             marker.showInfoWindow();
             mAllMarkersMap.put(marker, liveCrowds[i]);
             mMap.setOnInfoWindowClickListener(this);

@@ -29,6 +29,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -146,6 +147,13 @@ public class LoginActivity extends AppCompatActivity implements
         // Used to retrieve user preferences
         mContext = getApplicationContext();
         mAppPrefs = new AppPrefs(mContext);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Hide keyboard on startup
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     private void populateAutoComplete() {

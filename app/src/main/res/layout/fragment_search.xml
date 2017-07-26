@@ -6,16 +6,18 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:id="@+id/root_fragment_search"
-    android:background="@drawable/city_3"
+    android:background="@drawable/home_4_imp"
     tools:context="com.timemachine.toci.HomeMaterialActivity.SearchFragment">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:gravity="center"
         android:orientation="vertical"
-        android:id="@+id/linearLayout">
+        android:id="@+id/linearLayout"
+        android:layout_marginTop="122dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
 
         <EditText
             android:id="@+id/enter_city"
@@ -24,7 +26,7 @@
             android:layout_marginBottom="1dp"
             android:paddingRight="25dp"
             android:paddingLeft="25dp"
-            android:background="@color/azure"
+            android:background="@drawable/rounded_edittext"
             android:textColorHint="@color/light_grey"
             android:textColor="@color/PrimaryTextPrimaryColor"
             android:hint="@string/city_hint"

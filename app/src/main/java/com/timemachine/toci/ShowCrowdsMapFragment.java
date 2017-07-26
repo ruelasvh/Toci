@@ -323,7 +323,7 @@ public class ShowCrowdsMapFragment extends Fragment
             latLng = new LatLng(lat, lng);
 
             Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(latLng)
-                    .title(liveCrowds[i].getTitle()).snippet("LiveCrowd"));
+                    .title(liveCrowds[i].getTitle()));
             mAllMarkersMap.put(marker, liveCrowds[i]);
             mGoogleMap.setOnInfoWindowClickListener(this);
         }
