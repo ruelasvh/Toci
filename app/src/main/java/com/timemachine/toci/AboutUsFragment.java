@@ -23,11 +23,8 @@ import android.widget.ScrollView;
 public class AboutUsFragment extends Fragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
-    // TODO: Rename and change types of parameters
     private String mParam1;
-    // Used for setting Fragment's title in parent activity
     private static final String SECTION_TITLE = "AboutUsFragment";
-
     protected ScrollView mScrollView;
     private ImageView vicBubble;
     private ImageView gesemBubble;
@@ -39,7 +36,6 @@ public class AboutUsFragment extends Fragment {
      *
      * @return A new instance of fragment AboutUsFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static AboutUsFragment newInstance(int sectionNumber) {
         AboutUsFragment fragment = new AboutUsFragment();
         Bundle args = new Bundle();
@@ -65,26 +61,13 @@ public class AboutUsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_about_us, container, false);
-
-        // Setup the empty views
-//        vicBubble = (ImageView) rootView.findViewById(R.id.vicPic);
-//        gesemBubble = (ImageView) rootView.findViewById(R.id.gesemPic);
-//        royBubble = (ImageView) rootView.findViewById(R.id.royPic);
-
         return rootView;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         mScrollView = (ScrollView) getActivity().findViewById(R.id.about_us_scrollview);
-
-        // Set pictures into empty views
-//        vicBubble.setImageDrawable(new NavigationDrawerFragment.RoundImage(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.team_member_victor)));
-//        gesemBubble.setImageDrawable(new NavigationDrawerFragment.RoundImage(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.team_member_gesem)));
-//        royBubble.setImageDrawable(new NavigationDrawerFragment.RoundImage(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.team_member_roy)));
-
     }
 
 

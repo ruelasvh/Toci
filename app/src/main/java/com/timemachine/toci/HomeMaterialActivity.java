@@ -14,7 +14,9 @@ import android.view.MenuItem;
 
 import java.util.List;
 
-
+/**
+ * Created by Victor Ruelas on 4/5/16.
+ */
 public class HomeMaterialActivity extends AppCompatActivity
         implements
         ShowCrowdsListFragment.OnFragmentInteractionListener,
@@ -22,12 +24,8 @@ public class HomeMaterialActivity extends AppCompatActivity
         SearchFragment.OnFragmentInteractionListener,
         NavigationDrawerCallbacks {
 
-    private static final String TAG = HomeMaterialActivity.class.getSimpleName();
     private static final String FETCH_CROWDS_FILTER = "BY_ID";
     private static String CROWDS;
-    /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-     */
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private Toolbar mToolbar;
     private CharSequence mTitle;
@@ -66,17 +64,12 @@ public class HomeMaterialActivity extends AppCompatActivity
         mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mToolbar);
          //populate the navigation drawer
         mNavigationDrawerFragment.setUserData(getResources().getString(R.string.rc_moto));
-//        mNavigationDrawerFragment.setUserData(getResources().getString(R.string.cz_moto),
-//                BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_pink));
-
-    } // End onCreate method
+    }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-
         // update the main content by replacing fragments
         Fragment fragment = null;
-
         switch (position) {
             case 0:
                 fragment = new SearchFragment();
@@ -91,44 +84,6 @@ public class HomeMaterialActivity extends AppCompatActivity
             case 3:
                 fragment = new AboutUsFragment();
         }
-
-        // if user preferences exist, load fragments accordingly
-//        if (mAppPrefs.getFavorite_cities() != null) {
-//
-//            mCityFavorites = new ArrayList<>(mAppPrefs.getFavorite_cities());
-//            int totalCities = mCityFavorites.size();
-//
-//            if (position == 0) {
-//                fragment = new SearchFragment();
-//            }
-//            for (int i = 1; i <= totalCities; i++) {
-//                if (position == i) {
-//                    fragment = FavoriteCityFragment.newInstance(mCityFavorites.get(i-1));
-//                }
-//            }
-//            if (position == (totalCities+1)) {
-//                fragment = ShowCrowdsListFragment.newInstance(mAppPrefs.getFav_crowds());
-//            } else if (position == (totalCities+2)) {
-//                fragment = AddNewCrowdFragment.newInstance();
-//            } else if (position == (totalCities+3)) {
-//                fragment = new AboutUsFragment();
-//            }
-//        } else { // otherwise load basic list of fragments
-//            switch (position) {
-//                case 0:
-//                    fragment = new SearchFragment();
-//                    break;
-//                case 1:
-//                    fragment = ShowCrowdsListFragment.newInstance(mAppPrefs.getFav_crowds());
-//                    break;
-//                case 2:
-//                    fragment = AddNewCrowdFragment.newInstance();
-//                    break;
-//                case 3:
-//                    fragment = new AboutUsFragment();
-//            }
-//        }
-
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.container, fragment)
@@ -138,7 +93,6 @@ public class HomeMaterialActivity extends AppCompatActivity
 
 
     public void onSectionAttached(String section) {
-
         switch (section) {
             case "SearchFragment":
                 mTitle = getString(R.string.app_name);
@@ -155,7 +109,6 @@ public class HomeMaterialActivity extends AppCompatActivity
             default:
                 break;
         }
-
         mToolbar.setTitle(mTitle);
     }
 
@@ -187,10 +140,6 @@ public class HomeMaterialActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
-//            case R.id.some_menu_item:
-//                // Can do something when user presses "some_menu_item"
-//                return true;
-
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.

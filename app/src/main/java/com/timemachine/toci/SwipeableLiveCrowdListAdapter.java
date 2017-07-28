@@ -25,7 +25,6 @@ import java.util.List;
 
 /**
  * Created by Victor Ruelas on 4/16/17.
- * Copyright (c) 2017 CrowdZeeker, LLC. All rights reserved.
  */
 
 public class SwipeableLiveCrowdListAdapter extends BaseAdapter {
@@ -33,9 +32,9 @@ public class SwipeableLiveCrowdListAdapter extends BaseAdapter {
     Context context;
     int layoutResourceId;
     private List<LiveCrowd> crowdsList;
-    AppPrefs mAppPrefs;
-    ImageButton searchButton;
-    TextView searchText;
+    private AppPrefs mAppPrefs;
+    private ImageButton searchButton;
+    private TextView searchText;
     private ShowCrowdsListFragment.OnFragmentInteractionListener mListener;
 
     public SwipeableLiveCrowdListAdapter(Context context, int layoutResourceId, LiveCrowd[] crowds) {
@@ -144,7 +143,6 @@ public class SwipeableLiveCrowdListAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-
         CoordinatorLayout coordinatorLayout;
         CardView cardView;
         ImageButton livepic;
@@ -167,7 +165,6 @@ public class SwipeableLiveCrowdListAdapter extends BaseAdapter {
     }
 
     private void showSearchCrowds(boolean show) {
-
         RelativeLayout rootLayout = (RelativeLayout)((Activity) context).findViewById(R.id.root);
         rootLayout.removeView(searchButton);
         rootLayout.removeView(searchText);

@@ -15,6 +15,9 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 /**
+ * Created by Victor Ruelas on 9/24/16.
+ */
+/**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * {@link SignupFragment.OnAccountCreatedListener} interface
@@ -24,11 +27,8 @@ import android.widget.Toast;
  */
 public class SignupFragment extends Fragment {
 
-    private final static String TAG = SignupFragment.class.getSimpleName();
-
     // The fragment initialization parameters.
     private static final String ARG_PARAM1 = "email";
-
     // UI references.
     private ImageButton mLoginLink;
     private EditText mUsernameView;
@@ -36,11 +36,10 @@ public class SignupFragment extends Fragment {
     private EditText mPasswordView;
     private EditText mPasswordConfirmView;
     private ImageButton mRegisterSubmit;
-
     // Store UI references values.
     private String mEmail;
-
     private OnAccountCreatedListener mListener;
+
 
     public SignupFragment() {
         // Required empty public constructor
@@ -53,7 +52,6 @@ public class SignupFragment extends Fragment {
      * @param email Parameter 1.
      * @return A new instance of fragment SignupFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static SignupFragment newInstance(String email) {
         SignupFragment fragment = new SignupFragment();
         Bundle args = new Bundle();
@@ -148,7 +146,6 @@ public class SignupFragment extends Fragment {
                 // Flash registration attempt response
                 Toast.makeText(getActivity(), regisAttemptResponse,
                         Toast.LENGTH_LONG).show();
-                Log.i(TAG, "Error in registration request: " + getString(regisAttemptResponse));
                 break;
         }
 

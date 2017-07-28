@@ -61,13 +61,14 @@ import java.util.List;
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
+ * Created by Victor Ruelas on 4/5/16.
+ */
+/**
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity implements
         LoaderCallbacks<Cursor>,
         SignupFragment.OnAccountCreatedListener {
-
-    private final static String TAG = LoginActivity.class.getSimpleName();
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -446,7 +447,6 @@ public class LoginActivity extends AppCompatActivity implements
                 HttpResponse httpResponse = httpClient.execute(httpPost);
                 HttpEntity httpEntity = httpResponse.getEntity();
                 String response = EntityUtils.toString(httpEntity);
-                Log.d(TAG, "server post call response: " + response);
 
                 return response;
 
@@ -465,7 +465,6 @@ public class LoginActivity extends AppCompatActivity implements
             final List<String> responseStream = Arrays.asList(response.split(" "));
             SignupFragment signupFragment = (SignupFragment) getSupportFragmentManager().findFragmentByTag("signupFragment");
 
-            Log.d(TAG, responseStream.toString());
             final int finalResponse;
 
             if (responseStream.contains("'username_2'\"")) {
@@ -489,8 +488,7 @@ public class LoginActivity extends AppCompatActivity implements
 
         @Override
         protected void onCancelled() {
-            //TODO: set the instance of this class to null, disable progress bar
-
+            // Set the instance of this class to null, disable progress bar
         }
     }
 
@@ -510,7 +508,7 @@ public class LoginActivity extends AppCompatActivity implements
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
+            // Attempt authentication against a network service.
 
             Boolean response;
 
@@ -518,7 +516,6 @@ public class LoginActivity extends AppCompatActivity implements
                 String link = Config.USER_AUTHENTICATION_URL + "?" +
                         "email=" + URLEncoder.encode(mEmail, "UTF-8") + "&" +
                         "password=" + URLEncoder.encode(mPassword, "UTF-8");
-                Log.d(TAG, "POST link: " + link);
                 URI url = new URI(link);
                 HttpClient client = new DefaultHttpClient();
                 HttpGet request = new HttpGet();
@@ -527,7 +524,6 @@ public class LoginActivity extends AppCompatActivity implements
                 HttpEntity httpEntity = httpResponse.getEntity();
                 response = Boolean.valueOf(EntityUtils.toString(httpEntity));
                 mAppPrefs.setSessionStatus(response);
-                Log.d(TAG, "server response is: " + response);
 
                 return response;
 

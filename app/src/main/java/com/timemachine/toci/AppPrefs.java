@@ -12,10 +12,8 @@ import java.util.Set;
 
 /**
  * Created by Victor Ruelas on 4/5/16.
- * Copyright (c) 2016 CrowdZeeker, LLC. All rights reserved.
  */
 public class AppPrefs {
-    private static final String TAG = AppPrefs.class.getSimpleName();
     private static final int MAX_SIZE = 5;
     private static final String USER_PREFS = "USER_PREFS";
     private SharedPreferences appSharedPrefs;
@@ -75,7 +73,6 @@ public class AppPrefs {
      * Methods to remove favorites
      * @param crowd
      */
-
     public void removeFavorite_crowd(String crowd) {
         crowds_out = appSharedPrefs.getStringSet(fav_crowds, new HashSet<String>());
         crowds_in = new HashSet<>(crowds_out);
@@ -105,5 +102,4 @@ public class AppPrefs {
     public void setUser_name(String _user_name) {
         prefsEditor.putString(user_name, _user_name).commit();
     }
-
 }

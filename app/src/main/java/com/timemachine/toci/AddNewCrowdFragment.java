@@ -40,7 +40,6 @@ import java.util.Map;
 
 /**
  * Created by Victor Ruelas on 3/16/16.
- * Copyright (c) 2016 CrowdZeeker, LLC. All rights reserved.
  */
 public class AddNewCrowdFragment extends Fragment
         implements
@@ -49,41 +48,18 @@ public class AddNewCrowdFragment extends Fragment
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
-    // Identifier for debugging
-    private static final String TAG = AddNewCrowdFragment.class.getSimpleName();
-
     // used to set title to fragment when it's attached to the activity
     private static final String SECTION_TITLE = "AddNewCrowdFragment";
-
     final private int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
-
-    /**
-     * Request code passed to the PlacePicker intent to identify its result when it returns.
-     */
     private static final int REQUEST_PLACE_PICKER = 1;
-
-//    // TODO: Rename parameter arguments, choose names that match
-//    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//    private static final String ARG_PARAM1 = "param1";
-//    private static final String ARG_PARAM2 = "param2";
-//
-//    // TODO: Rename and change types of parameters
-//    private String mParam1;
-//    private String mParam2;
-
-    // Helper class for determining network availability
-    private Network network;
-
-    // Floating bar action button
-    FloatingActionButton fab;
-
+    private Network network; // Helper class for determining network availability
+    FloatingActionButton fab; // Floating bar action button
     private GoogleMap mMap;
     private LatLng mLatLng;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
     private Context mContext;
-    // AsyncTask to fetch crowds
-    private GetCrowds mGetCrowdsTask;
+    private GetCrowds mGetCrowdsTask; // AsyncTask to fetch crowds
     private Map<Marker, LiveCrowd> mAllMarkersMap = new HashMap<>();
 
 
@@ -91,37 +67,18 @@ public class AddNewCrowdFragment extends Fragment
         // Required empty public constructor
     }
 
-    //    /**
-//     * Use this factory method to create a new instance of
-//     * this fragment using the provided parameters.
-//     *
-//     * @param param1 Parameter 1.
-//     * @param param2 Parameter 2.
-//     * @return A new instance of fragment AddNewCrowdFragment
-//     */
-    // TODO: Rename and change types and number of parameters
-    public static AddNewCrowdFragment newInstance(/*String param1, String param2*/) {
+    public static AddNewCrowdFragment newInstance() {
         AddNewCrowdFragment fragment = new AddNewCrowdFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
-
         // Instantiate Network helper class
         mContext = getContext();
         network = new Network(mContext);
         mGetCrowdsTask = null;
-
         // Instantiate Google Location API
         buildGoogleLocationApi();
     }
@@ -157,7 +114,6 @@ public class AddNewCrowdFragment extends Fragment
                     Toast.makeText(getContext().getApplicationContext(), R.string.error_offline,
                             Toast.LENGTH_SHORT).show();
                 }
-
                 // Disable button after first click
                 fab.setEnabled(false);
             }
@@ -198,8 +154,6 @@ public class AddNewCrowdFragment extends Fragment
             mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                     mGoogleApiClient);
             if (mLastLocation != null) {
-//                Log.d(this.getClass().getSimpleName(),String.valueOf(mLastLocation.getLatitude()));
-//                Log.d(this.getClass().getSimpleName(),String.valueOf(mLastLocation.getLongitude()));
                 LatLng currentLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
             }
@@ -238,10 +192,8 @@ public class AddNewCrowdFragment extends Fragment
         if (requestCode == REQUEST_PLACE_PICKER) {
             if (resultCode == Activity.RESULT_OK) {
                 // Get the user's selected place from the Intent.
-//                final Place place = PlaceAutocomplete.getPlace(getActivity(), data);
                 final Place place = PlacePicker.getPlace(data, getActivity());
-
-//============= After selecting place insert to database immediately ========================//
+                // After selecting place insert to database immediately
                 new AddCrowdToDatabase(){
                     @Override
                     public void onPostExecute(String result) {
@@ -277,7 +229,6 @@ public class AddNewCrowdFragment extends Fragment
 
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(getActivity(), data);
-                Log.e(getTag(), "Error: Status = " + status.toString());
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 // Indicates that the activity closed before a selection was made. For example if
                 // the user pressed the back button.
@@ -289,8 +240,6 @@ public class AddNewCrowdFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-
-//        Log.d(TAG, "Resumed");
         fab.setEnabled(true);
     }
 
@@ -310,9 +259,6 @@ public class AddNewCrowdFragment extends Fragment
 
         @Override
         public void onClick(View v) {
-
-//            Log.d(TAG, "Action detected");
-
         }
     }
 
@@ -386,6 +332,4 @@ public class AddNewCrowdFragment extends Fragment
                     .build();
         }
     }
-
-    // End of Fragment code
 }

@@ -20,7 +20,6 @@ import java.util.List;
 
 /**
  * Created by Victor Ruelas on 3/17/16.
- * Copyright (c) 2016 CrowdZeeker, LLC. All rights reserved.
  */
 public class AddCrowdToDatabase extends AsyncTask<String, Void, String> {
 

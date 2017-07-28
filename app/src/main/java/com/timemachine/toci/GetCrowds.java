@@ -39,13 +39,10 @@ import java.util.HashMap;
 
 /**
  * Created by Victor Ruelas on 3/17/16.
- * Copyright (c) 2016 CrowdZeeker, LLC. All rights reserved.
  */
 public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
-
-    private final static String TAG = GetCrowds.class.getSimpleName();
 
     private final static String BY_CITY = "BY_CITY";
 
@@ -124,7 +121,6 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> implements
                 return crowds;
 
             } catch (JSONException e) {
-                Log.d(TAG, "error getting id and name from server response");
                 e.printStackTrace();
             }
         }
@@ -220,7 +216,6 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> implements
                 HttpResponse httpResponse = client.execute(request);
                 HttpEntity httpEntity = httpResponse.getEntity();
                 response = EntityUtils.toString(httpEntity);
-                Log.d(TAG, "GetCrowds.getList response type: " + filter + ", and query response: " + response);
 
                 return new JSONArray(response);
 
@@ -235,7 +230,6 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> implements
         if (filter.equals(BY_ID)) {
             try {
                 String link = Config.FETCH_CROWDS_BY_ID_URL + "?ids=" + URLEncoder.encode(query, "UTF-8") + "";
-                Log.d(TAG + " url: ", link);
                 URI url = new URI(link);
                 HttpClient client = new DefaultHttpClient();
                 HttpGet request = new HttpGet();
@@ -243,7 +237,6 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> implements
                 HttpResponse httpResponse = client.execute(request);
                 HttpEntity httpEntity = httpResponse.getEntity();
                 response = EntityUtils.toString(httpEntity);
-                Log.d(TAG, "GetCrowds.getList response type: " + filter + ", and query response: " + response);
 
                 return new JSONArray(response);
 
@@ -279,7 +272,6 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> implements
                 HttpResponse httpResponse = thisApp.execute(request);
                 HttpEntity serverObj = httpResponse.getEntity();
                 response = EntityUtils.toString(serverObj);
-                Log.d(TAG, "getPicUrls response: " + response);
 
                 final JSONArray jsonArray = new JSONArray(response);
 
@@ -307,13 +299,10 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> implements
                 return picUrls;
 
             } catch (JSONException e) {
-                Log.d(TAG, "could not get id from JSONArray: ");
                 e.printStackTrace();
             } catch (URISyntaxException e) {
-                Log.d(TAG, "error syntax with URI");
                 e.printStackTrace();
             } catch (IOException e) {
-                Log.d(TAG, "error with HttpResponse");
                 e.printStackTrace();
             }
         }

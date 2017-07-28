@@ -20,12 +20,9 @@ import java.util.List;
 
 /**
  * Created by Victor Ruelas on 5/11/17.
- * Copyright (c) 2017 CrowdZeeker, LLC. All rights reserved.
  */
 
 public class RemoveCrowdFromDatabase extends AsyncTask<String, Void, String> {
-
-    private static final String TAG = RemoveCrowdFromDatabase.class.getSimpleName();
 
     Context context;
 
@@ -33,8 +30,6 @@ public class RemoveCrowdFromDatabase extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... params) {
         String paramPlaceId = params[0].replace("'","''");
         String paramPlaceCity = params[1].replace("'","''");
-        Log.d(TAG, "parameters to insert to database: " + paramPlaceId
-               + paramPlaceCity);
 
         List<NameValuePair> nameValuePairs = new ArrayList<>();
         nameValuePairs.add(new BasicNameValuePair("id", paramPlaceId));
@@ -47,7 +42,6 @@ public class RemoveCrowdFromDatabase extends AsyncTask<String, Void, String> {
 
             HttpResponse response = httpClient.execute(httpPost);
             HttpEntity entity = response.getEntity();
-            Log.d(TAG, entity.toString());
 
         } catch (ClientProtocolException e) {
             return "Failed to remove: ClientProtocolException.";

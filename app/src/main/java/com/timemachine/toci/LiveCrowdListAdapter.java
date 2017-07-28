@@ -18,19 +18,12 @@ import java.util.List;
 
 /**
  * Created by Victor Ruelas on 3/7/16.
- * Copyright (c) 2016 CrowdZeeker, LLC. All rights reserved.
  */
 public class LiveCrowdListAdapter extends ArrayAdapter<LiveCrowd> {
-
-    /**
-     * Logcat tag
-     */
-    private static final String TAG = LiveCrowdListAdapter.class.getSimpleName();
 
     Context context;
     int layoutResourceId;
     List<LiveCrowd> crowds;
-
 
     public LiveCrowdListAdapter(Context context, int layoutResourceId, LiveCrowd[] crowds) {
         super(context, layoutResourceId, crowds);
@@ -42,7 +35,6 @@ public class LiveCrowdListAdapter extends ArrayAdapter<LiveCrowd> {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-
         View rowView = convertView;
         final ViewHolder viewHolder;
 
@@ -55,7 +47,6 @@ public class LiveCrowdListAdapter extends ArrayAdapter<LiveCrowd> {
             viewHolder = (ViewHolder) rowView.getTag();
             Picasso.with(context).cancelRequest(viewHolder.livepic);
         }
-
         final LiveCrowd crowd = crowds.get(position);
         viewHolder.title.setText(crowd.getTitle());
         viewHolder.timeago.setText(crowd.getTimeago());
@@ -63,16 +54,13 @@ public class LiveCrowdListAdapter extends ArrayAdapter<LiveCrowd> {
         viewHolder.livepic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(context, crowdRow.getDetailedCrowd());
                 Intent intent = new Intent(context, LivePicsGalleryActivity.class);
                 intent.putExtra("crowd", SerializeLiveCrowd.toJson(crowd));
                 context.startActivity(intent);
             }
         });
-
         Picasso.with(context).load( crowd.getPicUrls().get( crowd.getPicUrls().size() - 1).get(0) )
                 .into( viewHolder.livepic);
-
         return rowView;
     }
 
@@ -80,7 +68,6 @@ public class LiveCrowdListAdapter extends ArrayAdapter<LiveCrowd> {
      * Holder which prevents UI to find objects every time list is loaded
      */
     static class ViewHolder {
-
         ImageButton livepic;
         TextView title;
         TextView timeago;

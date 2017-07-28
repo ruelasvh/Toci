@@ -6,7 +6,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:id="@+id/root_fragment_search"
-    android:background="@drawable/home_4_imp"
+    android:background="@drawable/home"
     tools:context="com.timemachine.toci.HomeMaterialActivity.SearchFragment">
 
     <LinearLayout

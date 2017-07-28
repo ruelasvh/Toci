@@ -63,10 +63,11 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Set;
 
-
+/**
+ * Created by Victor Ruelas on 4/5/16.
+ */
 public class LivePicsGalleryActivity extends AppCompatActivity implements OnConnectionFailedListener {
 
-    private static final String TAG = LivePicsGalleryActivity.class.getSimpleName();
     private final static String FETCH_CROWDS_FILTER = "BY_ID";
     private String UBER_CLIENT_ID;
     private String LYFT_CLIENT_ID;
@@ -191,12 +192,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
             public void onClick(View view) {
                 // Toggle Fab Menu
                 toggleFabMenu();
-//                mNavigateButton.setSelected(!mNavigateButton.isSelected());
-//                mNavigateButton.setImageResource(mNavigateButton.isSelected() ? R.drawable.animated_car : R.drawable.animated_close);
-//                Drawable drawable = mNavigateButton.getDrawable();
-//                if (drawable instanceof Animatable) {
-//                    ((Animatable) drawable).start();
-//                }
             }
         });
         mRideUberButton.setOnClickListener(new View.OnClickListener() {
@@ -247,18 +242,13 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 }
             }
         });
-
         // Set up preferences resources
         mContext = getApplicationContext();
         mAppPrefs = new AppPrefs(mContext);
-
         // Set the actionbar title
         setTitle(thisLiveCrowd.getTitle());
-
         // Instantiate network helper class
         network = new Network(this);
-
-//        Log.d(TAG, thisLiveCrowd.getPicUrls().toString());
     }
 
     /**
@@ -288,7 +278,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
             case android.R.id.home:
                 finish();
                 return true;
-
             case R.id.action_camera:
                 // Bring up the camera
                 if (network.isOnline()) {
@@ -298,7 +287,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                             Toast.LENGTH_SHORT).show();
                 }
                 return true;
-
             case R.id.action_favorite_toggle:
                 // Save to favorites
                 if (mAppPrefs.getFavorite_crowds().contains(thisLiveCrowd.getId())) {
@@ -311,7 +299,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                     saveToFavs(thisLiveCrowd.getId());
                 }
                 return true;
-
             default:
                 return super.onOptionsItemSelected(item);
 
@@ -359,15 +346,12 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                         Toast.LENGTH_SHORT).show();
             } else if (resultCode == RESULT_CANCELED) {
                 // user cancelled image capture
-//                Toast.makeText(getApplicationContext(), "User cancelled image capture",
-//                        Toast.LENGTH_SHORT).show();
             } else {
                 // failed to capture image
                 Toast.makeText(getApplicationContext(), "Internal Error: Couldn't capture image",
                         Toast.LENGTH_SHORT).show();
             }
         }
-
         // Refresh crowd with new pictures
         refreshCrowd();
     }
@@ -385,8 +369,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     @Override
     public void onPause() {
         super.onPause();
-
-//        cancelRefreshCrowd();
     }
 
     // Method to disconnect from the google places api
@@ -446,7 +428,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-
             return PlaceholderFragment.newInstance(position + 1);
         }
 
@@ -468,12 +449,9 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
-
         private RelativeLayout mDetailsContainerv2;
         private TextView mTimeStampView;
         private ImageView mHelperView;
-
-
         /**
          * Returns a new instance of this fragment for the given section
          * number.
@@ -487,6 +465,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         }
 
         public PlaceholderFragment() {
+            // Empty constructor
         }
 
         public int getPageNum() {
@@ -498,10 +477,8 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_livepiclayout, container, false);
             final ImageView liveImageView = (ImageView) rootView.findViewById(R.id.livePic);
-//            final TextView timeStampView = (TextView) getDetailsContainer().findViewById(R.id.timestamp);
             mDetailsContainerv2 = (RelativeLayout) rootView.findViewById(R.id.details_container);
             mTimeStampView = (TextView) mDetailsContainerv2.findViewById(R.id.timestamp);
-            // ImageView which takes up space so that onclicklistener from livepic is not triggered
             mHelperView = (ImageView) mDetailsContainerv2.findViewById(R.id.image_container);
             mHelperView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -509,8 +486,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                     // Empty on purpose
                 }
             });
-
-
 
             /* Set up behavior to toggle toolbar and details container */
             liveImageView.setOnClickListener(new View.OnClickListener() {
@@ -527,16 +502,10 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                             }
                         });
                         ((LivePicsGalleryActivity) getActivity()).closeFabMenu();
-                        // Animation fade out of the details container
-//                        slideToBottom(getDetailsContainer());
-//                        slideToBottom(mDetailsContainerv2);
                     } else {
                         // Show the actionbar/toolbar
                         getActionBar().show();
                         ((LivePicsGalleryActivity) getActivity()).mNavigateButton.show();
-                        // Animation fade in of the details container
-//                        slideToTop(getDetailsContainer());
-//                        slideToTop(mDetailsContainerv2);
                     }
                 }
             });
@@ -548,9 +517,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                             .into(liveImageView, new Callback() {
                                 @Override
                                 public void onSuccess() {
-//                                    timeStampView.setText( picUrls.get( picUrls.size()-1 ).get(1));
                                     mTimeStampView.setText(picUrls.get( picUrls.size()-1 ).get(1));
-
                                 }
 
                                 @Override
@@ -564,7 +531,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                             .into(liveImageView, new Callback() {
                                 @Override
                                 public void onSuccess() {
-//                                    timeStampView.setText( picUrls.get( picUrls.size()-2 ).get(1) );
                                     mTimeStampView.setText(picUrls.get( picUrls.size()-2 ).get(1));
                                 }
 
@@ -579,7 +545,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                             .into(liveImageView, new Callback() {
                                 @Override
                                 public void onSuccess() {
-//                                    timeStampView.setText( picUrls.get( picUrls.size()-3 ).get(1) );
                                     mTimeStampView.setText(picUrls.get( picUrls.size()-3 ).get(1));
                                 }
 
@@ -594,7 +559,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                             .into( liveImageView, new Callback() {
                                 @Override
                                 public void onSuccess() {
-//                                    timeStampView.setText( picUrls.get( picUrls.size()-4 ).get(1) );
                                     mTimeStampView.setText(picUrls.get( picUrls.size()-4 ).get(1));
                                 }
 
@@ -609,7 +573,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                             .into( liveImageView, new Callback() {
                                 @Override
                                 public void onSuccess() {
-//                                    timeStampView.setText( picUrls.get( picUrls.size()-5 ).get(1) );
                                     mTimeStampView.setText(picUrls.get( picUrls.size()-5 ).get(1));
                                 }
 
@@ -655,7 +618,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                     .alpha(1.0f);
         }
 
-    } // End of PlaceHolderFragment
+    }
 
 
     /**
@@ -733,7 +696,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                     bMap.recycle();
                     out.recycle();
                 } catch (Exception e) {
-                    // TODO: Handle exception
+                    // Handle exception
                 }
 
                 entity.addPart("image", new FileBody(resizedFile));
@@ -769,8 +732,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
         @Override
         protected void onPostExecute(String result) {
-            Log.e(TAG, "Response from server: " + result);
-
             super.onPostExecute(result);
         }
 
@@ -791,13 +752,9 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
             mRideGmapsButton.hide();
             mRideGmapsLabel.startAnimation(fadeOut);
             mRideGmapsLabel.setVisibility(View.INVISIBLE);
-//                mCallButton.show();
-//                mCallButton.setClickable(true);
             mNavigateButton.setImageResource(R.drawable.ic_directions_car_white);
             isFabMenuOpen = false;
         } else {
-//                mCallButton.hide();
-//                mCallButton.setClickable(false);
             mRideUberButton.setClickable(true);
             mRideLyftButton.setClickable(true);
             mRideGmapsButton.setClickable(true);
@@ -829,8 +786,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
             mRideGmapsButton.hide();
             mRideGmapsLabel.startAnimation(fadeOut);
             mRideGmapsLabel.setVisibility(View.INVISIBLE);
-//                mCallButton.show();
-//                mCallButton.setClickable(true);
             isFabMenuOpen = false;
         }
     }
@@ -865,7 +820,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         // Create the storage directory if it doesn't exist
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
-                Log.d(TAG, "Failed to create " + Config.IMAGE_DIRECTORY_NAME + " directory");
                 return null;
             }
         }
@@ -943,7 +897,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         // Create the storage directory if it doesn't exist
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
-                Log.d(TAG, "Failed to create " + Config.IMAGE_DIRECTORY_NAME + " directory");
                 return null;
             }
         }
@@ -970,14 +923,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
             mAppPrefs.setFavorite_crowd(crowdId);
             Toast.makeText(this, "Added To Favorites", Toast.LENGTH_SHORT).show();
         }
-
-        // Debug
-        if (mAppPrefs.getFavorite_crowds() != null) {
-            for (String element : mAppPrefs.getFavorite_crowds()) {
-                Log.i(TAG, element);
-            }
-        }
-
     }
 
     private void refreshCrowd() {

@@ -9,7 +9,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
-
+/**
+ * Created by Victor Ruelas on 4/5/16.
+ */
 public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDrawerAdapter.ViewHolder> {
 
     private List<NavigationItem> mData;

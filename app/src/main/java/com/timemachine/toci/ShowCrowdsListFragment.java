@@ -19,15 +19,16 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-
+/**
+ * Created by Victor Ruelas on 9/24/16.
+ */
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ShowCrowdsListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class ShowCrowdsListFragment extends Fragment {
-    // Tag to be used for debugging
-    private static final String TAG = ShowCrowdsListFragment.class.getSimpleName();
+
     private static final String ARG_FETCH_CROWDS_PARAM_FILTER = "fetchCrowdsParamFilter";
     private static final String ARG_FETCH_CROWDS_PARAM = "fetchCrowdsParam";
     private String FETCH_CROWDS_FILTER;
@@ -35,20 +36,13 @@ public class ShowCrowdsListFragment extends Fragment {
     // Used for setting Fragment's title in parent activity
     private static final String SECTION_TITLE = "ShowCrowdsListFragment";
     private ArrayList<String> crowdList;
-    // Adapter which loads crowds
-    private BaseAdapter mListAdapter;
-    // ListView which will hold the crowds
-    private ListView mListView;
-    // Spinner which shows while adapter loads crowds
-    private ProgressBar mProgressBar;
-    // Widget used for pull-to-refresh ListView
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    // Interface to help communicate up to the parent activity
-    private OnFragmentInteractionListener mListener;
-    // AsyncTask to fetch crowds
-    private GetCrowds getCrowdsTask;
-    // Class to check network status
-    private Network network;
+    private BaseAdapter mListAdapter;  // Adapter which loads crowds
+    private ListView mListView; // ListView which will hold the crowds
+    private ProgressBar mProgressBar; // Spinner which shows while adapter loads crowds
+    private SwipeRefreshLayout mSwipeRefreshLayout; // Widget used for pull-to-refresh ListView
+    private OnFragmentInteractionListener mListener; // Interface to help communicate up to the parent activity
+    private GetCrowds getCrowdsTask; // AsyncTask to fetch crowds
+    private Network network; // Class to check network status
     Context mContext;
 
     /**

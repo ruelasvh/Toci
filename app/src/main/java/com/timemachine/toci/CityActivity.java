@@ -6,6 +6,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+/**
+ * Created by Victor Ruelas on 4/5/16.
+ */
+
 public class CityActivity extends AppCompatActivity
     implements
         ShowCrowdsListFragment.OnFragmentInteractionListener,

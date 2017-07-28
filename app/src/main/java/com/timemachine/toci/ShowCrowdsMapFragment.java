@@ -35,9 +35,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
- * A simple {@link Fragment} subclass.
+ * Created by Victor Ruelas on 9/24/16.
  */
 public class ShowCrowdsMapFragment extends Fragment
         implements
@@ -52,18 +51,13 @@ public class ShowCrowdsMapFragment extends Fragment
     private String FETCH_CROWDS_FILTER;
     private String CROWDS;
     private ArrayList<String> CROWDS_LIST;
-    /*object of google map*/
-    public GoogleMap mGoogleMap;
+    public GoogleMap mGoogleMap; // Object of google map
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
-    // AsyncTask to fetch crowds
-    private GetCrowds mGetCrowdsTask;
-    // To show progress of fetching crowds
-    private ProgressDialog mFetchCrowdsProgressDialog;
-    // Interface to help communicate up to the parent activity
-    private OnFragmentInteractionListener mListener;
-    // Class to check mNetwork status
-    private Network mNetwork;
+    private GetCrowds mGetCrowdsTask; // AsyncTask to fetch crowds
+    private ProgressDialog mFetchCrowdsProgressDialog; // To show progress of fetching crowds
+    private OnFragmentInteractionListener mListener; // Interface to help communicate up to the parent activity
+    private Network mNetwork; // Class to check mNetwork status
     Context mContext;
     private Map<Marker, LiveCrowd> mAllMarkersMap = new HashMap<>();
 

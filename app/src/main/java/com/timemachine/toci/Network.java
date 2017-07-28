@@ -6,10 +6,10 @@ import android.net.NetworkInfo;
 
 /**
  * Created by Victor Ruelas on 11/17/16.
- * Copyright (c) 2016 CrowdZeeker, LLC. All rights reserved.
  */
 
 public class Network {
+
     Context context;
 
     public Network(Context context) {

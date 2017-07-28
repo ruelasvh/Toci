@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 /**
  * Created by Victor Ruelas on 9/24/16.
- * Copyright (c) 2016 CrowdZeeker, LLC. All rights reserved.
  */
 
 public class SerializeLiveCrowd {

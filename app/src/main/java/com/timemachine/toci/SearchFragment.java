@@ -33,26 +33,19 @@ import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
-
+/**
+ * Created by Victor Ruelas on 4/5/16.
+ */
 public class SearchFragment extends Fragment {
 
-    /**
-     * LogCat
-     */
-    private static final String TAG = SearchFragment.class.getSimpleName();
     /**
      * The fragment argument representing the section number for this
      * fragment.
      */
     private static final String SECTION_TITLE = "SearchFragment";
-
     private static final String SHOWCASE_ID = "custom example";
-
     private OnFragmentInteractionListener mListener;
-
-    // For checking if network is online
-    private Network network;
-
+    private Network network; // For checking if network is online
     private EditText mainEditText;
     private ImageView mainButton;
 
@@ -88,7 +81,6 @@ public class SearchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         network = new Network(getContext());
     }
 
@@ -158,7 +150,6 @@ public class SearchFragment extends Fragment {
         startActivity(intent);
     }
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -200,7 +191,6 @@ public class SearchFragment extends Fragment {
                 HttpResponse httpResponse = client.execute(request);
                 HttpEntity httpEntity = httpResponse.getEntity();
                 response = EntityUtils.toString(httpEntity);
-                Log.d(TAG, city + " found: " + response);
 
                 return Boolean.valueOf(response);
 
