@@ -9,6 +9,8 @@ public class Config {
     public static final String FILE_UPLOAD_URL = SERVER_ROOT + "AndroidFileUpload/fileUpload.php";
     // Fetch crowds by city
     public static final String FETCH_CROWDS_BY_CITY_URL = SERVER_ROOT + "fetchcrowds.php";
+    // Fetch list of cities for search bar autocomplete
+    public static final String FETCH_ALL_CITIES_URL = SERVER_ROOT + "fetchcities.php";
     // Fetch crowds by id
     public static final String FETCH_CROWDS_BY_ID_URL = SERVER_ROOT + "fetchcrowdsbyid.php";
     // Fetch latest crowd images

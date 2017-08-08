@@ -33,8 +33,6 @@ public class HomeMaterialActivity extends AppCompatActivity
     // Helper fields to help store favorite settings
     Context mContext;
     AppPrefs mAppPrefs;
-    List<String> mCityFavorites;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

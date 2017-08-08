@@ -25,6 +25,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -143,10 +144,6 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> implements
         if ( ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION ) == PackageManager.PERMISSION_GRANTED ) {
             mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                     mGoogleApiClient);
-            if (mLastLocation != null) {
-                Log.d(this.getClass().getSimpleName(),String.valueOf(mLastLocation.getLatitude()));
-                Log.d(this.getClass().getSimpleName(),String.valueOf(mLastLocation.getLongitude()));
-            }
         }
     }
 
@@ -263,8 +260,7 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> implements
 
             try {
                 String link = Config.FETCH_LATEST_CROWD_PICS_URL + "?" +
-                        "city=" + URLEncoder.encode(crowdCity, "UTF-8") + "&" +
-                        "id=" + URLEncoder.encode(crowdId, "UTF-8") + "";
+                        "id=" + URLEncoder.encode(crowdId, "UTF-8");
                 URI urlObj = new URI(link);
                 HttpClient thisApp = new DefaultHttpClient();
                 HttpGet request = new HttpGet();
@@ -287,11 +283,14 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> implements
 
                 if (jsonArray != null && jsonArray.length() != 0) {
                     for (int i = 0; i < jsonArray.length(); i++) {
-                        final String url = jsonArray.getString(i);
+                        final JSONObject obj = jsonArray.getJSONObject(i);
+                        final String url = obj.getString("image_url");
+                        final String show = obj.getString("show");
                         final String timeAgo = getTimeAgo(url);
                         picUrls.put(i, new ArrayList<String>() {{
                             add(url);
                             add(timeAgo);
+                            add(show);
                         }});
                     }
                 }

@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -28,6 +30,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
@@ -42,12 +46,14 @@ public class SearchFragment extends Fragment {
      * The fragment argument representing the section number for this
      * fragment.
      */
+    private static final String ARG_CITIES_LIST = "citiesListParam";
     private static final String SECTION_TITLE = "SearchFragment";
     private static final String SHOWCASE_ID = "custom example";
     private OnFragmentInteractionListener mListener;
     private Network network; // For checking if network is online
-    private EditText mainEditText;
+    private AutoCompleteTextView mainEditText;
     private ImageView mainButton;
+    private List<String> citiesList;
 
     /**
      * This interface must be implemented by activities that contain this
@@ -71,16 +77,23 @@ public class SearchFragment extends Fragment {
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static SearchFragment newInstance() {
+    public static SearchFragment newInstance(List<String> citiesListParam) {
         SearchFragment fragment = new SearchFragment();
-        // Could add some parameters here that we wish to initialize
-        // during the instantiation of this fragment.
+        Bundle args = new Bundle();
+        args.putStringArrayList(ARG_CITIES_LIST, new ArrayList<>(citiesListParam));
+        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Get passed parameters
+        if (getArguments() != null) {
+            citiesList = getArguments().getStringArrayList(ARG_CITIES_LIST);
+        }
+        // To check online/offline
         network = new Network(getContext());
     }
 
@@ -88,10 +101,21 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_search, container, false);
-
-        mainEditText = (EditText) rootView.findViewById(R.id.enter_city);
+        mainEditText = (AutoCompleteTextView) rootView.findViewById(R.id.enter_city);
         mainButton = (ImageView) rootView.findViewById(R.id.main_btn);
-
+        // Get list of cities then build AutoCompleteTextView
+        new GetCities(getContext())
+        {
+            @Override
+            protected void onPostExecute(Result result) {
+                if (result != null && result.mResultValue != null) {
+                    CitiesSuggestionAdapter citySuggestAdapter = new CitiesSuggestionAdapter(getContext(),
+                            android.R.layout.simple_dropdown_item_1line, result.mResultValue);
+                    mainEditText.setAdapter(citySuggestAdapter);
+                }
+            }
+        }.execute();
+        // Set button behavior to search city in database
         mainButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -235,7 +259,7 @@ public class SearchFragment extends Fragment {
                 "To search for RealCrowds near you, type the city you're interested in.", "GOT IT");
 
         sequence.addSequenceItem(mainButton,
-                "Show me what's happening!", "GOT IT");
+                "Then tap here to show what's happening!", "GOT IT");
 
         sequence.start();
     }
