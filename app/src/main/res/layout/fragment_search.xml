@@ -27,6 +27,7 @@
             android:paddingRight="25dp"
             android:paddingLeft="25dp"
             android:background="@drawable/rounded_edittext"
+            android:popupBackground="@color/black_transparent"
             android:textColorHint="@color/light_grey"
             android:textColor="@color/PrimaryTextPrimaryColor"
             android:hint="@string/city_hint"

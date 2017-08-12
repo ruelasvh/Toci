@@ -205,7 +205,13 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> implements
 
         if (filter.equals(BY_CITY)) {
             try {
-                String link = Config.FETCH_CROWDS_BY_CITY_URL + "?city=" + URLEncoder.encode(query, "UTF-8") + "";
+                String city, state;
+                String[] searchTerms = query.split(", ");
+                city = searchTerms[0];
+                state = searchTerms.length == 1 ? "" : searchTerms[1];
+
+                String link = Config.FETCH_CROWDS_BY_CITY_URL + "?state=" + URLEncoder.encode(state, "UTF-8") + "" +
+                        "&city=" + URLEncoder.encode(city, "UTF-8");
                 URI url = new URI(link);
                 HttpClient client = new DefaultHttpClient();
                 HttpGet request = new HttpGet();

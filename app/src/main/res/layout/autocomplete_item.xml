@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Medium Text"
+        android:textColor="@color/white"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:paddingTop="16dp"

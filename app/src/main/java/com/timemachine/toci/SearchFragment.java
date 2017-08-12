@@ -2,6 +2,7 @@ package com.timemachine.toci;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -11,10 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -34,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 /**
@@ -52,6 +50,8 @@ public class SearchFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private Network network; // For checking if network is online
     private AutoCompleteTextView mainEditText;
+    private CitiesSuggestionAdapter citySuggestAdapter;
+    private String searchCity;
     private ImageView mainButton;
     private List<String> citiesList;
 
@@ -104,12 +104,11 @@ public class SearchFragment extends Fragment {
         mainEditText = (AutoCompleteTextView) rootView.findViewById(R.id.enter_city);
         mainButton = (ImageView) rootView.findViewById(R.id.main_btn);
         // Get list of cities then build AutoCompleteTextView
-        new GetCities(getContext())
-        {
+        new GetCities(getContext()) {
             @Override
             protected void onPostExecute(Result result) {
                 if (result != null && result.mResultValue != null) {
-                    CitiesSuggestionAdapter citySuggestAdapter = new CitiesSuggestionAdapter(getContext(),
+                     citySuggestAdapter = new CitiesSuggestionAdapter(getContext(),
                             android.R.layout.simple_dropdown_item_1line, result.mResultValue);
                     mainEditText.setAdapter(citySuggestAdapter);
                 }
@@ -137,22 +136,31 @@ public class SearchFragment extends Fragment {
                  * AsyncTask which makes call to server and returns
                  * true if city found, false if city not found.
                  */
-                final String desired_city = mainEditText.getText().toString();
+                searchCity = mainEditText.getText().toString();
 
-                if (!desired_city.isEmpty()) {
+                // Set searchTerm to first suggestion if searchTerm contains suggestion
+                if (!searchCity.isEmpty() && citySuggestAdapter.getCount() > 0) {
+                    final Object item = citySuggestAdapter.getItem(0);
+                    if (item.toString().contains(searchCity)) {
+                        searchCity = item.toString();
+                    }
+                }
+
+
+                if (!searchCity.isEmpty()) {
                     new CheckCityTask() {
                         @Override
                         protected void onPostExecute(Boolean result) {
                             if (result) {
-                                StartCityActivity(desired_city);
+                                StartCityActivity(searchCity);
                             } else {
                                 Snackbar mySnackbar = Snackbar.make(getActivity().findViewById(R.id.root_fragment_search),
-                                        "No City Found", Snackbar.LENGTH_LONG);
+                                        "No Crowds Found.", Snackbar.LENGTH_LONG);
                                 mySnackbar.setAction("Add Crowd", new AddCrowdListener());
                                 mySnackbar.show();
                             }
                         }
-                    }.execute(desired_city);
+                    }.execute(searchCity);
                 }
             }
         });
@@ -203,11 +211,14 @@ public class SearchFragment extends Fragment {
         protected Boolean doInBackground (String... params) {
 
             String response;
-            String city = params[0];
+            String city, state;
+            String[] query = params[0].split(",");
+            city = query[0];
+            state = query.length == 1 ? "" : query[1];
 
             try {
-                String link = Config.CHECK_CITY_FOR_CROWDS_URL +
-                        "?" + "city=" + URLEncoder.encode(city, "UTF-8");
+                String link = Config.CHECK_CITY_FOR_CROWDS_URL + "?" + "state=" + URLEncoder.encode(state, "UTF-8") +
+                        "&city=" + URLEncoder.encode(city, "UTF-8");
                 URI url = new URI(link);
                 HttpClient client = new DefaultHttpClient();
                 HttpGet request = new HttpGet();
