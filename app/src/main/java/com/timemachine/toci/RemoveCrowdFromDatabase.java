@@ -29,9 +29,15 @@ public class RemoveCrowdFromDatabase extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... params) {
         String paramPlaceId = params[0].replace("'","''");
+        String paramPlaceCountry = params[1].replace("'","''");
+        String paramPlaceState = params[2].replace("'","''");
+        String paramPlaceCity = params[3].replace("'","''");
 
         List<NameValuePair> nameValuePairs = new ArrayList<>();
         nameValuePairs.add(new BasicNameValuePair("id", paramPlaceId));
+        nameValuePairs.add(new BasicNameValuePair("country", paramPlaceCountry));
+        nameValuePairs.add(new BasicNameValuePair("state", paramPlaceState));
+        nameValuePairs.add(new BasicNameValuePair("city", paramPlaceCity));
 
         try {
             HttpClient httpClient = new DefaultHttpClient();
