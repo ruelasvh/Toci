@@ -29,11 +29,9 @@ public class RemoveCrowdFromDatabase extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... params) {
         String paramPlaceId = params[0].replace("'","''");
-        String paramPlaceCity = params[1].replace("'","''");
 
         List<NameValuePair> nameValuePairs = new ArrayList<>();
         nameValuePairs.add(new BasicNameValuePair("id", paramPlaceId));
-        nameValuePairs.add(new BasicNameValuePair("city", paramPlaceCity));
 
         try {
             HttpClient httpClient = new DefaultHttpClient();
@@ -42,6 +40,7 @@ public class RemoveCrowdFromDatabase extends AsyncTask<String, Void, String> {
 
             HttpResponse response = httpClient.execute(httpPost);
             HttpEntity entity = response.getEntity();
+            Log.d("AddCrowdToDatabase", entity.toString());
 
         } catch (ClientProtocolException e) {
             return "Failed to remove: ClientProtocolException.";

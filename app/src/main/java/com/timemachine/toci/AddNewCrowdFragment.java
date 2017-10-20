@@ -10,7 +10,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -193,6 +192,10 @@ public class AddNewCrowdFragment extends Fragment
             if (resultCode == Activity.RESULT_OK) {
                 // Get the user's selected place from the Intent.
                 final Place place = PlacePicker.getPlace(data, getActivity());
+                String[] locale = getLocale(place.getAddress());
+                final String country = locale[0];
+                final String state = locale[1];
+                final String city = locale[2];
                 // After selecting place insert to database immediately
                 new AddCrowdToDatabase(){
                     @Override
@@ -207,7 +210,7 @@ public class AddNewCrowdFragment extends Fragment
                                             public void onPostExecute(String result) {
                                                 mMap.clear();
                                             }
-                                        }.execute(place.getId(), getCity(place.getAddress()));
+                                        }.execute(place.getId(), country, state, city);
                                     }
                         }).show();
 
@@ -224,7 +227,7 @@ public class AddNewCrowdFragment extends Fragment
                         place.getName().toString(),
                         place.getAddress().toString(),
                         cleanLatLng(place.getLatLng().toString()),
-                        getCity(place.getAddress())
+                        country, state, city
                 );
 
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
@@ -287,33 +290,16 @@ public class AddNewCrowdFragment extends Fragment
         mContext.startActivity(intent);
     }
 
-    private static String getCity(CharSequence address) {
+    private static String[] getLocale(CharSequence address) {
 
-        String city = "";
-        boolean[] separators = new boolean[address.length()];
-        int[] separatorIndeces = new int[5];
-        int counter = 0;
+        String[] addressArr = address.toString().split(", ");
+        int size = addressArr.length;
+        String country = addressArr[size - 1];
+        String state = addressArr[size - 2].split(" ")[0];
+        String city = addressArr[size - 3];
+        String[] locale = { country, state, city };
 
-        for(int j = 0; j < address.length(); j++)
-            separators[j] = false;
-
-        for(int i = 0; i < address.length(); i++) {
-            if(address.charAt(i) == ',') {
-                separators[i] = true;
-            }
-
-        }
-
-        for(int k = 0; k < separators.length; k++) {
-            if(separators[k]) {
-                separatorIndeces[counter] = k;
-                counter++;
-            }
-        }
-
-        city = address.subSequence(separatorIndeces[0]+2, separatorIndeces[1]).toString();
-
-        return city;
+        return locale;
     }
 
     // Get short address for displaying in the details container

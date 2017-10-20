@@ -23,8 +23,6 @@ import java.util.List;
  */
 public class AddCrowdToDatabase extends AsyncTask<String, Void, String> {
 
-    private static final String TAG = AddCrowdToDatabase.class.getSimpleName();
-
     Context context;
 
     @Override
@@ -33,15 +31,17 @@ public class AddCrowdToDatabase extends AsyncTask<String, Void, String> {
         String paramPlaceName = params[1].replace("'", "''");
         String paramPlaceAddress = params[2].replace("'", "''");
         String paramLatLng = params[3].replace("'", "''");
-        String paramPlaceCity = params[4].replace("'","''");
-        Log.d(TAG, "parameters to insert to database: " + paramPlaceId
-                + ", " + paramPlaceName + ", " + paramPlaceCity);
+        String paramPlaceCountry = params[4].replace("'","''");
+        String paramPlaceState = params[5].replace("'","''");
+        String paramPlaceCity = params[6].replace("'","''");
 
         List<NameValuePair> nameValuePairs = new ArrayList<>();
         nameValuePairs.add(new BasicNameValuePair("id", paramPlaceId));
         nameValuePairs.add(new BasicNameValuePair("name", paramPlaceName));
         nameValuePairs.add(new BasicNameValuePair("address", paramPlaceAddress));
         nameValuePairs.add(new BasicNameValuePair("latlng", paramLatLng));
+        nameValuePairs.add(new BasicNameValuePair("country", paramPlaceCountry));
+        nameValuePairs.add(new BasicNameValuePair("state", paramPlaceState));
         nameValuePairs.add(new BasicNameValuePair("city", paramPlaceCity));
 
         try {
@@ -51,7 +51,7 @@ public class AddCrowdToDatabase extends AsyncTask<String, Void, String> {
 
             HttpResponse response = httpClient.execute(httpPost);
             HttpEntity entity = response.getEntity();
-            Log.d(TAG, entity.toString());
+            Log.d("AddCrowdToDatabase", entity.toString());
 
         } catch (ClientProtocolException e) {
             return "Failed to upload: ClientProtocolException.";
