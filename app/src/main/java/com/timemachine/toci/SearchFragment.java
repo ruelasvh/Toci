@@ -214,7 +214,7 @@ public class SearchFragment extends Fragment {
             String city, state;
             String[] query = params[0].split(",");
             city = query[0];
-            state = query.length == 1 ? "" : query[1];
+            state = query.length == 1 ? "" : query[1].trim();
 
             try {
                 String link = Config.CHECK_CITY_FOR_CROWDS_URL + "?" + "state=" + URLEncoder.encode(state, "UTF-8") +

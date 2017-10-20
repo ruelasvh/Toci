@@ -4,7 +4,8 @@ package com.timemachine.toci;
  * Created by victorhugo on 1/28/15.
  */
 public class Config {
-    public static final String SERVER_ROOT = "http://104.152.64.96/AppCrowdZeeker/";
+//    public static final String SERVER_ROOT = "http://104.152.64.96/AppCrowdZeeker/";
+    public static final String SERVER_ROOT = "http://thetimemachinelabs.com/AppCrowdZeeker/";
     // Image upload
     public static final String FILE_UPLOAD_URL = SERVER_ROOT + "AndroidFileUpload/fileUpload.php";
     // Fetch crowds by city
