@@ -89,6 +89,29 @@ public class LiveCrowd {
     }
 
     /**
+     * Return LiveCrowd's state
+     * @return
+     */
+    public String getState() {
+        String[] addressArr = this.address.toString().split(",");
+        int size = addressArr.length;
+        String state = addressArr[size - 2].trim().split(" ")[0];
+        return state;
+    }
+
+    /**
+     * Return LiveCrowd's country
+     * @return
+     */
+    public String getCountry() {
+
+        String[] addressArr = address.toString().split(",");
+        int size = addressArr.length;
+        String country = addressArr[size - 1].trim();
+        return country;
+    }
+
+    /**
      * Return time ago to display on crowd in the list
      * @return
      */

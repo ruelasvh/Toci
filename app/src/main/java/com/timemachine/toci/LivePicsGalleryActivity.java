@@ -700,10 +700,10 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 }
 
                 entity.addPart("image", new FileBody(resizedFile));
-                entity.addPart("id",
-                        new StringBody(thisLiveCrowd.getId()));
-                entity.addPart("city",
-                        new StringBody(thisLiveCrowd.getCity()));
+                entity.addPart("id", new StringBody(thisLiveCrowd.getId()));
+                entity.addPart("city", new StringBody(thisLiveCrowd.getCity()));
+                entity.addPart("state", new StringBody(thisLiveCrowd.getState()));
+                entity.addPart("country", new StringBody(thisLiveCrowd.getCountry()));
                 totalSize = entity.getContentLength();
                 httppost.setEntity(entity);
 

@@ -292,11 +292,11 @@ public class AddNewCrowdFragment extends Fragment
 
     private static String[] getLocale(CharSequence address) {
 
-        String[] addressArr = address.toString().split(", ");
+        String[] addressArr = address.toString().split(",");
         int size = addressArr.length;
-        String country = addressArr[size - 1];
-        String state = addressArr[size - 2].split(" ")[0];
-        String city = addressArr[size - 3];
+        String country = addressArr[size - 1].trim();
+        String state = addressArr[size - 2].trim().split(" ")[0];
+        String city = addressArr[size - 3].trim();
         String[] locale = { country, state, city };
 
         return locale;
