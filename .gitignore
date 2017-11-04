@@ -4,3 +4,4 @@
 /.gradle
 /adb_wifi_connect
 /adb_wifi_disconnect
+*.iml
