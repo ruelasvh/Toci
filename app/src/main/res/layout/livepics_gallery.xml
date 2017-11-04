@@ -6,6 +6,10 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
     <!--android:animateLayoutChanges="true">-->
+    <com.viewpagerindicator.TitlePageIndicator
+        android:id="@+id/titles"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"/>
 
     <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"

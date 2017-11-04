@@ -38,6 +38,8 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import com.google.android.gms.location.places.Places;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.viewpagerindicator.PageIndicator;
+import com.viewpagerindicator.TitlePageIndicator;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -88,6 +90,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private ViewPager.OnPageChangeListener pageChangeListener;
 
     /**
      * Layout which holds details about crowds
@@ -102,32 +105,37 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     /**
      * File url to store image/video
      */
-    private Uri fileUri;
-    long totalSize = 0;
+    private Uri mFileUri;
+    long mTotalSize = 0;
 
     /**
      * Variable to hold crowd passed from pevious activity
      */
-    private static LiveCrowd thisLiveCrowd;
-    private String title;
-    private double latitude;
-    private double longitude;
+    private static LiveCrowd mThisLiveCrowd;
+    private String mTitle;
+    private double mLatitude;
+    private double mLongitude;
 
     /**
      * String array to hold picture urls passed from previous activity
      */
-    private static HashMap<Integer, ArrayList<String>> picUrls;
+    private static HashMap<Integer, ArrayList<String>> mPicUrls;
+
+    /**
+     * Holds the current image being displayed
+     */
+    public static ArrayList<String> mCurrImage;
 
     /**
      * AsyncTask for retrieving latest pictures
      */
-    private GetCrowds getCrowdsTask;
+    private GetCrowds mGetCrowdsTask;
     private final String GET_CROWDS_TASK_RUNNING = "getCrowdsTaskRunning";
 
     /**
-     * Helper class to discover network availability
+     * Helper class to discover mNetwork availability
      */
-    private Network network;
+    private Network mNetwork;
 
     /**
      * Helper fields to help store favorite settings
@@ -154,16 +162,16 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         setContentView(R.layout.livepics_gallery);
 
         // Get crowd from previous activity
-        thisLiveCrowd = SerializeLiveCrowd.fromJson(getIntent().getExtras().getString("crowd"));
-        picUrls = thisLiveCrowd.getPicUrls();
+        mThisLiveCrowd = SerializeLiveCrowd.fromJson(getIntent().getExtras().getString("crowd"));
+        mPicUrls = mThisLiveCrowd.getPicUrls();
         try {
-            title = URLEncoder.encode(thisLiveCrowd.getTitle(), "UTF-8");
+            mTitle = URLEncoder.encode(mThisLiveCrowd.getTitle(), "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            title = "";
+            mTitle = "";
         }
-        String[] latlng = thisLiveCrowd.getLatlng().split(",");
-        latitude = Double.parseDouble(latlng[0]);
-        longitude = Double.parseDouble(latlng[1]);
+        String[] latlng = mThisLiveCrowd.getLatlng().split(",");
+        mLatitude = Double.parseDouble(latlng[0]);
+        mLongitude = Double.parseDouble(latlng[1]);
 
         // Get Uber and Lyft Client IDs
         UBER_CLIENT_ID = getString(R.string.uber_client_id);
@@ -175,6 +183,39 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        // Bind invisible title indicator to the adapter (to be able to get current page and current crowd id)
+        TitlePageIndicator titlePageIndicator = (TitlePageIndicator) findViewById(R.id.titles);
+        titlePageIndicator.setViewPager(mViewPager);
+        pageChangeListener = new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // Empty
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                /* Load pictures in pager */
+                Integer size = mPicUrls.size();
+                Integer currIndex = size - (position + 1);
+                mCurrImage = mPicUrls.get(currIndex);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                // Empty
+            }
+        };
+        titlePageIndicator.setOnPageChangeListener(pageChangeListener);
+        // Force onPageSelected when fragment is created
+        // Do this in a runnable to make sure the viewPager's views are already instantiated before
+        // triggering the onPageSelected call
+        mViewPager.post(new Runnable() {
+            @Override
+            public void run() {
+                pageChangeListener.onPageSelected(mViewPager.getCurrentItem());
+            }
+        });
 
         fadeIn = AnimationUtils.loadAnimation(this, R.anim.fab_menu_open);
         fadeOut = AnimationUtils.loadAnimation(this, R.anim.fab_menu_close);
@@ -200,9 +241,9 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 String packageId = "com.ubercab";
                 String uri = "uber://?client_id=" + UBER_CLIENT_ID +
                         "&action=setPickup&pickup=my_location" +
-                        "&dropoff[latitude]=" + latitude +
-                        "&dropoff[longitude]=" + longitude +
-                        "8&dropoff[nickname]=" + title;
+                        "&dropoff[mLatitude]=" + mLatitude +
+                        "&dropoff[mLongitude]=" + mLongitude +
+                        "8&dropoff[nickname]=" + mTitle;
                 String signupLink = "https://uber.com/sign-up?client_id=" + UBER_CLIENT_ID;
                 openDeeplink(packageId, uri, signupLink);
             }
@@ -213,8 +254,8 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 String packageId = "me.lyft.android";
                 String uri = "lyft://ridetype?id=lyft" +
                         "&partner=" + LYFT_CLIENT_ID +
-                        "&destination[latitude]=" + latitude +
-                        "&destination[longitude]=" + longitude;
+                        "&destination[mLatitude]=" + mLatitude +
+                        "&destination[mLongitude]=" + mLongitude;
                 String signupLink = "https://www.lyft.com/signup/SDKSIGNUP?clientId=" + LYFT_CLIENT_ID +
                         "&sdkName=android_direct";
                 openDeeplink(packageId, uri, signupLink);
@@ -224,7 +265,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
             @Override
             public void onClick(View view) {
                 String packageId = "com.google.android.apps.maps";
-                String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?daddr=%f,%f (%s)", latitude, longitude, title);
+                String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?daddr=%f,%f (%s)", mLatitude, mLongitude, mTitle);
                 String signupLink = "https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=7&cad=rja&uact=8&ved=0ahUKEwj08urXpevTAhVF7CYKHZbSDbEQFghHMAY&url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.google.android.apps.maps%26hl%3Den&usg=AFQjCNGh3toBm79BSodS6P_e6E3tOHtb9Q&sig2=qWa7rcnV2Y6drANuHz17mQ";
                 openDeeplink(packageId, uri, signupLink);
             }
@@ -245,10 +286,10 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         // Set up preferences resources
         mContext = getApplicationContext();
         mAppPrefs = new AppPrefs(mContext);
-        // Set the actionbar title
-        setTitle(thisLiveCrowd.getTitle());
-        // Instantiate network helper class
-        network = new Network(this);
+        // Set the actionbar mTitle
+        setTitle(mThisLiveCrowd.getTitle());
+        // Instantiate mNetwork helper class
+        mNetwork = new Network(this);
     }
 
     /**
@@ -258,7 +299,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_live_pics_gallery, menu);
-        if (mAppPrefs.getFavorite_crowds().contains(thisLiveCrowd.getId())) {
+        if (mAppPrefs.getFavorite_crowds().contains(mThisLiveCrowd.getId())) {
             menu.findItem(R.id.action_favorite_toggle).setIcon(R.drawable.ic_action_star_on);
         } else {
             menu.findItem(R.id.action_favorite_toggle).setIcon(R.drawable.ic_action_star_off);
@@ -280,7 +321,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 return true;
             case R.id.action_camera:
                 // Bring up the camera
-                if (network.isOnline()) {
+                if (mNetwork.isOnline()) {
                     captureImage();
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.error_offline,
@@ -289,16 +330,39 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 return true;
             case R.id.action_favorite_toggle:
                 // Save to favorites
-                if (mAppPrefs.getFavorite_crowds().contains(thisLiveCrowd.getId())) {
+                if (mAppPrefs.getFavorite_crowds().contains(mThisLiveCrowd.getId())) {
                     item.setIcon(R.drawable.ic_action_star_off);
                     item.setTitle("Remove From Favorites");
-                    saveToFavs(thisLiveCrowd.getId());
+                    saveToFavs(mThisLiveCrowd.getId());
                 } else {
                     item.setIcon(R.drawable.ic_action_star_on);
                     item.setTitle("Add To Favorites");
-                    saveToFavs(thisLiveCrowd.getId());
+                    saveToFavs(mThisLiveCrowd.getId());
                 }
                 return true;
+            case R.id.action_report_image:
+                // Report image and mark it public = FALSE
+                if (mNetwork.isOnline()) {
+                    try {
+                        String imageId = mCurrImage.get(2);
+                        String imageUrl = mCurrImage.get(0);
+                        new ReportImageTask() {
+                            @Override
+                            public void onPostExecute(String response) {
+                                refreshCrowd();
+                                Toast.makeText(getApplicationContext(), R.string.report_image_success_message,
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }.execute(imageId, imageUrl);
+                    } catch (IndexOutOfBoundsException e) {
+                        Toast.makeText(getApplicationContext(), "Cannot report this image",
+                                Toast.LENGTH_SHORT).show();
+                    }
+
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.error_offline,
+                            Toast.LENGTH_SHORT).show();
+                }
             default:
                 return super.onOptionsItemSelected(item);
 
@@ -311,9 +375,9 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         super.onSaveInstanceState(outState);
 
         // save file url in bundle as it will be null on screen orientation changes
-        outState.putParcelable("file_uri", fileUri);
+        outState.putParcelable("file_uri", mFileUri);
 
-        // save state of getCrowdsTask
+        // save state of mGetCrowdsTask
         if (isTaskRunning()) {
             outState.putBoolean(GET_CROWDS_TASK_RUNNING, true);
         }
@@ -324,9 +388,9 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         super.onRestoreInstanceState(savedInstanceState);
 
         // get the file url
-        fileUri = savedInstanceState.getParcelable("file_uri");
+        mFileUri = savedInstanceState.getParcelable("file_uri");
 
-        // check if getCrowdsTask is running so it can be restarted
+        // check if mGetCrowdsTask is running so it can be restarted
         if (savedInstanceState.getBoolean(GET_CROWDS_TASK_RUNNING, false)) {
             refreshCrowd();
         }
@@ -433,9 +497,8 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
         @Override
         public int getCount() {
-
             // Show total pages.
-            int num_pages = picUrls.size();
+            int num_pages = mPicUrls.size();
             return num_pages;
         }
     }
@@ -477,6 +540,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_livepiclayout, container, false);
             final ImageView liveImageView = (ImageView) rootView.findViewById(R.id.livePic);
+            final ArrayList<String> image;
             mDetailsContainerv2 = (RelativeLayout) rootView.findViewById(R.id.details_container);
             mTimeStampView = (TextView) mDetailsContainerv2.findViewById(R.id.timestamp);
             mHelperView = (ImageView) mDetailsContainerv2.findViewById(R.id.image_container);
@@ -511,13 +575,15 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
             });
 
             /* Load pictures in pager */
+            Integer size = mPicUrls.size();
             switch (this.getPageNum()) {
                 case 1:
-                    Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-1 ).get(0) )
+                    image = mPicUrls.get( size - 1 );
+                    Picasso.with(getActivity()).load( image.get(0) )
                             .into(liveImageView, new Callback() {
                                 @Override
                                 public void onSuccess() {
-                                    mTimeStampView.setText(picUrls.get( picUrls.size()-1 ).get(1));
+                                    mTimeStampView.setText(image.get(1));
                                 }
 
                                 @Override
@@ -527,11 +593,12 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                             });
                     break;
                 case 2:
-                    Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-2 ).get(0) )
+                    image = mPicUrls.get( size - 2 );
+                    Picasso.with(getActivity()).load( image.get(0) )
                             .into(liveImageView, new Callback() {
                                 @Override
                                 public void onSuccess() {
-                                    mTimeStampView.setText(picUrls.get( picUrls.size()-2 ).get(1));
+                                    mTimeStampView.setText(image.get(1));
                                 }
 
                                 @Override
@@ -541,11 +608,12 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                             });
                     break;
                 case 3:
-                    Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-3 ).get(0) )
+                    image = mPicUrls.get( size - 3 );
+                    Picasso.with(getActivity()).load( image.get(0) )
                             .into(liveImageView, new Callback() {
                                 @Override
                                 public void onSuccess() {
-                                    mTimeStampView.setText(picUrls.get( picUrls.size()-3 ).get(1));
+                                    mTimeStampView.setText(image.get(1));
                                 }
 
                                 @Override
@@ -555,11 +623,12 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                             });
                     break;
                 case 4:
-                    Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-4 ).get(0) )
+                    image = mPicUrls.get( size - 4 );
+                    Picasso.with(getActivity()).load( image.get(0) )
                             .into( liveImageView, new Callback() {
                                 @Override
                                 public void onSuccess() {
-                                    mTimeStampView.setText(picUrls.get( picUrls.size()-4 ).get(1));
+                                    mTimeStampView.setText(image.get(1));
                                 }
 
                                 @Override
@@ -569,11 +638,12 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                             });
                     break;
                 case 5:
-                    Picasso.with(getActivity()).load( picUrls.get( picUrls.size()-5 ).get(0) )
+                    image = mPicUrls.get( size - 5 );
+                    Picasso.with(getActivity()).load( image.get(0) )
                             .into( liveImageView, new Callback() {
                                 @Override
                                 public void onSuccess() {
-                                    mTimeStampView.setText(picUrls.get( picUrls.size()-5 ).get(1));
+                                    mTimeStampView.setText(image.get(1));
                                 }
 
                                 @Override
@@ -646,11 +716,11 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
                             @Override
                             public void transferred(long num) {
-                                publishProgress((int) ((num / (float) totalSize) * 100));
+                                publishProgress((int) ((num / (float) mTotalSize) * 100));
                             }
                         });
 
-                File sourceFile = new File(fileUri.getPath());
+                File sourceFile = new File(mFileUri.getPath());
 
                 /**
                  * Shrink image
@@ -700,11 +770,11 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 }
 
                 entity.addPart("image", new FileBody(resizedFile));
-                entity.addPart("id", new StringBody(thisLiveCrowd.getId()));
-                entity.addPart("city", new StringBody(thisLiveCrowd.getCity()));
-                entity.addPart("state", new StringBody(thisLiveCrowd.getState()));
-                entity.addPart("country", new StringBody(thisLiveCrowd.getCountry()));
-                totalSize = entity.getContentLength();
+                entity.addPart("id", new StringBody(mThisLiveCrowd.getId()));
+                entity.addPart("city", new StringBody(mThisLiveCrowd.getCity()));
+                entity.addPart("state", new StringBody(mThisLiveCrowd.getState()));
+                entity.addPart("country", new StringBody(mThisLiveCrowd.getCountry()));
+                mTotalSize = entity.getContentLength();
                 httppost.setEntity(entity);
 
                 // Making server call
@@ -796,8 +866,8 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
     private void captureImage() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+        mFileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, mFileUri);
         startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
     }
 
@@ -926,16 +996,19 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     }
 
     private void refreshCrowd() {
-        if (network.isOnline()) {
-            getCrowdsTask = new GetCrowds(this, new GetCrowds.AsyncResponse() {
+        if (mNetwork.isOnline()) {
+            mGetCrowdsTask = new GetCrowds(this, new GetCrowds.AsyncResponse() {
                 @Override
                 public void onAsyncTaskFinish(LiveCrowd[] crowds) {
-                    picUrls = crowds[0].getPicUrls();
+                    mPicUrls = crowds[0].getPicUrls();
                     mSectionsPagerAdapter.notifyDataSetChanged();
                     mViewPager.setAdapter(mSectionsPagerAdapter);
+                    // triggering the onPageSelected to reset mCurrImage
+                    pageChangeListener.onPageSelected(mViewPager.getCurrentItem());
+
                 }
             });
-            getCrowdsTask.execute(FETCH_CROWDS_FILTER, thisLiveCrowd.getId());
+            mGetCrowdsTask.execute(FETCH_CROWDS_FILTER, mThisLiveCrowd.getId());
         } else {
             Toast.makeText(getApplicationContext(), "No Connection Available",
                     Toast.LENGTH_SHORT).show();
@@ -943,13 +1016,13 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     }
 
     private void cancelRefreshCrowd() {
-        if (getCrowdsTask != null) {
-            getCrowdsTask.cancel(true);
+        if (mGetCrowdsTask != null) {
+            mGetCrowdsTask.cancel(true);
         }
     }
 
     private boolean isTaskRunning() {
-        return (getCrowdsTask != null) && (getCrowdsTask.getStatus() == AsyncTask.Status.RUNNING);
+        return (mGetCrowdsTask != null) && (mGetCrowdsTask.getStatus() == AsyncTask.Status.RUNNING);
     }
 
 }

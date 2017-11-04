@@ -291,12 +291,12 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> implements
                     for (int i = 0; i < jsonArray.length(); i++) {
                         final JSONObject obj = jsonArray.getJSONObject(i);
                         final String url = obj.getString("image_url");
-                        final String show = obj.getString("show");
+                        final String id = obj.getString("id");
                         final String timeAgo = getTimeAgo(url);
                         picUrls.put(i, new ArrayList<String>() {{
                             add(url);
                             add(timeAgo);
-                            add(show);
+                            add(id);
                         }});
                     }
                 }

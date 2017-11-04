@@ -14,6 +14,7 @@
     <!-- LivePicsGalleryActivity -->
     <string name="livepics_gallery">Live Feed</string>
     <string name="report_photo">Report Photo</string>
+    <string name="report_image_success_message">Image has been reported</string>
     <!-- String from Material Navigation Drawer -->
     <string name="drawer_open">Menu opened</string>
     <string name="drawer_close">Menu closed</string>

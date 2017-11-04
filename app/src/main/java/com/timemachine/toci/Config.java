@@ -30,4 +30,6 @@ public class Config {
     public static final String CHECK_CITY_FOR_CROWDS_URL = SERVER_ROOT + "checkcity.php";
     // Directory name to store capture images and videos
     public static final String IMAGE_DIRECTORY_NAME = "Android File Upload";
+    // Report image
+    public static final String REPORT_IMAGE_URL = SERVER_ROOT +  "AndroidFileUpload/reportimage.php";
 }
