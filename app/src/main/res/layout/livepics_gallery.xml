@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
     <!--android:animateLayoutChanges="true">-->
     <com.viewpagerindicator.TitlePageIndicator
+        android:visibility="gone"
         android:id="@+id/titles"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"/>
@@ -18,80 +20,95 @@
         android:layout_height="match_parent"
         tools:context="com.timemachine.toci.LivePicsGalleryActivity" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_ride_uber"
-        app:backgroundTint="@color/azure"
-        app:fabSize="mini"
-        android:src="@drawable/uber_logo"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
+        android:layout_gravity="right|bottom"
         android:layout_marginBottom="200dp"
-        android:layout_marginRight="24dp"
-        android:layout_gravity="right|bottom"/>
+        android:layout_marginRight="24dp">
 
-    <TextView
-        android:id="@+id/uber_label"
-        android:background="@drawable/fab_menu_label_border"
-        android:text="Uber"
-        android:textColor="@color/white"
-        android:visibility="invisible"
-        android:textAlignment="center"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_marginBottom="210dp"
-        android:layout_marginRight="84dp"
-        android:layout_gravity="right|bottom"/>
+        <TextView
+            android:id="@+id/uber_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_weight="17.06"
+            android:background="@drawable/fab_menu_label_border"
+            android:text="Uber"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:visibility="invisible" />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_ride_uber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:src="@drawable/uber_logo"
+            android:visibility="invisible"
+            app:backgroundTint="@color/azure"
+            app:fabSize="mini" />
+    </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_ride_lyft"
-        app:backgroundTint="@color/azure"
-        app:fabSize="mini"
-        android:src="@drawable/lyft_logo"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
+        android:layout_gravity="right|bottom"
         android:layout_marginBottom="144dp"
-        android:layout_marginRight="24dp"
-        android:layout_gravity="right|bottom"/>
+        android:layout_marginRight="24dp">
 
-    <TextView
-        android:id="@+id/lyft_label"
-        android:background="@drawable/fab_menu_label_border"
-        android:text="Lyft"
-        android:textColor="@color/white"
-        android:visibility="invisible"
-        android:textAlignment="center"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_marginBottom="154dp"
-        android:layout_marginRight="84dp"
-        android:layout_gravity="right|bottom"/>
+        <TextView
+            android:id="@+id/lyft_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_weight="17.06"
+            android:background="@drawable/fab_menu_label_border"
+            android:text="Lyft"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:visibility="invisible" />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_ride_lyft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:src="@drawable/lyft_logo"
+            android:visibility="invisible"
+            app:backgroundTint="@color/azure"
+            app:fabSize="mini" />
+    </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_ride_gmaps"
-        app:backgroundTint="@color/azure"
-        app:fabSize="mini"
-        android:src="@drawable/gmaps_logo"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
+        android:layout_gravity="right|bottom"
         android:layout_marginBottom="88dp"
-        android:layout_marginRight="24dp"
-        android:layout_gravity="right|bottom"/>
+        android:layout_marginRight="24dp">
 
-    <TextView
-        android:id="@+id/gmpas_label"
-        android:background="@drawable/fab_menu_label_border"
-        android:text="Navigate"
-        android:textColor="@color/white"
-        android:visibility="invisible"
-        android:textAlignment="center"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_marginBottom="98dp"
-        android:layout_marginRight="84dp"
-        android:layout_gravity="right|bottom"/>
+        <TextView
+            android:id="@+id/gmpas_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_weight="17.06"
+            android:background="@drawable/fab_menu_label_border"
+            android:text="Navigate"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:visibility="invisible" />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_ride_gmaps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:src="@drawable/gmaps_logo"
+            android:visibility="invisible"
+            app:backgroundTint="@color/azure"
+            app:fabSize="mini" />
+    </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_call_crowd"
