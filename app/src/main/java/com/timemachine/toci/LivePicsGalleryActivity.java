@@ -175,6 +175,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
         // Get Uber and Lyft Client IDs
         UBER_CLIENT_ID = getString(R.string.uber_client_id);
+        LYFT_CLIENT_ID = getString(R.string.lyft_client_id);
 
         // Create the adapter that will return a fragment for each of the five
         // primary sections of the activity.
@@ -241,8 +242,8 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 String packageId = "com.ubercab";
                 String uri = "uber://?client_id=" + UBER_CLIENT_ID +
                         "&action=setPickup&pickup=my_location" +
-                        "&dropoff[mLatitude]=" + mLatitude +
-                        "&dropoff[mLongitude]=" + mLongitude +
+                        "&dropoff[latitude]=" + mLatitude +
+                        "&dropoff[longitude]=" + mLongitude +
                         "8&dropoff[nickname]=" + mTitle;
                 String signupLink = "https://uber.com/sign-up?client_id=" + UBER_CLIENT_ID;
                 openDeeplink(packageId, uri, signupLink);
@@ -254,8 +255,8 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 String packageId = "me.lyft.android";
                 String uri = "lyft://ridetype?id=lyft" +
                         "&partner=" + LYFT_CLIENT_ID +
-                        "&destination[mLatitude]=" + mLatitude +
-                        "&destination[mLongitude]=" + mLongitude;
+                        "&destination[latitude]=" + mLatitude +
+                        "&destination[longitude]=" + mLongitude;
                 String signupLink = "https://www.lyft.com/signup/SDKSIGNUP?clientId=" + LYFT_CLIENT_ID +
                         "&sdkName=android_direct";
                 openDeeplink(packageId, uri, signupLink);
