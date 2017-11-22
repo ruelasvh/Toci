@@ -17,7 +17,7 @@
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
 
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@color/PrimaryDarkColor</item>
 
         <item name="android:windowBackground">@color/PrimaryWindowBackground</item>
         <item name="android:windowContentTransitions">true</item>

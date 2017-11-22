@@ -200,7 +200,7 @@ public class AddNewCrowdFragment extends Fragment
                 new AddCrowdToDatabase(){
                     @Override
                     public void onPostExecute(String result) {
-                        Snackbar.make(getActivity().findViewById(R.id.root_add_new_crowd),
+                        Snackbar.make(getActivity().findViewById(R.id.snackBar),
                                 result, Snackbar.LENGTH_LONG)
                                 .setAction("UNDO", new View.OnClickListener() {
                                     @Override
@@ -250,7 +250,7 @@ public class AddNewCrowdFragment extends Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         // Set Fragment's title in parent activity
-        ((HomeMaterialActivity) context).onSectionAttached(SECTION_TITLE);
+//        ((HomeMaterialActivity) context).onSectionAttached(SECTION_TITLE);
     }
 
     @Override

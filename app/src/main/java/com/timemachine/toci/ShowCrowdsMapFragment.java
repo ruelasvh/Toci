@@ -90,8 +90,6 @@ public class ShowCrowdsMapFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // This fragment has it's own toolbar menu, so display it
-        setHasOptionsMenu(true);
         mContext = getContext();
 
         if (getArguments() != null) {
@@ -111,6 +109,8 @@ public class ShowCrowdsMapFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // This fragment has it's own toolbar menu, so display it
+        setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_show_crowds_map, container, false);
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.crowds_map);
@@ -146,6 +146,7 @@ public class ShowCrowdsMapFragment extends Fragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_show_crowds_map, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -220,8 +221,6 @@ public class ShowCrowdsMapFragment extends Fragment
             mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                     mGoogleApiClient);
             if (mLastLocation != null) {
-//                Log.d(this.getClass().getSimpleName(),String.valueOf(mLastLocation.getLatitude()));
-//                Log.d(this.getClass().getSimpleName(),String.valueOf(mLastLocation.getLongitude()));
                 LatLng currentLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
 

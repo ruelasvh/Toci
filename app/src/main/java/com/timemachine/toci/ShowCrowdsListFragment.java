@@ -83,8 +83,6 @@ public class ShowCrowdsListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // This fragment has it's own toolbar menu, so display it
-        setHasOptionsMenu(true);
         mContext = getContext();
 
         // Assign value passed from parent activity to mParam1
@@ -100,6 +98,8 @@ public class ShowCrowdsListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // This fragment has it's own toolbar menu, so display it
+        setHasOptionsMenu(true);
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_show_crowds_list, container, false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swiperefresh);
@@ -129,6 +129,7 @@ public class ShowCrowdsListFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_show_crowds, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -157,9 +158,9 @@ public class ShowCrowdsListFragment extends Fragment {
         super.onAttach(context);
 
         // Set Fragment's title in parent activity
-        if (context instanceof HomeMaterialActivity) {
-            ((HomeMaterialActivity) context).onSectionAttached(SECTION_TITLE);
-        }
+//        if (context instanceof HomeMaterialActivity) {
+//            ((HomeMaterialActivity) context).onSectionAttached(SECTION_TITLE);
+//        }
 
         try {
             mListener = (OnFragmentInteractionListener) context;

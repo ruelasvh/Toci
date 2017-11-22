@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -154,10 +156,10 @@ public class SearchFragment extends Fragment {
                             if (result) {
                                 StartCityActivity(searchCity);
                             } else {
-                                Snackbar mySnackbar = Snackbar.make(getActivity().findViewById(R.id.root_fragment_search),
+                                Snackbar noCityFoundDialog = Snackbar.make(getActivity().findViewById(R.id.snackBar),
                                         "No Crowds Found.", Snackbar.LENGTH_LONG);
-                                mySnackbar.setAction("Add Crowd", new AddCrowdListener());
-                                mySnackbar.show();
+                                noCityFoundDialog.setAction("Add Crowd", new AddCrowdListener());
+                                noCityFoundDialog.show();
                             }
                         }
                     }.execute(searchCity);
@@ -186,7 +188,7 @@ public class SearchFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        ((HomeMaterialActivity) context).onSectionAttached(SECTION_TITLE);
+//        ((HomeMaterialActivity) context).onSectionAttached(SECTION_TITLE);
 
         try {
             mListener = (OnFragmentInteractionListener) context;

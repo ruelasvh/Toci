@@ -1,18 +1,23 @@
 package com.timemachine.toci;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.internal.BottomNavigationItemView;
+import android.support.design.internal.BottomNavigationMenu;
+import android.support.design.internal.BottomNavigationMenuView;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.List;
+import java.lang.reflect.Field;
 
 /**
  * Created by Victor Ruelas on 4/5/16.
@@ -21,14 +26,14 @@ public class HomeMaterialActivity extends AppCompatActivity
         implements
         ShowCrowdsListFragment.OnFragmentInteractionListener,
         ShowCrowdsMapFragment.OnFragmentInteractionListener,
-        SearchFragment.OnFragmentInteractionListener,
-        NavigationDrawerCallbacks {
+        SearchFragment.OnFragmentInteractionListener {
 
+    private static final String SELECTED_ITEM = "arg_selected_item";
     private static final String FETCH_CROWDS_FILTER = "BY_ID";
     private static String CROWDS;
-    private NavigationDrawerFragment mNavigationDrawerFragment;
+    private BottomNavigationView mBottomNav;
+    private int mSelectedItem;
     private Toolbar mToolbar;
-    private CharSequence mTitle;
 
     // Helper fields to help store favorite settings
     Context mContext;
@@ -54,106 +59,97 @@ public class HomeMaterialActivity extends AppCompatActivity
         mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(mToolbar);
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getFragmentManager().findFragmentById(R.id.fragment_drawer);
-        // Set title of different fragments
-        mTitle = getTitle();
-        // Set up the drawer.
-        mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mToolbar);
-         //populate the navigation drawer
-        mNavigationDrawerFragment.setUserData(getResources().getString(R.string.rc_moto));
+        // Bottom navigation
+        mBottomNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        disableShiftMode(mBottomNav);
+        mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                selectFragment(item);
+                return true;
+            }
+        });
+
+        MenuItem selectedItem;
+        if (savedInstanceState != null) {
+            mSelectedItem = savedInstanceState.getInt(SELECTED_ITEM, 0);
+            selectedItem = mBottomNav.getMenu().findItem(mSelectedItem);
+        } else {
+            selectedItem = mBottomNav.getMenu().getItem(0);
+        }
+        selectFragment(selectedItem);
+    }
+
+    @SuppressLint("RestrictedApi")
+    public static void disableShiftMode(BottomNavigationView view) {
+        BottomNavigationMenuView menuView = (BottomNavigationMenuView) view.getChildAt(0);
+        try {
+            Field shiftingMode = menuView.getClass().getDeclaredField("mShiftingMode");
+            shiftingMode.setAccessible(true);
+            shiftingMode.setBoolean(menuView, false);
+            shiftingMode.setAccessible(false);
+            for (int i = 0; i < menuView.getChildCount(); i++) {
+                BottomNavigationItemView item = (BottomNavigationItemView) menuView.getChildAt(i);
+                item.setShiftingMode(false);
+                // set once again checked value, so view will be updated
+                item.setChecked(item.getItemData().isChecked());
+            }
+        } catch (NoSuchFieldException e) {
+            //Timber.e(e, "Unable to get shift mode field");
+        } catch (IllegalAccessException e) {
+            //Timber.e(e, "Unable to change value of shift mode");
+        }
     }
 
     @Override
-    public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
-        Fragment fragment = null;
-        switch (position) {
-            case 0:
-                fragment = new SearchFragment();
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(SELECTED_ITEM, mSelectedItem);
+        super.onSaveInstanceState(outState);
+    }
+
+    private void selectFragment(MenuItem item) {
+        Fragment frag = null;
+        // init corresponding fragment
+        switch (item.getItemId()) {
+            case R.id.menu_search:
+                frag = new SearchFragment();
                 break;
-            case 1:
+            case R.id.menu_favorites:
                 CROWDS = TextUtils.join(",", mAppPrefs.getFavorite_crowds());
-                fragment = ShowCrowdsListFragment.newInstance(FETCH_CROWDS_FILTER, CROWDS);
+                frag = ShowCrowdsListFragment.newInstance(FETCH_CROWDS_FILTER, CROWDS);
                 break;
-            case 2:
-                fragment = AddNewCrowdFragment.newInstance();
+            case R.id.menu_add_crowd:
+                frag = AddNewCrowdFragment.newInstance();
                 break;
-            case 3:
-                fragment = new AboutUsFragment();
+            case R.id.menu_settings:
+                frag = new SettingsFragment();
+                break;
         }
-        if (fragment != null) {
+
+        updateToolbarText(item.getTitle());
+        updateSelectedBottomNavItem(item.getItemId());
+
+        if (frag != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container, fragment)
+            fragmentManager.beginTransaction().replace(R.id.container, frag)
                     .addToBackStack(null).commit();
         }
     }
 
+    private void updateSelectedBottomNavItem(int item) {
+        mSelectedItem = item;
+        mBottomNav.getMenu().findItem(mSelectedItem).setChecked(true);
+    }
+
+    private void updateToolbarText(CharSequence text) {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(text);
+        }
+    }
 
     public void onSectionAttached(String section) {
-        switch (section) {
-            case "SearchFragment":
-                mTitle = getString(R.string.app_name);
-                break;
-            case "AddNewCrowdFragment":
-                mTitle = "Add New Crowd";
-                break;
-            case "ShowCrowdsListFragment":
-                mTitle = "Favorite Crowds";
-                break;
-            case "AboutUsFragment":
-                mTitle = "About Us";
-                break;
-            default:
-                break;
-        }
-        mToolbar.setTitle(mTitle);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mNavigationDrawerFragment.isDrawerOpen())
-            mNavigationDrawerFragment.closeDrawer();
-        else
-            super.onBackPressed();
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.menu_main, menu);
-            return true;
-        }
-        return super.onCreateOptionsMenu(menu);
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        switch (item.getItemId()) {
-            default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
-        }
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
+        // Used to communicate with other fragments
     }
 
     /**
@@ -161,7 +157,5 @@ public class HomeMaterialActivity extends AppCompatActivity
      * @param position
      */
     public void onFragmentInteraction(int position) {
-        mNavigationDrawerFragment.setCurrentSelectedPosition(position);
     }
-
 }

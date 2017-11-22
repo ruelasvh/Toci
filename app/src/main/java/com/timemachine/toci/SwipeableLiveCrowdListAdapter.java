@@ -112,7 +112,7 @@ public class SwipeableLiveCrowdListAdapter extends BaseAdapter {
                     showSearchCrowds(true);
                 }
 
-                Snackbar.make(((Activity) context).findViewById(R.id.crowds_listview),
+                Snackbar.make(((Activity) context).findViewById(R.id.snackBar),
                         "Removed " + crowd.getTitle(), Snackbar.LENGTH_LONG)
                         .setAction("UNDO", new View.OnClickListener() {
                             @Override
