@@ -1,103 +1,63 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/PrimaryColor"
     tools:context="com.timemachine.toci.AboutUsFragment">
 
-    <ScrollView
-        android:id="@+id/about_us_scrollview"
+    <Button
+        android:id="@+id/close_button"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_margin="15dp"
+        style="?android:attr/borderlessButtonStyle"
+        android:background="@drawable/ic_action_close" />
+
+    <LinearLayout
+        android:id="@+id/textInfo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/PrimaryColor"
-        android:fillViewport="true">
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:weightSum="1">
 
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="26px">
+        <TextView
+            android:id="@+id/about_us_title"
+            style="?android:textAppearanceLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:text="@string/about_title"
+            android:textColor="@color/PrimaryAccentColor" />
 
-            <LinearLayout
-                android:id="@+id/textInfo"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:weightSum="1"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true">
+        <TextView
+            android:id="@+id/about_us_desctiption"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="25dp"
+            android:text="@string/about_summary"
+            android:textColor="@color/white" />
 
-                <TextView
-                    android:id="@+id/about_us_title"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:text="@string/about_title"
-                    android:textColor="@color/PrimaryAccentColor"
-                    style="?android:textAppearanceLarge" />
+        <TextView
+            style="?android:textAppearanceSmall"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="25dp"
+            android:text="@string/about_author"
+            android:textColor="@color/white"
+            android:textStyle="italic" />
 
-                <TextView
-                    android:id="@+id/about_us_desctiption"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:text="@string/about_summary"
-                    android:textColor="@color/white"
-                    android:layout_marginTop="25dp" />
+        <TextView
+            android:id="@+id/about_us_contact"
+            style="?android:textAppearanceSmall"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="0dp"
+            android:text="@string/about_contact"
+            android:textColor="@color/white" />
+    </LinearLayout>
 
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:text="@string/about_author"
-                    android:textColor="@color/white"
-                    style="?android:textAppearanceSmall"
-                    android:layout_marginTop="25dp"
-                    android:textStyle="italic"/>
-
-                <TextView
-                    android:id="@+id/about_us_contact"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:text="@string/about_contact"
-                    android:textColor="@color/white"
-                    style="?android:textAppearanceSmall"
-                    android:layout_marginTop="0dp" />
-            </LinearLayout>
-
-            <!--<ImageView-->
-                <!--android:src="@android:drawable/title_bar"-->
-                <!--android:id="@+id/vicPic"-->
-                <!--android:layout_width="75dp"-->
-                <!--android:layout_height="75dp"-->
-                <!--android:adjustViewBounds="true"-->
-                <!--android:layout_below="@+id/textInfo" />-->
-
-
-            <!--<ImageView-->
-                <!--android:src="@android:drawable/title_bar"-->
-                <!--android:id="@+id/gesemPic"-->
-                <!--android:layout_width="75dp"-->
-                <!--android:layout_height="75dp"-->
-                <!--android:adjustViewBounds="true"-->
-                <!--android:layout_alignTop="@+id/vicPic"-->
-                <!--android:layout_centerHorizontal="true" />-->
-
-            <!--<ImageView-->
-                <!--android:src="@android:drawable/title_bar"-->
-                <!--android:id="@+id/royPic"-->
-                <!--android:layout_width="75dp"-->
-                <!--android:layout_height="75dp"-->
-                <!--android:adjustViewBounds="true"-->
-                <!--android:layout_alignTop="@+id/gesemPic"-->
-                <!--android:layout_alignRight="@+id/textInfo"-->
-                <!--android:layout_alignEnd="@+id/textInfo" />-->
-
-        </RelativeLayout>
-
-    </ScrollView>
-
-</FrameLayout>
+</RelativeLayout>
