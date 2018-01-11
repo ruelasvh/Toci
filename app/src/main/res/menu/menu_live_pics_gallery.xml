@@ -4,8 +4,7 @@
     tools:context="com.timemachine.toci.LivePicsGalleryActivity">
 
     <item
-        android:id="@+id/action_favorite"
-        android:icon="@drawable/ic_action_goldstar"
+        android:id="@+id/action_favorite_toggle"
         android:title="Add To Favorites"
         app:showAsAction="ifRoom" />
 
@@ -15,17 +14,9 @@
         android:title="Take Picture"
         app:showAsAction="ifRoom" />
 
-
-    <!--<item-->
-        <!--android:id="@+id/action_map"-->
-        <!--android:icon="@android:drawable/ic_menu_directions"-->
-        <!--android:title="Directions"-->
-        <!--app:showAsAction="ifRoom" />-->
-
-
-    <!--<item-->
-        <!--android:id="@+id/action_settings"-->
-        <!--android:title="@string/action_settings"-->
-        <!--android:orderInCategory="100"-->
-        <!--app:showAsAction="never" />-->
+    <item
+        android:id="@+id/action_report_image"
+        android:title="@string/report_photo"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
 </menu>

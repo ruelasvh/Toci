@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
     <!--android:animateLayoutChanges="true">-->
+    <com.viewpagerindicator.TitlePageIndicator
+        android:visibility="gone"
+        android:id="@+id/titles"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"/>
 
     <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -14,100 +20,116 @@
         android:layout_height="match_parent"
         tools:context="com.timemachine.toci.LivePicsGalleryActivity" />
 
-    <FrameLayout
-        android:id="@+id/details_container"
-        android:layout_width="match_parent"
-        android:layout_height="212dp"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal|bottom">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_marginBottom="200dp"
+        android:layout_marginRight="24dp">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="112dp"
-            android:background="@color/black_transparent"
-            android:layout_gravity="center_horizontal|bottom">
+        <TextView
+            android:id="@+id/uber_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_weight="17.06"
+            android:background="@drawable/fab_menu_label_border"
+            android:text="Uber"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:visibility="invisible" />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_ride_uber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:src="@drawable/uber_logo"
+            android:visibility="invisible"
+            app:backgroundTint="@color/azure"
+            app:fabSize="mini" />
+    </LinearLayout>
 
-            <ImageView
-                android:id="@+id/image_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_marginBottom="144dp"
+        android:layout_marginRight="24dp">
 
-            <Button
-                android:id="@+id/status"
-                android:layout_width="wrap_content"
-                android:layout_height="35dip"
-                android:layout_marginTop="7dp"
-                android:layout_marginLeft="18dp"
-                android:padding="4dp"
-                android:text="open"
-                android:textSize="18dp"
-                android:textColor="@color/white"
-                android:background="@drawable/custom_button_status_selector" />
+        <TextView
+            android:id="@+id/lyft_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_weight="17.06"
+            android:background="@drawable/fab_menu_label_border"
+            android:text="Lyft"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:visibility="invisible" />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_ride_lyft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:src="@drawable/lyft_logo"
+            android:visibility="invisible"
+            app:backgroundTint="@color/azure"
+            app:fabSize="mini" />
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_marginBottom="88dp"
+        android:layout_marginRight="24dp">
 
-            <TextView
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:autoLink="all"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/white"
-                android:id="@+id/address"
-                android:layout_marginTop="50dp"
-                android:layout_marginLeft="18dp"/>
+        <TextView
+            android:id="@+id/gmpas_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_weight="17.06"
+            android:background="@drawable/fab_menu_label_border"
+            android:text="Navigate"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:visibility="invisible" />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_ride_gmaps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:src="@drawable/gmaps_logo"
+            android:visibility="invisible"
+            app:backgroundTint="@color/azure"
+            app:fabSize="mini" />
+    </LinearLayout>
 
-            <ImageView
-                android:id="@+id/web"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_web"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="18dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_call_crowd"
+        app:backgroundTint="@color/azure"
+        app:fabSize="mini"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_action_call"
+        android:layout_marginBottom="88dp"
+        android:layout_marginRight="24dp"
+        android:layout_gravity="right|bottom" />
 
-            <ImageView
-                android:id="@+id/map"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginTop="10dp"
-                android:src="@android:drawable/ic_dialog_map"
-                android:layout_toLeftOf="@+id/web"
-                android:layout_toStartOf="@+id/web"
-                android:layout_marginRight="20dp" />
-
-            <ImageView
-                android:id="@+id/phone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:src="@android:drawable/stat_sys_phone_call"
-                android:layout_toLeftOf="@+id/map"
-                android:layout_toStartOf="@+id/map"
-                android:layout_marginRight="20dp"/>
-
-
-        </RelativeLayout>
-
-        <!--<at.markushi.ui.CircleButton-->
-            <!--android:id="@+id/main_btn"-->
-            <!--android:layout_width="100dp"-->
-            <!--android:layout_height="100dp"-->
-            <!--app:cb_color="@color/PrimaryAccentColor"-->
-            <!--android:layout_marginLeft="40dp" />-->
-
-        <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
-            <!--android:text="CLOSED"-->
-            <!--android:id="@+id/status"-->
-            <!--android:textColor="@color/white"-->
-            <!--android:layout_marginLeft="50dp"-->
-            <!--android:layout_marginTop="36dp"-->
-            <!--android:layout_alignBottom="@+id/address" />-->
-
-    </FrameLayout>
-
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_ride_crowd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tint="@color/azure"
+        android:src="@drawable/ic_directions_car_white"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_gravity="right|bottom" />
 
 </FrameLayout>

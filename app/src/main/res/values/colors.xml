@@ -1,50 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="view_background">#e8ecfa</color>
-    <color name="blue">#277bec</color>
     <color name="white">#ffffff</color>
-    <color name="blueish_grey">#4e5572</color>
-
     <color name="azure">#F0FFFF</color>
     <color name="orange">#FF8C00</color>
-    <color name="red_party">#c7ff0000</color>
     <color name="black_transparent">#ae0e0e0e</color>
     <color name="light_grey">#C0C0C0</color>
-    <color name="brown">#B95835</color>
-    <color name="blue_light">#c22866d0</color>
     <color name="transparent">#00000000</color>
-    <color name="tab_highlight">#ff9ecfbf</color>
-
-    <!--
-        Check Android Theme colors for color reference:
-        https://developer.android.com/training/material/images/ThemeColors.png
-
-        Refer also to Color palette for the UI colors you should use:
-        http://www.google.com/design/spec/style/color.html#color-ui-color-palette
-    -->
-
     <color name="PrimaryColor">#ff25365f</color>
     <color name="PrimaryDarkColor">#ff0e1c49</color>
-    <color name="PrimaryColorBlue">#2196F3</color>
-    <color name="PrimaryDarkColorBlue">#1976D2</color>
-    <color name="PrimaryColorGreen">#41924B</color>
-    <color name="PrimaryDarkColorGreen">#f5195b03</color>
     <color name="PrimaryAccentColor">#FF4081</color>
-    <color name="PrimaryDrawerBackground">#FFF</color>
     <color name="PrimaryWindowBackground">#FFF</color>
     <color name="PrimaryTextPrimaryColor">#212121</color>
     <color name="PrimaryNavigationColor">#000</color>
 
     <drawable name="pressed_gray">#0c000000</drawable>
     <drawable name="selected_gray">#2c000000</drawable>
-
-    <!--
-        Colors for "Specials" section
-    -->
-
-    <color name="violetSpecials">#8635ac</color>
-    <color name="redSpecials">#d73232</color>
-    <color name="yellowSpecials">#ffbf00</color>
-    <color name="blueSpecials">#0401cc</color>
-
 </resources>

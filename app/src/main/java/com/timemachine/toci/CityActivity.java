@@ -1,139 +1,71 @@
 package com.timemachine.toci;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 
-import java.util.ArrayList;
-import java.util.List;
+/**
+ * Created by Victor Ruelas on 4/5/16.
+ */
 
-public class CityActivity extends AppCompatActivity {
-    // helper in debugging
-    private final static String TAG = CityActivity.class.getSimpleName();
+public class CityActivity extends AppCompatActivity
+    implements
+        ShowCrowdsListFragment.OnFragmentInteractionListener,
+        ShowCrowdsMapFragment.OnFragmentInteractionListener {
 
-    private static String mCity;
+    private static final String FETCH_CROWDS_FILTER = "BY_CITY";
+    private static String CROWDS;
 
-    private liveCrowdRowAdapterv2 adapter;
-    private ProgressBar spinner;
-    private ListView crowdList;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-
-    // Helper fields to help store favorite settings
-    Context mContext;
-    AppPrefs mAppPrefs;
-    List<String> mCityFavorites;
+    public CityActivity() {
+        // Required empty public constructor
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city);
 
-        mCity = getIntent().getStringExtra("city");
+        CROWDS = getIntent().getStringExtra("city");
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(mCity);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
+        toolbar.setTitle(CROWDS);
         setSupportActionBar(toolbar);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
-        // BEGIN_INCLUDE (change_colors)
-        // Set the color scheme of the SwipeRefreshLayout by providing 4 color resource ids
-        mSwipeRefreshLayout.setColorSchemeResources(
-                R.color.PrimaryAccentColor, R.color.PrimaryAccentColor,
-                R.color.PrimaryAccentColor, R.color.PrimaryAccentColor);
-
-        initiateRefresh();
-
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                initiateRefresh();
-            }
-        });
-    }
-
-    /**
-     * Inflate the menu.
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_refresh, menu);
-        return true;
-    }
-
-    /**
-     * Handle menu items selection.
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        mContext = getApplicationContext();
-        mAppPrefs = new AppPrefs(mContext);
-
-        switch (item.getItemId()) {
-            // This returns to previous fragment in previous activity.
-            case android.R.id.home:
-                finish();
-                return true;
-
-            case R.id.action_refresh:
-                mSwipeRefreshLayout.setRefreshing(true);
-                initiateRefresh();
-                return true;
-            case R.id.action_favorite:
-                mAppPrefs.setFavorite_city(mCity);
-                if (mAppPrefs.getFavorite_cities() != null) {
-                    for (String city : mAppPrefs.getFavorite_cities()) {
-                        Log.i(TAG, city);
-                    }
-                }
-                Snackbar.make(findViewById(android.R.id.content), "Pinned To Home Menu", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        Fragment fragment = ShowCrowdsListFragment.newInstance(FETCH_CROWDS_FILTER, CROWDS);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container, fragment)
+        .addToBackStack(null).commit();
     }
 
-    private void initiateRefresh() {
-
-        new GetCrowdsv2(new GetCrowdsv2.AsyncResponse() {
-            @Override
-            public void onAsyncTaskFinish(liveCrowdRow[] crowds) {
-
-                spinner = (ProgressBar) findViewById(R.id.spinner);
-                spinner.setVisibility(View.VISIBLE);
-                crowdList = (ListView) findViewById(R.id.crowds_listview);
-
-                adapter = new liveCrowdRowAdapterv2(CityActivity.this, R.layout.row, crowds);
-                adapter.notifyDataSetChanged();
-                if (!adapter.isEmpty()) spinner.setVisibility(View.GONE);
-                crowdList.setAdapter(adapter);
-                mSwipeRefreshLayout.setRefreshing(false);
-
-            }
-        }).execute(mCity);
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    /**
+     * Method to communicate with fragments
+     * @param position
+     */
+    public void onFragmentInteraction(int position) {
+    }
 }

@@ -12,14 +12,13 @@ import android.util.AttributeSet;
 import android.view.WindowInsets;
 import android.widget.FrameLayout;
 
-
 /**
  * A layout that draws something in the insets passed to {@link #fitSystemWindows(Rect)}, i.e. the area above UI chrome
  * (status and navigation bars, overlay action bars).
  */
 public class ScrimInsetsFrameLayout extends FrameLayout {
-    private Drawable mInsetForeground;
 
+    private Drawable mInsetForeground;
     private Rect mInsets;
     private Rect mTempRect = new Rect();
 

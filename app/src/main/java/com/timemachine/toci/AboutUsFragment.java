@@ -1,51 +1,38 @@
 package com.timemachine.toci;
 
-import android.app.Activity;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
+import android.app.Dialog;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.view.LayoutInflater;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialogFragment;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.ScrollView;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link AboutUsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link AboutUsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AboutUsFragment extends android.support.v4.app.Fragment {
+public class AboutUsFragment extends BottomSheetDialogFragment {
 
-    private static final String ARG_SECTION_NUMBER = "section_number";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-
-    private OnFragmentInteractionListener mListener;
-
-    protected ScrollView mScrollView;
-    private ImageView vicBubble;
-    private ImageView gesemBubble;
-    private ImageView royBubble;
-
+    private Button mCloseButton;
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
      * @return A new instance of fragment AboutUsFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static AboutUsFragment newInstance(int sectionNumber) {
+    public static AboutUsFragment newInstance() {
         AboutUsFragment fragment = new AboutUsFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -54,81 +41,60 @@ public class AboutUsFragment extends android.support.v4.app.Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_SECTION_NUMBER);
+    }
+
+    private BottomSheetBehavior.BottomSheetCallback mBottomSheetBehaviorCallback = new BottomSheetBehavior.BottomSheetCallback() {
+        @Override
+        public void onStateChanged(@NonNull View bottomSheet, int newState) {
+            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                dismiss();
+            }
         }
-    }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_about_us, container, false);
+        @Override
+        public void onSlide(@NonNull View bottomSheet, float slideOffset) {
 
-        // Setup the empty views
-//        vicBubble = (ImageView) rootView.findViewById(R.id.vicPic);
-//        gesemBubble = (ImageView) rootView.findViewById(R.id.gesemPic);
-//        royBubble = (ImageView) rootView.findViewById(R.id.royPic);
-
-        return rootView;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        mScrollView = (ScrollView) getActivity().findViewById(R.id.about_us_scrollview);
-
-        // Set pictures into empty views
-//        vicBubble.setImageDrawable(new NavigationDrawerFragment.RoundImage(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.team_member_victor)));
-//        gesemBubble.setImageDrawable(new NavigationDrawerFragment.RoundImage(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.team_member_gesem)));
-//        royBubble.setImageDrawable(new NavigationDrawerFragment.RoundImage(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.team_member_roy)));
-
-    }
-
-    /*
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        ((HomeMaterialActivity) activity).onSectionAttached(
-                getArguments().getInt(ARG_SECTION_NUMBER));
-
-    }
-    */
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
         }
-    }
-
+    };
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
+    public void setupDialog(final Dialog dialog, int style) {
+        super.setupDialog(dialog, style);
+        View contentView = View.inflate(getContext(), R.layout.fragment_about_us, null);
+        dialog.setContentView(contentView);
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
-    }
+        CoordinatorLayout.LayoutParams layoutParams =
+                (CoordinatorLayout.LayoutParams) ((View) contentView.getParent()).getLayoutParams();
+        final CoordinatorLayout.Behavior behavior = layoutParams.getBehavior();
 
+        if (behavior != null && behavior instanceof BottomSheetBehavior) {
+            ((BottomSheetBehavior) behavior).setBottomSheetCallback(mBottomSheetBehaviorCallback);
+        }
+
+        View parent = (View) contentView.getParent();
+        parent.setFitsSystemWindows(true);
+        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(parent);
+        contentView.measure(0, 0);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int screenHeight = displayMetrics.heightPixels;
+        bottomSheetBehavior.setPeekHeight(screenHeight);
+
+        if (layoutParams.getBehavior() instanceof  BottomSheetBehavior) {
+            ((BottomSheetBehavior) layoutParams.getBehavior()).setBottomSheetCallback(mBottomSheetBehaviorCallback);
+        }
+
+        layoutParams.height = screenHeight;
+        parent.setLayoutParams(layoutParams);
+
+        // Close bottom sheet on button click
+        dialog.findViewById(R.id.close_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+    }
 }

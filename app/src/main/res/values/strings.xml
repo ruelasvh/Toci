@@ -1,94 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">CrowdZeeker</string>
-    <string name="cz_moto">Find your perfect crowd, now.</string>
+    <string name="app_name">RealCrowd</string>
+    <string name="rc_moto">Find your perfect crowd, now.</string>
+    <string name="about_title">About RealCrowd</string>
+    <string name="about_summary">This app will serve as a gateway connecting you to all of your local hangouts, essentially giving you a panoramic perspective of the ambiance or \'crowd\' currently posted at that particular location. An image is worth a thousand words. No longer will any special, fun plans be made based on subjective reviews, outdated recollections, or vague descriptions. You will now be able to see for yourself a quick glance of the current ambiance or environment of your potential destination, without having to cross your fingers in hopes that the atmosphere will be worth your invested time, money and drive. RealCrowd will facilitate planning and save users time that would otherwise be wasted driving around looking for their ideal hangout spot, while at the same time helping people find new friends with similar interests or taste. Let us worry about the hassle, just sit back, browse, and find your crowds.</string>
+    <string name="about_contact">Contact: ruelasvh@gmail.com</string>
+    <string name="about_author">Victor Ruelas (Developer)</string>
     <string name="hello_world">Never Stop Dreaming.</string>
-    <string name="action_settings">Settings</string>
-    <string name="action_capture_data">Capture Data</string>
-    <string name="btnTakePicture">Take a Picture</string>
-    <string name="btnRecordVideo">Take a Video</string>
-    <string name="or">(or)</string>
-    <string name="btnUploadToServer">Upload to Server</string>
-    <string name="image_view_camera">This is a camera image</string>
-    <string name="city_hint">Enter City, e.g. Geneva</string>
-    <string name="company_name">CrowdZeeker, LLC.</string>
-    <string name="title_activity_mountain_view_ca">Mountain View, CA</string>
-    <string name="title_activity_capture_image">Capture Image</string>
-    <string name="mollys">Molly Magees</string>
-    <string name="stevens">Stevens Green</string>
-    <string name="city_1">Manchester</string>
-    <string name="city_2">Paris</string>
-    <string name="city_3">San Francisco</string>
-    <string name="city_4">L.A.</string>
-    <string name="city_5">Geneva</string>
-    <string name="title_activity_search_main">SearchMainActivity</string>
+    <string name="city_hint">Enter City, e.g. Brooklyn</string>
+    <string name="company_name"></string>
 
-    <string name="drawer_section_1">Most popular</string>
-    <string name="drawer_section_2">Find your crowd</string>
-    <string name="drawer_section_3">Mountain View</string>
-    <string name="drawer_section_4">About Us</string>
-    <string name="drawer_section_5">Add name in res/values/strings</string>
-
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <string name="action_example">Example action</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_mountain_view_tabbed">MountainViewTabbedActivity</string>
-
-    <string name="title_section1">Featured</string>
-    <string name="title_section2">All Crowds</string>
-    <string name="title_section3">Find Friends</string>
-
-    <!-- Example Swipe with Tabs -->
-
-    <string name="dummy_section_text">Section %1d is just a dummy section.</string>
+    <!-- LivePicsGalleryActivity -->
     <string name="livepics_gallery">Live Feed</string>
-
+    <string name="report_photo">Report Photo</string>
+    <string name="report_image_success_message">Image has been reported</string>
     <!-- String from Material Navigation Drawer -->
-
-    <string name="openDrawer">Drawer Opened!</string>
-    <string name="closeDrawer">Drawer Closed!</string>
-    <string name="title_activity_home_material">HomeMaterialActivity</string>
     <string name="drawer_open">Menu opened</string>
     <string name="drawer_close">Menu closed</string>
-    <string name="title_activity_palo_alto_tabbed">PaloAltoTabbedActivity</string>
-    <string name="title_activity_maps">Map</string>
 
-    <!-- Addresses -->
-    <string name="mtnview_street">500 Castro St</string>
-    <string name="mtnview_zip">Mountain View, CA 94041</string>
-
-    <string name="selected_place">Last Selected Place:</string>
-    <string name="place_details">
-    <![CDATA[
-        <b>Place: %1$s</b>
-        <br/>
-        <i>Place Id: %2$s</i>
-        <br/>
-        Address: %3$s
-        <br/>
-        Phone: %4$s
-        <br/>
-        Website: %5$s
-    ]]>
-    </string>
-    <string name="place_details_add_new">
-    <![CDATA[
-        <b>%1$s</b>
-        <br/>
-        Address: %2$s
-        <br/>
-        Phone: %3$s
-        <br/>
-        Website: %4$s
-    ]]>
-    </string>
-        <string name="place_details_exist">
+    <string name="place_details_exist">
     <![CDATA[
         <b>%1$s</b>
         <br/>
@@ -96,15 +27,41 @@
     ]]>
     </string>
     <string name="title_activity_city">CityActivity</string>
-    <string name="title_activity_city2">City2Activity</string>
-    <string name="title_activity_ad">AdActivity</string>
 
-    <string name="interstitial_ad_sample">Interstitial Ad Sample</string>
-    <string name="start_level">Level 1</string>
-    <string name="next_level">Next Level</string>
-    <!-- -
-        This is an ad unit ID for an interstitial test ad. Replace with your own interstitial ad unit id.
-        For more information, see https://support.google.com/admob/answer/3052638
-    <!- -->
-    <string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string>
+    <!-- Services keys -->
+    <string name="uber_client_id">3YHteScZ7o9lznBKuSWBYa9KLyiCiMRr</string>
+    <string name="lyft_client_id">bI8k8ztNo3Dg</string>
+
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to authentication and registration -->
+    <string name="welcome_message">Welcome to RealCrowd.</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Login</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_register">Create Account</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_invalid_username">This username is too short</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="regis_progress_message">Churning the server gears...</string>
+    <string name="error_unavaiable_username">This username is already taken</string>
+    <string name="error_registered_email">This email is already registered</string>
+    <string name="error_account_exists">Account already exists</string>
+    <string name="successful_regis">Registration successful</string>
+    <string name="error_regis">Something went wrong</string>
+    <string name="error_offline">No internet connection</string>
+    <string name="user_name_signup">Pick your username</string>
+    <string name="promp_email_signup">Enter an email</string>
+    <string name="promp_password_signup">Choose a password</string>
+    <string name="prompt_password_confirm">Confirm password</string>
+    <string name="error_passwords_match">Passwords don\u2019t match</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

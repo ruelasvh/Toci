@@ -1,212 +1,160 @@
 package com.timemachine.toci;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.internal.BottomNavigationItemView;
+import android.support.design.internal.BottomNavigationMenuView;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import android.text.TextUtils;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.reflect.Field;
 
-
+/**
+ * Created by Victor Ruelas on 4/5/16.
+ */
 public class HomeMaterialActivity extends AppCompatActivity
-        implements MostPopularFragment.OnFragmentInteractionListener,
-        LoginFragment.OnFragmentInteractionListener, AboutUsFragment.OnFragmentInteractionListener,
-        AddNewCrowdFragment.OnFragmentInteractionListener, FavoriteCityFragment.OnFragmentInteractionListener
-        ,NavigationDrawerCallbacks {
+        implements
+        ShowCrowdsListFragment.OnFragmentInteractionListener,
+        ShowCrowdsMapFragment.OnFragmentInteractionListener,
+        SearchFragment.OnFragmentInteractionListener {
 
-    /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-     */
-    private NavigationDrawerFragment mNavigationDrawerFragment;
+    private static final String SELECTED_ITEM = "arg_selected_item";
+    private static final String FETCH_CROWDS_FILTER = "BY_ID";
+    private static String CROWDS;
+    private BottomNavigationView mBottomNav;
+    private int mSelectedItem;
     private Toolbar mToolbar;
-    private CharSequence mTitle;
 
     // Helper fields to help store favorite settings
     Context mContext;
     AppPrefs mAppPrefs;
-    List<String> mCityFavorites;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_home_material);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
-        setSupportActionBar(mToolbar);
-
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getFragmentManager().findFragmentById(R.id.fragment_drawer);
-        // Set title of different fragments
-        mTitle = getTitle();
-        // Set up the drawer.
-        mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mToolbar);
-         //populate the navigation drawer
-        mNavigationDrawerFragment.setUserData(getResources().getString(R.string.cz_moto));
-//        mNavigationDrawerFragment.setUserData(getResources().getString(R.string.cz_moto),
-//                BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_pink));
-
-    } // End onCreate method
-
-    @Override
-    public void onNavigationDrawerItemSelected(int position) {
 
         // Used to retrieve user preferences
         mContext = getApplicationContext();
         mAppPrefs = new AppPrefs(mContext);
+        boolean isLoggedin = mAppPrefs.getSessionStatus();
 
-        // update the main content by replacing fragments
-        Fragment fragment = null;
-
-        // if user preferences exist, load fragments accordingly
-        if (mAppPrefs.getFavorite_cities() != null) {
-
-            mCityFavorites = new ArrayList<>(mAppPrefs.getFavorite_cities());
-            int totalCities = mCityFavorites.size();
-
-            if (position == 0) {
-                fragment = new SearchFragment();
-            }
-            for (int i = 1; i <= totalCities; i++) {
-                if (position == i) {
-                    fragment = FavoriteCityFragment.newInstance(mCityFavorites.get(i-1));
-                }
-            }
-            if (position == (totalCities+1)) {
-                fragment = FavoriteCrowdsFragment.newInstance();
-            } else if (position == (totalCities+2)) {
-                fragment = AddNewCrowdFragment.newInstance();
-            } else if (position == (totalCities+3)) {
-                fragment = new LoginFragment();
-            } else if (position == (totalCities+4)) {
-                fragment = new AboutUsFragment();
-            }
-        } else { // otherwise load basic list of fragments
-            switch (position) {
-                case 0:
-                    fragment = new SearchFragment();
-                    break;
-                case 1:
-                    fragment = FavoriteCrowdsFragment.newInstance();
-                    break;
-                case 2:
-                    fragment = AddNewCrowdFragment.newInstance();
-                    break;
-                case 3:
-                    fragment = new LoginFragment();
-                    break;
-                case 4:
-                    fragment = new AboutUsFragment();
-            }
+        // Put asynctask here to check server if logged in
+        if (!isLoggedin) {
+            Intent intent = new Intent(mContext, LoginActivity.class);
+            startActivity(intent);
+            finish();
         }
 
-        if (fragment != null) {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
+        setSupportActionBar(mToolbar);
+
+        // Bottom navigation
+        mBottomNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        disableShiftMode(mBottomNav);
+        mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                selectFragment(item);
+                return true;
+            }
+        });
+
+        MenuItem selectedItem;
+        if (savedInstanceState != null) {
+            mSelectedItem = savedInstanceState.getInt(SELECTED_ITEM, 0);
+            selectedItem = mBottomNav.getMenu().findItem(mSelectedItem);
+        } else {
+            selectedItem = mBottomNav.getMenu().getItem(0);
+        }
+        selectFragment(selectedItem);
+    }
+
+    @SuppressLint("RestrictedApi")
+    public static void disableShiftMode(BottomNavigationView view) {
+        BottomNavigationMenuView menuView = (BottomNavigationMenuView) view.getChildAt(0);
+        try {
+            Field shiftingMode = menuView.getClass().getDeclaredField("mShiftingMode");
+            shiftingMode.setAccessible(true);
+            shiftingMode.setBoolean(menuView, false);
+            shiftingMode.setAccessible(false);
+            for (int i = 0; i < menuView.getChildCount(); i++) {
+                BottomNavigationItemView item = (BottomNavigationItemView) menuView.getChildAt(i);
+                item.setShiftingMode(false);
+                // set once again checked value, so view will be updated
+                item.setChecked(item.getItemData().isChecked());
+            }
+        } catch (NoSuchFieldException e) {
+            //Timber.e(e, "Unable to get shift mode field");
+        } catch (IllegalAccessException e) {
+            //Timber.e(e, "Unable to change value of shift mode");
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(SELECTED_ITEM, mSelectedItem);
+        super.onSaveInstanceState(outState);
+    }
+
+    private void selectFragment(MenuItem item) {
+        Fragment frag = null;
+        // init corresponding fragment
+        switch (item.getItemId()) {
+            case R.id.menu_search:
+                frag = new SearchFragment();
+                break;
+            case R.id.menu_favorites:
+                CROWDS = TextUtils.join(",", mAppPrefs.getFavorite_crowds());
+                frag = ShowCrowdsListFragment.newInstance(FETCH_CROWDS_FILTER, CROWDS);
+                break;
+            case R.id.menu_add_crowd:
+                frag = AddNewCrowdFragment.newInstance();
+                break;
+            case R.id.menu_settings:
+                frag = new SettingsFragment();
+                break;
+        }
+
+        updateToolbarText(item.getTitle());
+        updateSelectedBottomNavItem(item.getItemId());
+
+        if (frag != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container, fragment)
+            fragmentManager.beginTransaction().replace(R.id.container, frag)
                     .addToBackStack(null).commit();
         }
     }
 
+    private void updateSelectedBottomNavItem(int item) {
+        mSelectedItem = item;
+        mBottomNav.getMenu().findItem(mSelectedItem).setChecked(true);
+    }
+
+    private void updateToolbarText(CharSequence text) {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(text);
+        }
+    }
 
     public void onSectionAttached(String section) {
-
-        if (mAppPrefs.getFavorite_cities() != null) {
-
-            for (int i = 0; i < mCityFavorites.size(); i++) {
-                if (section == mCityFavorites.get(i)) {
-                    mTitle = mCityFavorites.get(i);
-                }
-            }
-        }
-
-        if (section == "SearchFragment") {
-            mTitle = getString(R.string.app_name);
-        }
-
-        if (section == "AddNewCrowdFragment") {
-            mTitle = "Add New Crowd";
-        }
-//        switch (section) {
-//            case "SearchFragment":
-//                mTitle = getString(R.string.app_name);
-//                break;
-//            case "MountainViewFeaturedFragment":
-//                mTitle = "Mountain View";
-//                break;
-//            case "PaloAltoFeaturedFragment":
-//                mTitle = "Palo Alto";
-//                break;
-//            case "SanFranciscoFeaturedFragment":
-//                mTitle = "San Francisco";
-//                break;
-//            case "SanJoseFeaturedFragment":
-//                mTitle = "San Jose";
-//                break;
-//            case "AddNewCrowdFragment":
-//                mTitle = "Add New Crowd";
-//                break;
-//            default:
-//        }
-        setTitle();
-    }
-
-    private void setTitle() {
-        mToolbar.setTitle(mTitle);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mNavigationDrawerFragment.isDrawerOpen())
-            mNavigationDrawerFragment.closeDrawer();
-        else
-            super.onBackPressed();
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.menu_main, menu);
-            return true;
-        }
-        return super.onCreateOptionsMenu(menu);
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        switch (item.getItemId()) {
-//            case R.id.some_menu_item:
-//                // Can do something when user presses "some_menu_item"
-//                return true;
-
-            default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
-        }
-
+        // Used to communicate with other fragments
     }
 
     /**
      * Method to communicate with fragments
-     * @param uri
+     * @param position
      */
-    public void onFragmentInteraction(Uri uri) {
-        // empty
+    public void onFragmentInteraction(int position) {
     }
-
-
 }
