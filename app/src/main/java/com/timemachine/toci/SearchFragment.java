@@ -105,6 +105,7 @@ public class SearchFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_search, container, false);
         mainEditText = (AutoCompleteTextView) rootView.findViewById(R.id.enter_city);
         mainButton = (ImageView) rootView.findViewById(R.id.main_btn);
+
         // Get list of cities then build AutoCompleteTextView
         new GetCities(getContext()) {
             @Override
@@ -116,7 +117,7 @@ public class SearchFragment extends Fragment {
                 }
             }
         }.execute();
-        // Set button behavior to search city in database
+
         mainButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,7 +128,6 @@ public class SearchFragment extends Fragment {
                 inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
                         InputMethodManager.HIDE_NOT_ALWAYS);
 
-                // Check network status
                 if (!network.isOnline()) {
                     Toast.makeText(getContext().getApplicationContext(), R.string.error_offline,
                             Toast.LENGTH_SHORT).show();
@@ -167,7 +167,7 @@ public class SearchFragment extends Fragment {
             }
         });
 
-        // Search feature demo
+        // Start demo
         presentShowCaseView();
 
         return rootView;
@@ -187,8 +187,6 @@ public class SearchFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
-//        ((HomeMaterialActivity) context).onSectionAttached(SECTION_TITLE);
 
         try {
             mListener = (OnFragmentInteractionListener) context;
@@ -252,7 +250,7 @@ public class SearchFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            // Launch AddNewCrowdFragment
+            // TODO: Fix Launch AddNewCrowdFragment
             int addCrowdFragPosition = 2;
             mListener.onFragmentInteraction(addCrowdFragPosition);
         }
