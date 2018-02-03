@@ -8,13 +8,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -43,12 +46,15 @@ import com.viewpagerindicator.TitlePageIndicator;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 import java.io.BufferedOutputStream;
@@ -57,11 +63,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.ref.WeakReference;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -73,73 +81,20 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     private final static String FETCH_CROWDS_FILTER = "BY_ID";
     private String UBER_CLIENT_ID;
     private String LYFT_CLIENT_ID;
-    private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
-    public static final int MEDIA_TYPE_IMAGE = 1;
-
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
+    private static final int REQUEST_ACCESS_CAMERA = 2;
     private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private ViewPager mViewPager;
     private ViewPager.OnPageChangeListener pageChangeListener;
-
-    /**
-     * Layout which holds details about crowds
-     */
-    private RelativeLayout mDetailsLayout;
-
-    /**
-     * The api client used in connecting to google places api
-     */
-    private GoogleApiClient mGoogleApiClient;
-
-    /**
-     * File url to store image/video
-     */
-    private Uri mFileUri;
     long mTotalSize = 0;
-
-    /**
-     * Variable to hold crowd passed from pevious activity
-     */
     private static LiveCrowd mThisLiveCrowd;
     private String mTitle;
     private double mLatitude;
     private double mLongitude;
-
-    /**
-     * String array to hold picture urls passed from previous activity
-     */
     private static HashMap<Integer, ArrayList<String>> mPicUrls;
-
-    /**
-     * Holds the current image being displayed
-     */
     public static ArrayList<String> mCurrImage;
-
-    /**
-     * AsyncTask for retrieving latest pictures
-     */
     private GetCrowds mGetCrowdsTask;
-    private final String GET_CROWDS_TASK_RUNNING = "getCrowdsTaskRunning";
-
-    /**
-     * Helper class to discover mNetwork availability
-     */
+    private final String GET_CROWDS_TASK_RUNNING = "GET_CROWDS_TASK_RUNNING";
     private Network mNetwork;
-
-    /**
-     * Helper fields to help store favorite settings
-     */
     Context mContext;
     AppPrefs mAppPrefs;
 
@@ -161,8 +116,17 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         super.onCreate(savedInstanceState);
         setContentView(R.layout.livepics_gallery);
 
+        // Set up preferences resources
+        mContext = this;
+        mAppPrefs = new AppPrefs(mContext);
+
+        // Instantiate mNetwork helper class
+        mNetwork = new Network(this);
+
         // Get crowd from previous activity
         mThisLiveCrowd = SerializeLiveCrowd.fromJson(getIntent().getExtras().getString("crowd"));
+        // Set the actionbar mTitle
+        setTitle(mThisLiveCrowd.getTitle());
         mPicUrls = mThisLiveCrowd.getPicUrls();
         try {
             mTitle = URLEncoder.encode(mThisLiveCrowd.getTitle(), "UTF-8");
@@ -284,13 +248,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 }
             }
         });
-        // Set up preferences resources
-        mContext = getApplicationContext();
-        mAppPrefs = new AppPrefs(mContext);
-        // Set the actionbar mTitle
-        setTitle(mThisLiveCrowd.getTitle());
-        // Instantiate mNetwork helper class
-        mNetwork = new Network(this);
     }
 
     /**
@@ -323,7 +280,11 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
             case R.id.action_camera:
                 // Bring up the camera
                 if (mNetwork.isOnline()) {
-                    captureImage();
+                    if (mAppPrefs.hasCameraAccess()) {
+                        dispatchTakePictureIntent();
+                    } else {
+                        mAppPrefs.setCameraPermissions();
+                    }
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.error_offline,
                             Toast.LENGTH_SHORT).show();
@@ -347,14 +308,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                     try {
                         String imageId = mCurrImage.get(2);
                         String imageUrl = mCurrImage.get(0);
-                        new ReportImageTask() {
-                            @Override
-                            public void onPostExecute(String response) {
-                                refreshCrowd();
-                                Toast.makeText(getApplicationContext(), R.string.report_image_success_message,
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                        }.execute(imageId, imageUrl);
+                        new ReportImageTask(this).execute(imageId, imageUrl);
                     } catch (IndexOutOfBoundsException e) {
                         Toast.makeText(getApplicationContext(), "Cannot report this image",
                                 Toast.LENGTH_SHORT).show();
@@ -375,9 +329,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        // save file url in bundle as it will be null on screen orientation changes
-        outState.putParcelable("file_uri", mFileUri);
-
         // save state of mGetCrowdsTask
         if (isTaskRunning()) {
             outState.putBoolean(GET_CROWDS_TASK_RUNNING, true);
@@ -388,12 +339,25 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
-        // get the file url
-        mFileUri = savedInstanceState.getParcelable("file_uri");
-
         // check if mGetCrowdsTask is running so it can be restarted
         if (savedInstanceState.getBoolean(GET_CROWDS_TASK_RUNNING, false)) {
             refreshCrowd();
+        }
+    }
+
+    /**
+     * Callback received when a permissions request has been completed.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_ACCESS_CAMERA) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                dispatchTakePictureIntent();
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.error_camera_permission,
+                        Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -403,12 +367,10 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // if the result is capturing image
-        if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
+        if (requestCode == REQUEST_TAKE_PHOTO) {
             if (resultCode == RESULT_OK) {
                 // successfully captured the image. Upload picture to server
                 new UploadFileToServer().execute();
-                Toast.makeText(getApplicationContext(), "Photo successfully uploaded",
-                        Toast.LENGTH_SHORT).show();
             } else if (resultCode == RESULT_CANCELED) {
                 // user cancelled image capture
             } else {
@@ -419,30 +381,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         }
         // Refresh crowd with new pictures
         refreshCrowd();
-    }
-
-    // Method to connect to the google places api
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient.connect();
-        }
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    // Method to disconnect from the google places api
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient.disconnect();
-        }
     }
 
     // Method to handle connection errors. Now error handling is silent.
@@ -668,10 +606,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
             return ((LivePicsGalleryActivity) getActivity()).getSupportActionBar();
         }
 
-        private RelativeLayout getDetailsContainer() {
-            return ((LivePicsGalleryActivity) getActivity()).mDetailsLayout;
-        }
-
         // To animate details container from bottom to top
         public void slideToBottom(View view){
             view.setAlpha(1.0f);
@@ -697,6 +631,9 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
      */
     private class UploadFileToServer extends AsyncTask<Void, Integer, String> {
 
+        public UploadFileToServer() {
+        }
+
         @Override
         protected String doInBackground(Void... params) {
             return uploadFile();
@@ -714,29 +651,24 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
                 AndroidMultiPartEntity entity = new AndroidMultiPartEntity(
                         new AndroidMultiPartEntity.ProgressListener() {
-
                             @Override
                             public void transferred(long num) {
                                 publishProgress((int) ((num / (float) mTotalSize) * 100));
                             }
                         });
 
-                File sourceFile = new File(mFileUri.getPath());
-
                 /**
                  * Shrink image
                  */
-                // get absolute path of file to shrink
-                String newPath = sourceFile.getAbsolutePath();
                 // get original dimensions
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inJustDecodeBounds = true;
-                BitmapFactory.decodeFile(newPath, options);
+                BitmapFactory.decodeFile(mCurrentPhotoPath, options);
                 int originalWidth = options.outWidth;
                 int originalHeight = options.outHeight;
                 int newWidth = -1;
                 int newHeight = -1;
-                float mulFactor = -1.0F;
+                float mulFactor;
                 if (originalHeight > originalWidth) {
                     newHeight = 1024;
                     mulFactor = (float) originalWidth / (float) originalHeight;
@@ -754,18 +686,18 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                  */
 
                 // Decode the file
-                Bitmap bMap = BitmapFactory.decodeFile(newPath);
-                Bitmap out = Bitmap.createScaledBitmap(bMap, newWidth, newHeight, false);
-                File resizedFile= getOutputMediaFile();
+                Bitmap bMap = BitmapFactory.decodeFile(mCurrentPhotoPath);
+                Bitmap scaledBmap = Bitmap.createScaledBitmap(bMap, newWidth, newHeight, false);
+                File resizedFile = createImageFile();
 
                 OutputStream fOut = null;
                 try {
                     fOut = new BufferedOutputStream(new FileOutputStream(resizedFile));
-                    out.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+                    scaledBmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
                     fOut.flush();
                     fOut.close();
                     bMap.recycle();
-                    out.recycle();
+                    scaledBmap.recycle();
                 } catch (Exception e) {
                     // Handle exception
                 }
@@ -785,10 +717,9 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 int statusCode = response.getStatusLine().getStatusCode();
                 if (statusCode == 200) {
                     // Server response
-                    responseString = EntityUtils.toString(r_entity);
+                    responseString = "Photo uploaded!";
                 } else {
-                    responseString = "Error occurred! Http Status Code: "
-                            + statusCode;
+                    responseString = "Error occurred! Photo not uploaded";
                 }
 
             } catch (ClientProtocolException e) {
@@ -802,10 +733,62 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
+        protected void onPostExecute(String resultMessage) {
+            super.onPostExecute(resultMessage);
+            Toast.makeText(getApplicationContext(), resultMessage,
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Created by Victor Ruelas on 10/24/17.
+     */
+    private static class ReportImageTask extends AsyncTask<String, Void, String> {
+
+        private WeakReference<LivePicsGalleryActivity> activityReference;
+
+        ReportImageTask(LivePicsGalleryActivity context) {
+            activityReference = new WeakReference<>(context);
         }
 
+        @Override
+        protected String doInBackground(String... params) {
+            String paramImageId = params[0];
+            String paramImageUrl = params[1];
+
+            List<NameValuePair> nameValuePairs = new ArrayList<>();
+            nameValuePairs.add(new BasicNameValuePair("id", paramImageId));
+            nameValuePairs.add(new BasicNameValuePair("image_url", paramImageUrl));
+
+            try {
+                HttpClient httpClient = new DefaultHttpClient();
+                HttpPost httpPost = new HttpPost(Config.REPORT_IMAGE_URL);
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+                HttpResponse response = httpClient.execute(httpPost);
+                String responseMessage = EntityUtils.toString(response.getEntity());
+                return responseMessage;
+
+            } catch (ClientProtocolException e) {
+                return "Failed to report image: ClientProtocolException.";
+            } catch (IOException e) {
+                return "Failed to report image: IOException";
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            // get a reference to the activity if it is still there
+            LivePicsGalleryActivity activity = activityReference.get();
+            if (activity == null) return;
+
+            activity.refreshCrowd();
+            Toast.makeText(activity, R.string.report_image_success_message,
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     // Helper method to show and hide FAB Menu
@@ -864,48 +847,50 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     /**
      * Launching camera app for capturing image
      */
+    static final int REQUEST_TAKE_PHOTO = 9;
 
-    private void captureImage() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        mFileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, mFileUri);
-        startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.timemachine.toci",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
+        } else {
+            Toast.makeText(getApplicationContext(), "No camera app installed",
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     /**
      * Helper Methods for handling pictures taken
      */
+    String mCurrentPhotoPath;
 
-    // Creating file uri to store image/video
-    public Uri getOutputMediaFileUri(int type) {
-        return Uri.fromFile(getOutputMediaFile(type));
-    }
-
-    // returning image/video
-    private static File getOutputMediaFile(int type) {
-        // External sdcard location
-        File mediaStorageDir = new File(
-                Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_PICTURES), Config.IMAGE_DIRECTORY_NAME);
-
-        // Create the storage directory if it doesn't exist
-        if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                return null;
-            }
-        }
-
-        // Create a media file name
+    private File createImageFile() throws IOException {
+        // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
                 Locale.getDefault()).format(new Date());
-        File mediaFile;
-        if (type == MEDIA_TYPE_IMAGE) {
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator
-                    + "IMG_" + timeStamp + ".jpg");
-        } else {
-            return null;
-        }
-        return mediaFile;
+        String imageFileName = "IMG_" + timeStamp;
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = new File(storageDir + File.separator
+                + "IMG_" + timeStamp + ".jpg");
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
     }
 
     /**
@@ -942,45 +927,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         short_address = address.subSequence(0, separatorIndices[2]).toString();
 
         return short_address;
-    }
-
-    /**
-     * Methods which builds google places api.
-     */
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(this)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(this /* AppCompatActivity */,
-                        this /* OnConnectionFailedListener */ )
-                .build();
-
-    }
-
-    // returning image/video
-    private static File getOutputMediaFile() {
-        // External sdcard location
-        File mediaStorageDir = new File(
-                Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_PICTURES), Config.IMAGE_DIRECTORY_NAME);
-
-        // Create the storage directory if it doesn't exist
-        if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                return null;
-            }
-        }
-
-        // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
-                Locale.getDefault()).format(new Date());
-        File mediaFile;
-
-        mediaFile = new File(mediaStorageDir.getPath() + File.separator
-                + "IMG_" + timeStamp + ".jpg");
-
-        return mediaFile;
     }
 
     // Helper method for saving individual crowd to shared preferences
@@ -1025,5 +971,4 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     private boolean isTaskRunning() {
         return (mGetCrowdsTask != null) && (mGetCrowdsTask.getStatus() == AsyncTask.Status.RUNNING);
     }
-
 }

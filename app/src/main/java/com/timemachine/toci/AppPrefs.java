@@ -1,71 +1,52 @@
 package com.timemachine.toci;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.design.widget.Snackbar;
+import android.support.v13.app.ActivityCompat;
+import android.view.View;
 
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
+
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.CAMERA;
 
 /**
  * Created by Victor Ruelas on 4/5/16.
  */
 public class AppPrefs {
-    private static final int MAX_SIZE = 5;
     private static final String USER_PREFS = "USER_PREFS";
+    private static final String FAV_CROWDS = "FAV_CROWDS";
+    private static final String SESSION_STATUS = "SESSION_STATUS";
+    private static final int REQUEST_ACCESS_COARSE_LOCATION = 1;
+    private static final int REQUEST_ACCESS_CAMERA = 2;
     private SharedPreferences appSharedPrefs;
     private SharedPreferences.Editor prefsEditor;
-    private String fav_cities = "fav_cities_prefs";
-    private String fav_crowds = "fav_crowds_prefs";
-    private String user_name = "user_name_prefs";
-    private String user_id = "user_id_prefs";
-    private String session_status = "session_status_prefs";
-    private Boolean isLoggedin = false;
-    private Set<String> in;
-    private Set<String> out;
     private Set<String> crowds_in;
     private Set<String> crowds_out;
+    private Context mContext;
 
 
     public AppPrefs(Context context) {
+        this.mContext = context;
         this.appSharedPrefs = context.getSharedPreferences(USER_PREFS, Activity.MODE_PRIVATE);
         this.prefsEditor = appSharedPrefs.edit();
     }
 
-    // Getter methods
-    public Set<String> getFavorite_cities() {
-        return appSharedPrefs.getStringSet(fav_cities, null);
-    }
-
     public Set<String> getFavorite_crowds() {
-        return appSharedPrefs.getStringSet(fav_crowds, new HashSet<String>());
-    }
-
-    // Setter methods
-    public void setFavorite_city(String _favorite_city) {
-        out = appSharedPrefs.getStringSet(fav_cities, new HashSet<String>());
-        if (out.size() == MAX_SIZE) {
-            // Reached max size of city favorites/override
-            in = new HashSet<>(out);
-            in.remove(in.toArray()[4]);
-            in.add(_favorite_city);
-            prefsEditor.putStringSet(fav_cities, in).commit();
-        } else {
-            in = new HashSet<>(out);
-            in.add(_favorite_city);
-            prefsEditor.putStringSet(fav_cities, in);
-            prefsEditor.commit();
-        }
+        return appSharedPrefs.getStringSet(FAV_CROWDS, new HashSet<String>());
     }
 
     public void setFavorite_crowd(String crowd) {
-        crowds_out = appSharedPrefs.getStringSet(fav_crowds, new HashSet<String>());
+        crowds_out = appSharedPrefs.getStringSet(FAV_CROWDS, new HashSet<String>());
         crowds_in = new HashSet<>(crowds_out);
         crowds_in.add(crowd);
-        prefsEditor.putStringSet(fav_crowds, crowds_in).commit();
+        prefsEditor.putStringSet(FAV_CROWDS, crowds_in).commit();
     }
 
 
@@ -74,32 +55,43 @@ public class AppPrefs {
      * @param crowd
      */
     public void removeFavorite_crowd(String crowd) {
-        crowds_out = appSharedPrefs.getStringSet(fav_crowds, new HashSet<String>());
+        crowds_out = appSharedPrefs.getStringSet(FAV_CROWDS, new HashSet<String>());
         crowds_in = new HashSet<>(crowds_out);
         crowds_in.remove(crowd);
-        prefsEditor.putStringSet(fav_crowds, crowds_in).commit();
+        prefsEditor.putStringSet(FAV_CROWDS, crowds_in).commit();
     }
 
     /** Methods for dealing with user accounts **/
     public boolean getSessionStatus() {
-        return  appSharedPrefs.getBoolean(session_status, false);
+        return  appSharedPrefs.getBoolean(SESSION_STATUS, false);
     }
+
     public void setSessionStatus(boolean _is_loggedin) {
-        prefsEditor.putBoolean(session_status, _is_loggedin).commit();
-    }
-    public int getUser_id() {
-        return appSharedPrefs.getInt(user_id, 0);
+        prefsEditor.putBoolean(SESSION_STATUS, _is_loggedin).commit();
     }
 
-    public void setUser_id(int _user_id) {
-        prefsEditor.putInt(user_id, _user_id).commit();
+    public boolean hasLocationPermissions() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+        return this.mContext.checkSelfPermission(ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED;
     }
 
-    public String getUser_name() {
-        return appSharedPrefs.getString(user_name, "unknown");
+    @TargetApi(Build.VERSION_CODES.M)
+    public void setLocationPermissions() {
+        ActivityCompat.requestPermissions((Activity) this.mContext, new String[]{ACCESS_COARSE_LOCATION}, REQUEST_ACCESS_COARSE_LOCATION);
     }
 
-    public void setUser_name(String _user_name) {
-        prefsEditor.putString(user_name, _user_name).commit();
+    public boolean hasCameraAccess() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+        return this.mContext.checkSelfPermission(CAMERA) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    public void setCameraPermissions() {
+        ActivityCompat.requestPermissions((Activity) this.mContext, new String[]{CAMERA}, REQUEST_ACCESS_CAMERA);
     }
 }
