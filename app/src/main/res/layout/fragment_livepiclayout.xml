@@ -15,42 +15,36 @@
     <RelativeLayout
         android:id="@+id/details_container"
         android:layout_width="match_parent"
-        android:layout_height="85dp"
+        android:layout_height="84dp"
         android:layout_gravity="center_horizontal|bottom">
-
-    <!--<RelativeLayout-->
-        <!--android:id="@+id/details_container"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="45dp"-->
-        <!--android:layout_gravity="center_horizontal|bottom">-->
 
         <ImageView
             android:id="@+id/image_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/fadetop"/>
+            android:src="@drawable/fadetop" />
 
         <TextView
+            android:id="@+id/street_address"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_alignStart="@+id/timestamp"
+            android:layout_above="@+id/timestamp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/white" />
+
+
+        <TextView
+            android:id="@+id/timestamp"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:autoLink="all"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="18dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="16dp"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/white"
-            android:id="@+id/timestamp"
-            android:layout_marginTop="52dp"
-            android:layout_marginLeft="18dp"/>
-
-        <!--<TextView-->
-            <!--android:layout_width="200dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:autoLink="all"-->
-            <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
-            <!--android:textColor="@color/white"-->
-            <!--android:id="@+id/timestamp"-->
-            <!--android:layout_marginTop="12dp"-->
-            <!--android:layout_marginLeft="18dp"/>-->
+            android:textColor="@color/white" />
 
     </RelativeLayout>
-
 
 </FrameLayout>

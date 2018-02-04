@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -22,7 +21,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spanned;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,15 +34,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.location.places.Places;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.viewpagerindicator.PageIndicator;
 import com.viewpagerindicator.TitlePageIndicator;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -67,6 +61,7 @@ import java.lang.ref.WeakReference;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -451,7 +446,8 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
-        private RelativeLayout mDetailsContainerv2;
+        private RelativeLayout mDetailsContainer;
+        private TextView mStreetAddressView;
         private TextView mTimeStampView;
         private ImageView mHelperView;
         /**
@@ -480,9 +476,10 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
             View rootView = inflater.inflate(R.layout.fragment_livepiclayout, container, false);
             final ImageView liveImageView = (ImageView) rootView.findViewById(R.id.livePic);
             final ArrayList<String> image;
-            mDetailsContainerv2 = (RelativeLayout) rootView.findViewById(R.id.details_container);
-            mTimeStampView = (TextView) mDetailsContainerv2.findViewById(R.id.timestamp);
-            mHelperView = (ImageView) mDetailsContainerv2.findViewById(R.id.image_container);
+            mDetailsContainer = (RelativeLayout) rootView.findViewById(R.id.details_container);
+            mStreetAddressView = (TextView) mDetailsContainer.findViewById(R.id.street_address);
+            mTimeStampView = (TextView) mDetailsContainer.findViewById(R.id.timestamp);
+            mHelperView = (ImageView) mDetailsContainer.findViewById(R.id.image_container);
             mHelperView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -513,6 +510,8 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 }
             });
 
+            /* Set crowd's address */
+            mStreetAddressView.setText(mThisLiveCrowd.getAddress());
             /* Load pictures in pager */
             Integer size = mPicUrls.size();
             switch (this.getPageNum()) {
@@ -605,24 +604,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         private android.support.v7.app.ActionBar getActionBar() {
             return ((LivePicsGalleryActivity) getActivity()).getSupportActionBar();
         }
-
-        // To animate details container from bottom to top
-        public void slideToBottom(View view){
-            view.setAlpha(1.0f);
-            view.animate()
-                    .translationY(view.getHeight())
-                    .alpha(0.0f);
-        }
-
-        // To animate details container slide out from bottom to top
-        public void slideToTop(View view){
-            view.setVisibility(View.VISIBLE);
-            view.setAlpha(0.0f);
-            view.animate()
-                    .translationY(0)
-                    .alpha(1.0f);
-        }
-
     }
 
 
@@ -690,9 +671,8 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 Bitmap scaledBmap = Bitmap.createScaledBitmap(bMap, newWidth, newHeight, false);
                 File resizedFile = createImageFile();
 
-                OutputStream fOut = null;
                 try {
-                    fOut = new BufferedOutputStream(new FileOutputStream(resizedFile));
+                    OutputStream fOut = new BufferedOutputStream(new FileOutputStream(resizedFile));
                     scaledBmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
                     fOut.flush();
                     fOut.close();
@@ -712,7 +692,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
                 // Making server call
                 HttpResponse response = httpclient.execute(httppost);
-                HttpEntity r_entity = response.getEntity();
 
                 int statusCode = response.getStatusLine().getStatusCode();
                 if (statusCode == 200) {
@@ -883,7 +862,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
                 Locale.getDefault()).format(new Date());
-        String imageFileName = "IMG_" + timeStamp;
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = new File(storageDir + File.separator
                 + "IMG_" + timeStamp + ".jpg");
@@ -891,42 +869,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
-    }
-
-    /**
-     * Helper methods to format information about a place nicely.
-     */
-    public static Spanned formatPlaceDetails(Resources res, CharSequence name,
-                                             CharSequence address) {
-        return Html.fromHtml(res.getString(R.string.place_details_exist, name, address));
-    }
-
-    // Get short address for displaying in the details container
-    private static String getShortAddress(CharSequence address) {
-
-        String short_address = "";
-        boolean[] separators = new boolean[address.length()];
-        int[] separatorIndices = new int[5];
-        int counter = 0;
-
-        for(int j = 0; j < address.length(); j++)
-            separators[j] = false;
-
-        for(int i = 0; i < address.length(); i++) {
-            if(address.charAt(i) == ',') {
-                separators[i] = true;
-            }
-        }
-
-        for(int k = 0; k < separators.length; k++) {
-            if(separators[k]) {
-                separatorIndices[counter] = k;
-                counter++;
-            }
-        }
-        short_address = address.subSequence(0, separatorIndices[2]).toString();
-
-        return short_address;
     }
 
     // Helper method for saving individual crowd to shared preferences
