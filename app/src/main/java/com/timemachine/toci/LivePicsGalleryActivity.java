@@ -514,9 +514,10 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
             mStreetAddressView.setText(mThisLiveCrowd.getAddress());
             /* Load pictures in pager */
             Integer size = mPicUrls.size();
-            switch (this.getPageNum()) {
+            Integer pageNum = this.getPageNum();
+            switch (pageNum) {
                 case 1:
-                    image = mPicUrls.get( size - 1 );
+                    image = mPicUrls.get( pageNum - 1 );
                     Picasso.with(getActivity()).load( image.get(0) )
                             .into(liveImageView, new Callback() {
                                 @Override
@@ -531,7 +532,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                             });
                     break;
                 case 2:
-                    image = mPicUrls.get( size - 2 );
+                    image = mPicUrls.get( pageNum - 1 );
                     Picasso.with(getActivity()).load( image.get(0) )
                             .into(liveImageView, new Callback() {
                                 @Override
@@ -546,7 +547,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                             });
                     break;
                 case 3:
-                    image = mPicUrls.get( size - 3 );
+                    image = mPicUrls.get( pageNum - 1 );
                     Picasso.with(getActivity()).load( image.get(0) )
                             .into(liveImageView, new Callback() {
                                 @Override
@@ -561,7 +562,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                             });
                     break;
                 case 4:
-                    image = mPicUrls.get( size - 4 );
+                    image = mPicUrls.get( pageNum - 1 );
                     Picasso.with(getActivity()).load( image.get(0) )
                             .into( liveImageView, new Callback() {
                                 @Override
@@ -576,7 +577,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                             });
                     break;
                 case 5:
-                    image = mPicUrls.get( size - 5 );
+                    image = mPicUrls.get( pageNum - 1 );
                     Picasso.with(getActivity()).load( image.get(0) )
                             .into( liveImageView, new Callback() {
                                 @Override

@@ -91,7 +91,7 @@ public class SwipeableLiveCrowdListAdapter extends BaseAdapter {
             }
         });
 
-        Picasso.with(context).load( crowd.getPicUrls().get( crowd.getPicUrls().size() - 1).get(0) )
+        Picasso.with(context).load( crowd.getPicUrls().get(0).get(0) )
                 .into( viewHolder.livepic);
 
         final CardView cardView = viewHolder.cardView;

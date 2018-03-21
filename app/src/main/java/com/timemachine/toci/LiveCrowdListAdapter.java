@@ -59,7 +59,7 @@ public class LiveCrowdListAdapter extends ArrayAdapter<LiveCrowd> {
                 context.startActivity(intent);
             }
         });
-        Picasso.with(context).load( crowd.getPicUrls().get( crowd.getPicUrls().size() - 1).get(0) )
+        Picasso.with(context).load(crowd.getPicUrls().get(0).get(0))
                 .into( viewHolder.livepic);
         return rowView;
     }
