@@ -4,7 +4,7 @@
     <color name="azure">#F0FFFF</color>
     <color name="orange">#FF8C00</color>
     <color name="black_transparent">#ae0e0e0e</color>
-    <color name="light_grey">#C0C0C0</color>
+    <color name="light_grey">#2ac0c0c0</color>
     <color name="transparent">#00000000</color>
     <color name="PrimaryColor">#ff25365f</color>
     <color name="PrimaryDarkColor">#ff0e1c49</color>
@@ -12,6 +12,8 @@
     <color name="PrimaryWindowBackground">#FFF</color>
     <color name="PrimaryTextPrimaryColor">#212121</color>
     <color name="PrimaryNavigationColor">#000</color>
+    <color name="foreground_material_light">#ffffff</color>
+    <color name="background_material_light">#00ffffff</color>
 
     <drawable name="pressed_gray">#0c000000</drawable>
     <drawable name="selected_gray">#2c000000</drawable>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">RealCrowd</string>
+    <string name="app_name">Crowdwyse</string>
     <string name="rc_moto">Find your perfect crowd, now.</string>
-    <string name="about_title">About RealCrowd</string>
-    <string name="about_summary">This app will serve as a gateway connecting you to all of your local hangouts, essentially giving you a panoramic perspective of the ambiance or \'crowd\' currently posted at that particular location. An image is worth a thousand words. No longer will any special, fun plans be made based on subjective reviews, outdated recollections, or vague descriptions. You will now be able to see for yourself a quick glance of the current ambiance or environment of your potential destination, without having to cross your fingers in hopes that the atmosphere will be worth your invested time, money and drive. RealCrowd will facilitate planning and save users time that would otherwise be wasted driving around looking for their ideal hangout spot, while at the same time helping people find new friends with similar interests or taste. Let us worry about the hassle, just sit back, browse, and find your crowds.</string>
+    <string name="about_title">About Crowdwyse </string>
+    <string name="about_summary">This app will serve as a gateway connecting you to all of your local hangouts, essentially giving you a panoramic perspective of the ambiance or \'crowd\' currently posted at that particular location. An image is worth a thousand words. No longer will any special, fun plans be made based on subjective reviews, outdated recollections, or vague descriptions. You will now be able to see for yourself a quick glance of the current ambiance or environment of your potential destination, without having to cross your fingers in hopes that the atmosphere will be worth your invested time, money and drive. Crowdwyse will facilitate planning and save users time that would otherwise be wasted driving around looking for their ideal hangout spot, while at the same time helping people find new friends with similar interests or taste. Let us worry about the hassle, just sit back, browse, and find your crowds.</string>
     <string name="about_contact">Contact: ruelasvh@gmail.com</string>
     <string name="about_author">Victor Ruelas (Developer)</string>
     <string name="hello_world">Never Stop Dreaming.</string>
     <string name="city_hint">Enter City, e.g. Brooklyn</string>
-    <string name="company_name"></string>
+    <string name="company_name">Crowdwyse, LLC</string>
 
     <!-- LivePicsGalleryActivity -->
     <string name="livepics_gallery">Live Feed</string>
@@ -35,7 +35,7 @@
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to authentication and registration -->
-    <string name="welcome_message">Welcome to RealCrowd.</string>
+    <string name="welcome_message">Welcome to Crowdwyse.</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Login</string>
@@ -48,7 +48,7 @@
     <string name="error_field_required">This field is required</string>
     <string name="location_permission_rationale">"Location permissions are needed to proceed."
     </string>
-    <string name="regis_progress_message">Churning the server gears...</string>
+    <string name="regis_progress_message">Churning the server gears&#8230;</string>
     <string name="error_unavaiable_username">This username is already taken</string>
     <string name="error_registered_email">This email is already registered</string>
     <string name="error_account_exists">Account already exists</string>

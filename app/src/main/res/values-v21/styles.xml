@@ -15,10 +15,8 @@
         <item name="android:textColorPrimary">@color/PrimaryTextPrimaryColor</item>
         <item name="android:navigationBarColor">@color/PrimaryNavigationColor</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
-
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/PrimaryDarkColor</item>
-
         <item name="android:windowBackground">@color/PrimaryWindowBackground</item>
         <item name="android:windowContentTransitions">true</item>
     </style>

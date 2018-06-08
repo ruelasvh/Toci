@@ -648,20 +648,18 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 BitmapFactory.decodeFile(mCurrentPhotoPath, options);
                 int originalWidth = options.outWidth;
                 int originalHeight = options.outHeight;
-                int newWidth = -1;
-                int newHeight = -1;
-                float mulFactor;
+                int newHeight;
+                int newWidth;
+                final int maxSize = 1024;
                 if (originalHeight > originalWidth) {
-                    newHeight = 1024;
-                    mulFactor = (float) originalWidth / (float) originalHeight;
-                    newWidth = (int) (newHeight*mulFactor);
+                    newHeight = maxSize;
+                    newWidth = (originalWidth * maxSize) / originalHeight;
                 } else if (originalWidth > originalHeight) {
-                    newWidth = 1024;
-                    mulFactor = (float) originalHeight / (float)  originalWidth;
-                    newHeight = (int) (newWidth*mulFactor);
-                } else if (originalHeight == originalWidth) {
-                    newHeight = 1024;
-                    newWidth = 1024;
+                    newWidth = maxSize;
+                    newHeight = (originalHeight * maxSize) / originalWidth;
+                } else {
+                    newHeight = maxSize;
+                    newWidth = maxSize;
                 }
                 /**
                  * End of shrink image block

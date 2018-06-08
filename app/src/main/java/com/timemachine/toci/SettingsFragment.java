@@ -84,11 +84,4 @@ public class SettingsFragment extends Fragment {
 
         return fragmentsView;
     }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        // Set Fragments's title in parent activity
-        ((HomeMaterialActivity) context).onSectionAttached(SECTION_TITLE);
-    }
 }

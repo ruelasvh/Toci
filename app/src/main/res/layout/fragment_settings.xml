@@ -20,8 +20,8 @@
         android:gravity="left|center_vertical"
         android:paddingLeft="20dp"
         android:text="About"
-        android:textSize="16dp"
-        android:textAllCaps="false" />
+        android:textAllCaps="false"
+        android:textSize="16dp" />
 
     <View
         android:id="@+id/dividerAbout"
@@ -43,8 +43,8 @@
         android:gravity="left|center_vertical"
         android:paddingLeft="20dp"
         android:text="Legal"
-        android:textSize="16dp"
-        android:textAllCaps="false" />
+        android:textAllCaps="false"
+        android:textSize="16dp" />
 
     <Button
         android:id="@+id/signout"
@@ -58,9 +58,9 @@
         android:gravity="left|center_vertical"
         android:paddingLeft="20dp"
         android:text="Log Out"
-        android:textSize="16dp"
         android:textAllCaps="false"
-        android:textColor="#fa0101" />
+        android:textColor="#fa0101"
+        android:textSize="16dp" />
 
     <TextView
         android:id="@+id/detailsLabel"
@@ -71,9 +71,8 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="32dp"
         android:text="Details"
-        android:textSize="14dp"
-        android:textStyle="bold"
-        android:textColor="#696969"
+        android:textColor="@color/PrimaryTextPrimaryColor"
+        android:textSize="14sp"
         tools:text="Details" />
 
     <TextView
@@ -85,9 +84,8 @@
         android:layout_marginBottom="52dp"
         android:layout_marginLeft="20dp"
         android:text="Session"
-        android:textSize="14dp"
-        android:textStyle="bold"
-        android:textColor="#696969"
+        android:textColor="@color/PrimaryTextPrimaryColor"
+        android:textSize="14sp"
         tools:text="Session" />
 
 </RelativeLayout>
