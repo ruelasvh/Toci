@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,9 +25,13 @@ public class SettingsFragment extends Fragment {
     // Helper fields to help store favorite settings
     Context mContext;
     AppPrefs mAppPrefs;
-    private Button mLogoutLink;
-    private Button mAboutLink;
-    private BottomSheetDialogFragment bottomSheetDialogFragment;
+    private Button mLogoutButton;
+    private Button mAboutButton;
+    private Button mPrivacyPolicyButton;
+    private Button mTermsAndContitionsButton;
+    private BottomSheetDialogFragment bottomSheetDialogAboutUs;
+    private BottomSheetDialogFragment bottomSheetDialogPrivacyPolicy;
+    private BottomSheetDialogFragment bottomSheetDialogTermsAndContitions;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -53,7 +56,9 @@ public class SettingsFragment extends Fragment {
         mContext = getActivity().getApplicationContext();
         mAppPrefs = new AppPrefs(mContext);
         // About us bottom sheet fragment
-        bottomSheetDialogFragment = new AboutUsFragment();
+        bottomSheetDialogAboutUs = SettingsBottomSheetFragment.newInstance(R.string.about_title, R.string.about_us_content_html);
+        bottomSheetDialogPrivacyPolicy = SettingsBottomSheetFragment.newInstance(R.string.pp_title, R.string.pp_content_html);
+        bottomSheetDialogTermsAndContitions = SettingsBottomSheetFragment.newInstance(R.string.terms_and_conditions_title, R.string.terms_and_conditions_html);
     }
 
     @Override
@@ -62,16 +67,35 @@ public class SettingsFragment extends Fragment {
         // Inflate the layout for this fragment
         View fragmentsView = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        mAboutLink = (Button) fragmentsView.findViewById(R.id.about);
-        mAboutLink.setOnClickListener(new View.OnClickListener() {
+        mAboutButton = fragmentsView.findViewById(R.id.about);
+        mAboutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bottomSheetDialogFragment.show(getActivity().getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
+                bottomSheetDialogAboutUs.show(getActivity().getSupportFragmentManager(),
+                bottomSheetDialogAboutUs.getTag());
             }
         });
 
-        mLogoutLink = (Button) fragmentsView.findViewById(R.id.signout);
-        mLogoutLink.setOnClickListener(new View.OnClickListener() {
+        mPrivacyPolicyButton = fragmentsView.findViewById(R.id.legalPrivacyPolicy);
+        mPrivacyPolicyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialogPrivacyPolicy.show(getActivity().getSupportFragmentManager(),
+                bottomSheetDialogPrivacyPolicy.getTag());
+            }
+        });
+
+        mTermsAndContitionsButton = fragmentsView.findViewById(R.id.legalTermsConditions);
+        mTermsAndContitionsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialogTermsAndContitions.show(getActivity().getSupportFragmentManager(),
+                bottomSheetDialogTermsAndContitions.getTag());
+            }
+        });
+
+        mLogoutButton = fragmentsView.findViewById(R.id.signout);
+        mLogoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // set session in app prefs to false

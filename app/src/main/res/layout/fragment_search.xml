@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -62,9 +63,9 @@
                 android:maxLength="25"
                 android:paddingLeft="25dp"
                 android:paddingRight="25dp"
-                android:popupBackground="@color/black_transparent"
-                android:textColor="@color/PrimaryTextPrimaryColor"
-                android:textColorHint="@color/light_grey"
+                android:popupBackground="@color/azure"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/darker_gray"
                 app:layout_anchor="@id/main_btn"
                 app:layout_anchorGravity="top|center" />
 

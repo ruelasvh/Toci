@@ -288,23 +288,6 @@ public class ShowCrowdsMapFragment extends Fragment
         LatLng latLng;
 
         if (liveCrowds.length == 0) {
-            mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                @Override
-                public void onMapClick(LatLng latLng) {
-                    Snackbar.make(((Activity) mContext)
-                            .findViewById(R.id.show_crowds_map_container),
-                            "No LiveCrowds saved.", Snackbar.LENGTH_LONG)
-                            .setAction("FIND SOME", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    // Launch SearchFragment and select it in NavDrawer
-                                    int searchFragPosition = 0;
-                                    mListener.onFragmentInteraction(searchFragPosition);
-                                }
-                            })
-                            .show();
-                }
-            });
             return;
         }
 

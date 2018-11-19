@@ -3,9 +3,10 @@ package com.timemachine.toci;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -18,9 +19,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
-import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,6 +32,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
@@ -61,7 +62,6 @@ import java.lang.ref.WeakReference;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -74,9 +74,11 @@ import java.util.Set;
 public class LivePicsGalleryActivity extends AppCompatActivity implements OnConnectionFailedListener {
 
     private final static String FETCH_CROWDS_FILTER = "BY_ID";
+    private final String GET_CROWDS_TASK_RUNNING = "GET_CROWDS_TASK_RUNNING";
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_ACCESS_CAMERA = 2;
     private String UBER_CLIENT_ID;
     private String LYFT_CLIENT_ID;
-    private static final int REQUEST_ACCESS_CAMERA = 2;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private ViewPager.OnPageChangeListener pageChangeListener;
@@ -88,15 +90,15 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     private static HashMap<Integer, ArrayList<String>> mPicUrls;
     public static ArrayList<String> mCurrImage;
     private GetCrowds mGetCrowdsTask;
-    private final String GET_CROWDS_TASK_RUNNING = "GET_CROWDS_TASK_RUNNING";
     private Network mNetwork;
+    private File mCapturedFile;
+    private String mCapturedImagePath;
     Context mContext;
     AppPrefs mAppPrefs;
 
     // Action buttons
     private Boolean isFabMenuOpen = false;
     private FloatingActionButton mNavigateButton;
-    private FloatingActionButton mCallButton;
     private FloatingActionButton mRideUberButton;
     private TextView mRideUberLabel;
     private FloatingActionButton mRideLyftButton;
@@ -105,11 +107,13 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     private TextView mRideGmapsLabel;
     private Animation fadeIn, fadeOut;
 
+    private Toolbar mToolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.livepics_gallery);
+        setContentView(R.layout.activity_livepics_gallery);
 
         // Set up preferences resources
         mContext = this;
@@ -120,8 +124,14 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
         // Get crowd from previous activity
         mThisLiveCrowd = SerializeLiveCrowd.fromJson(getIntent().getExtras().getString("crowd"));
+        mToolbar = findViewById(R.id.toolbar_actionbar);
         // Set the actionbar mTitle
-        setTitle(mThisLiveCrowd.getTitle());
+        mToolbar.setTitle(mThisLiveCrowd.getTitle());
+        setSupportActionBar(mToolbar);
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         mPicUrls = mThisLiveCrowd.getPicUrls();
         try {
             mTitle = URLEncoder.encode(mThisLiveCrowd.getTitle(), "UTF-8");
@@ -141,7 +151,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager = findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         // Bind invisible title indicator to the adapter (to be able to get current page and current crowd id)
@@ -155,10 +165,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
 
             @Override
             public void onPageSelected(int position) {
-                /* Load pictures in pager */
-                Integer size = mPicUrls.size();
-                Integer currIndex = size - (position + 1);
-                mCurrImage = mPicUrls.get(currIndex);
+                // Empty
             }
 
             @Override
@@ -180,14 +187,13 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         fadeIn = AnimationUtils.loadAnimation(this, R.anim.fab_menu_open);
         fadeOut = AnimationUtils.loadAnimation(this, R.anim.fab_menu_close);
         // Set up the navigate and call buttons
-        mNavigateButton = (FloatingActionButton) findViewById(R.id.fab_ride_crowd);
-        mCallButton = (FloatingActionButton) findViewById(R.id.fab_call_crowd);
-        mRideUberButton = (FloatingActionButton) findViewById(R.id.fab_ride_uber);
-        mRideUberLabel = (TextView) findViewById(R.id.uber_label);
-        mRideLyftButton = (FloatingActionButton) findViewById(R.id.fab_ride_lyft);
-        mRideLyftLabel = (TextView) findViewById(R.id.lyft_label);
-        mRideGmapsButton = (FloatingActionButton) findViewById(R.id.fab_ride_gmaps);
-        mRideGmapsLabel = (TextView) findViewById(R.id.gmpas_label);
+        mNavigateButton = findViewById(R.id.fab_ride_crowd);
+        mRideUberButton = findViewById(R.id.fab_ride_uber);
+        mRideUberLabel = findViewById(R.id.uber_label);
+        mRideLyftButton = findViewById(R.id.fab_ride_lyft);
+        mRideLyftLabel = findViewById(R.id.lyft_label);
+        mRideGmapsButton = findViewById(R.id.fab_ride_gmaps);
+        mRideGmapsLabel = findViewById(R.id.gmpas_label);
         mNavigateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -230,19 +236,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 openDeeplink(packageId, uri, signupLink);
             }
         });
-        mCallButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    Intent intent = new Intent(Intent.ACTION_DIAL);
-                    intent.setData(Uri.parse("tel:016509966132"));
-                    startActivity(intent);
-                } catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), "No Phone Number Available",
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
     }
 
     /**
@@ -257,7 +250,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         } else {
             menu.findItem(R.id.action_favorite_toggle).setIcon(R.drawable.ic_action_star_off);
         }
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
 
@@ -266,6 +259,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
 
         switch (item.getItemId()) {
             // This returns to previous fragment in previous activity.
@@ -298,14 +292,14 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 }
                 return true;
             case R.id.action_report_image:
-                // Report image and mark it public = FALSE
                 if (mNetwork.isOnline()) {
                     try {
+                        mCurrImage = mPicUrls.get(mViewPager.getCurrentItem());
                         String imageId = mCurrImage.get(2);
                         String imageUrl = mCurrImage.get(0);
                         new ReportImageTask(this).execute(imageId, imageUrl);
                     } catch (IndexOutOfBoundsException e) {
-                        Toast.makeText(getApplicationContext(), "Cannot report this image",
+                        Toast.makeText(getApplicationContext(), R.string.report_image_not_available,
                                 Toast.LENGTH_SHORT).show();
                     }
 
@@ -361,21 +355,10 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // if the result is capturing image
-        if (requestCode == REQUEST_TAKE_PHOTO) {
-            if (resultCode == RESULT_OK) {
-                // successfully captured the image. Upload picture to server
-                new UploadFileToServer().execute();
-            } else if (resultCode == RESULT_CANCELED) {
-                // user cancelled image capture
-            } else {
-                // failed to capture image
-                Toast.makeText(getApplicationContext(), "Internal Error: Couldn't capture image",
-                        Toast.LENGTH_SHORT).show();
-            }
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            new UploadFileToServer().execute();
         }
-        // Refresh crowd with new pictures
-        refreshCrowd();
     }
 
     // Method to handle connection errors. Now error handling is silent.
@@ -474,12 +457,12 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_livepiclayout, container, false);
-            final ImageView liveImageView = (ImageView) rootView.findViewById(R.id.livePic);
+            final ImageView liveImageView = rootView.findViewById(R.id.livePic);
             final ArrayList<String> image;
-            mDetailsContainer = (RelativeLayout) rootView.findViewById(R.id.details_container);
-            mStreetAddressView = (TextView) mDetailsContainer.findViewById(R.id.street_address);
-            mTimeStampView = (TextView) mDetailsContainer.findViewById(R.id.timestamp);
-            mHelperView = (ImageView) mDetailsContainer.findViewById(R.id.image_container);
+            mDetailsContainer = rootView.findViewById(R.id.details_container);
+            mStreetAddressView = mDetailsContainer.findViewById(R.id.street_address);
+            mTimeStampView = mDetailsContainer.findViewById(R.id.timestamp);
+            mHelperView = mDetailsContainer.findViewById(R.id.image_container);
             mHelperView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -493,7 +476,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 public void onClick(View view) {
                     if (getActionBar().isShowing()) {
                         // Hide the actionbar/toolbar
-                        getActionBar().hide();
+                        hideActionBar();
                         ((LivePicsGalleryActivity) getActivity()).mNavigateButton.hide(new FloatingActionButton.OnVisibilityChangedListener() {
                             @Override
                             public void onHidden(FloatingActionButton fab) {
@@ -504,7 +487,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                         ((LivePicsGalleryActivity) getActivity()).closeFabMenu();
                     } else {
                         // Show the actionbar/toolbar
-                        getActionBar().show();
+                        showActionBar();
                         ((LivePicsGalleryActivity) getActivity()).mNavigateButton.show();
                     }
                 }
@@ -603,7 +586,36 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
          * and animate the details container
          */
         private android.support.v7.app.ActionBar getActionBar() {
-            return ((LivePicsGalleryActivity) getActivity()).getSupportActionBar();
+            return ((AppCompatActivity) getActivity()).getSupportActionBar();
+        }
+
+        protected void hideActionBar(){
+            final ActionBar ab = getActionBar();
+            final Toolbar mToolbar = ((AppCompatActivity) getActivity()).findViewById(R.id.toolbar_actionbar);
+            if (ab != null && ab.isShowing()) {
+                if(mToolbar != null) {
+                    mToolbar.animate().translationY(-112).setDuration(100L)
+                            .withEndAction(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ab.hide();
+                                }
+                            }).start();
+                } else {
+                    ab.hide();
+                }
+            }
+        }
+
+        protected void showActionBar(){
+            final ActionBar ab = getActionBar();
+            final Toolbar mToolbar = ((AppCompatActivity) getActivity()).findViewById(R.id.toolbar_actionbar);
+            if (ab != null && !ab.isShowing()) {
+                ab.show();
+                if(mToolbar != null) {
+                    mToolbar.animate().translationY(0).setDuration(100L).start();
+                }
+            }
         }
     }
 
@@ -611,20 +623,18 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     /**
      * Uploading the file to server on a different thread than the main UI tread.
      */
-    private class UploadFileToServer extends AsyncTask<Void, Integer, String> {
+    private class UploadFileToServer extends AsyncTask<Void, Integer, Integer> {
 
         public UploadFileToServer() {
         }
 
         @Override
-        protected String doInBackground(Void... params) {
+        protected Integer doInBackground(Void... params) {
             return uploadFile();
         }
 
         @SuppressWarnings("deprecation")
-        private String uploadFile() {
-
-            String responseString;
+        private Integer uploadFile() {
 
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(Config.FILE_UPLOAD_URL);
@@ -639,89 +649,81 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                             }
                         });
 
-                /**
-                 * Shrink image
-                 */
-                // get original dimensions
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = true;
-                BitmapFactory.decodeFile(mCurrentPhotoPath, options);
-                int originalWidth = options.outWidth;
-                int originalHeight = options.outHeight;
-                int newHeight;
-                int newWidth;
-                final int maxSize = 1024;
-                if (originalHeight > originalWidth) {
-                    newHeight = maxSize;
-                    newWidth = (originalWidth * maxSize) / originalHeight;
-                } else if (originalWidth > originalHeight) {
-                    newWidth = maxSize;
-                    newHeight = (originalHeight * maxSize) / originalWidth;
-                } else {
-                    newHeight = maxSize;
-                    newWidth = maxSize;
-                }
-                /**
-                 * End of shrink image block
-                 */
+                Bitmap bMap = BitmapFactory.decodeFile(mCapturedImagePath);
+                ExifInterface exif = new ExifInterface(mCapturedImagePath);
+                int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                int rotationInDegrees = exifToDegrees(rotation);
+                Matrix matrix = new Matrix();
+                if (rotation != 0f) {matrix.preRotate(rotationInDegrees);}
+                Bitmap rotatedBitmap = Bitmap.createBitmap(bMap,0,0, bMap.getWidth(), bMap.getHeight(), matrix, true);
 
-                // Decode the file
-                Bitmap bMap = BitmapFactory.decodeFile(mCurrentPhotoPath);
-                Bitmap scaledBmap = Bitmap.createScaledBitmap(bMap, newWidth, newHeight, false);
-                File resizedFile = createImageFile();
+                OutputStream fOut = new BufferedOutputStream(new FileOutputStream(mCapturedFile));
+                rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+                fOut.flush();
+                fOut.close();
+                bMap.recycle();
+                rotatedBitmap.recycle();
 
-                try {
-                    OutputStream fOut = new BufferedOutputStream(new FileOutputStream(resizedFile));
-                    scaledBmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
-                    fOut.flush();
-                    fOut.close();
-                    bMap.recycle();
-                    scaledBmap.recycle();
-                } catch (Exception e) {
-                    // Handle exception
-                }
-
-                entity.addPart("image", new FileBody(resizedFile));
+                entity.addPart("image", new FileBody(mCapturedFile));
                 entity.addPart("id", new StringBody(mThisLiveCrowd.getId()));
                 entity.addPart("city", new StringBody(mThisLiveCrowd.getCity()));
                 entity.addPart("state", new StringBody(mThisLiveCrowd.getState()));
                 entity.addPart("country", new StringBody(mThisLiveCrowd.getCountry()));
                 mTotalSize = entity.getContentLength();
                 httppost.setEntity(entity);
-
                 // Making server call
                 HttpResponse response = httpclient.execute(httppost);
 
                 int statusCode = response.getStatusLine().getStatusCode();
                 if (statusCode == 200) {
-                    // Server response
-                    responseString = "Photo uploaded!";
+                    return 200;
                 } else {
-                    responseString = "Error occurred! Photo not uploaded";
+                    return 500;
                 }
 
             } catch (ClientProtocolException e) {
-                responseString = e.toString();
+                e.printStackTrace();
+                return 500;
             } catch (IOException e) {
-                responseString = e.toString();
+                e.printStackTrace();
+                return 500;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return 500;
             }
+        }
 
-            return responseString;
-
+        /**
+         * Gets the Amount of Degrees of rotation using the exif integer to determine how much
+         * we should rotate the image.
+         * @param exifOrientation - the Exif data for Image Orientation
+         * @return - how much to rotate in degrees
+         */
+        private int exifToDegrees(int exifOrientation) {
+            if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) { return 90; }
+            else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {  return 180; }
+            else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {  return 270; }
+            return 0;
         }
 
         @Override
-        protected void onPostExecute(String resultMessage) {
-            super.onPostExecute(resultMessage);
-            Toast.makeText(getApplicationContext(), resultMessage,
-                    Toast.LENGTH_SHORT).show();
+        protected void onPostExecute(Integer resultCode) {
+            super.onPostExecute(resultCode);
+            if (resultCode == 200) {
+                Toast.makeText(getApplicationContext(), R.string.upload_image_success,
+                        Toast.LENGTH_SHORT).show();
+                refreshCrowd();
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.generic_error,
+                        Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
     /**
      * Created by Victor Ruelas on 10/24/17.
      */
-    private static class ReportImageTask extends AsyncTask<String, Void, String> {
+    private static class ReportImageTask extends AsyncTask<String, Void, Integer> {
 
         private WeakReference<LivePicsGalleryActivity> activityReference;
 
@@ -730,7 +732,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
         }
 
         @Override
-        protected String doInBackground(String... params) {
+        protected Integer doInBackground(String... params) {
             String paramImageId = params[0];
             String paramImageUrl = params[1];
 
@@ -744,28 +746,37 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
                 HttpResponse response = httpClient.execute(httpPost);
-                String responseMessage = EntityUtils.toString(response.getEntity());
-                return responseMessage;
+                int statusCode = response.getStatusLine().getStatusCode();
+                if (statusCode == 200) {
+                    return 200;
+                } else {
+                    return 500;
+                }
 
             } catch (ClientProtocolException e) {
-                return "Failed to report image: ClientProtocolException.";
+                e.printStackTrace();
+                return 500;
             } catch (IOException e) {
-                return "Failed to report image: IOException";
+                e.printStackTrace();
+                return 500;
             }
-
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
+        protected void onPostExecute(Integer responseCode) {
+            super.onPostExecute(responseCode);
 
             // get a reference to the activity if it is still there
             LivePicsGalleryActivity activity = activityReference.get();
             if (activity == null) return;
 
-            activity.refreshCrowd();
-            Toast.makeText(activity, R.string.report_image_success_message,
-                    Toast.LENGTH_SHORT).show();
+            if (responseCode == 200) {
+                activity.refreshCrowd();
+                Toast.makeText(activity, R.string.report_image_success, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(activity, R.string.generic_error, Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 
@@ -825,26 +836,20 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     /**
      * Launching camera app for capturing image
      */
-    static final int REQUEST_TAKE_PHOTO = 9;
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
             try {
-                photoFile = createImageFile();
+                mCapturedFile = createImageFile();
             } catch (IOException ex) {
-                // Error occurred while creating the File
+                // Handle error quietly
             }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.timemachine.toci",
-                        photoFile);
+            if (mCapturedFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this, "com.timemachine.toci", mCapturedFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         } else {
             Toast.makeText(getApplicationContext(), "No camera app installed",
@@ -855,7 +860,6 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
     /**
      * Helper Methods for handling pictures taken
      */
-    String mCurrentPhotoPath;
 
     private File createImageFile() throws IOException {
         // Create an image file name
@@ -866,7 +870,7 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                 + "IMG_" + timeStamp + ".jpg");
 
         // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
+        mCapturedImagePath = image.getAbsolutePath();
         return image;
     }
 
@@ -891,14 +895,13 @@ public class LivePicsGalleryActivity extends AppCompatActivity implements OnConn
                     mPicUrls = crowds[0].getPicUrls();
                     mSectionsPagerAdapter.notifyDataSetChanged();
                     mViewPager.setAdapter(mSectionsPagerAdapter);
-                    // triggering the onPageSelected to reset mCurrImage
                     pageChangeListener.onPageSelected(mViewPager.getCurrentItem());
 
                 }
             });
             mGetCrowdsTask.execute(FETCH_CROWDS_FILTER, mThisLiveCrowd.getId());
         } else {
-            Toast.makeText(getApplicationContext(), "No Connection Available",
+            Toast.makeText(getApplicationContext(), R.string.error_offline,
                     Toast.LENGTH_SHORT).show();
         }
     }

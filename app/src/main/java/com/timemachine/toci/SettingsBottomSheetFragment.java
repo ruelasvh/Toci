@@ -8,35 +8,40 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ScrollView;
+import android.widget.TextView;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * to handle interaction events.
- * Use the {@link AboutUsFragment#newInstance} factory method to
+ * Use the {@link SettingsBottomSheetFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AboutUsFragment extends BottomSheetDialogFragment {
+public class SettingsBottomSheetFragment extends BottomSheetDialogFragment {
 
-    private Button mCloseButton;
+    private static final String ARG_LAYOUT_TITLE = "layoutTitleParam";
+    private static final String ARG_LAYOUT_CONTENT = "layoutContentParam";
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment AboutUsFragment.
+     * @return A new instance of fragment SettingsBottomSheetFragment.
      */
-    public static AboutUsFragment newInstance() {
-        AboutUsFragment fragment = new AboutUsFragment();
+    public static SettingsBottomSheetFragment newInstance(Integer layoutTitle, Integer layoutContent) {
+        SettingsBottomSheetFragment fragment = new SettingsBottomSheetFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_LAYOUT_TITLE, layoutTitle);
+        args.putInt(ARG_LAYOUT_CONTENT, layoutContent);
+        fragment.setArguments(args);
         return fragment;
     }
 
-    public AboutUsFragment() {
+    public SettingsBottomSheetFragment() {
         // Required empty public constructor
     }
 
@@ -62,8 +67,15 @@ public class AboutUsFragment extends BottomSheetDialogFragment {
     @Override
     public void setupDialog(final Dialog dialog, int style) {
         super.setupDialog(dialog, style);
-        View contentView = View.inflate(getContext(), R.layout.fragment_about_us, null);
+
+        View contentView = View.inflate(getContext(), R.layout.fragment_settings_bottomsheet, null);
         dialog.setContentView(contentView);
+
+        TextView dialogTitle = dialog.findViewById(R.id.settings_bottom_sheet_title);
+        dialogTitle.setText(Html.fromHtml(getString(getArguments().getInt(ARG_LAYOUT_TITLE))));
+
+        TextView dialogContent = dialog.findViewById(R.id.settings_bottom_sheet_content);
+        dialogContent.setText(Html.fromHtml(getString(getArguments().getInt(ARG_LAYOUT_CONTENT))));
 
         CoordinatorLayout.LayoutParams layoutParams =
                 (CoordinatorLayout.LayoutParams) ((View) contentView.getParent()).getLayoutParams();

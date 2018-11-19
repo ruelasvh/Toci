@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -191,7 +192,7 @@ public class AddNewCrowdFragment extends Fragment
         if (requestCode == REQUEST_PLACE_PICKER) {
             if (resultCode == Activity.RESULT_OK) {
                 // Get the user's selected place from the Intent.
-                final Place place = PlacePicker.getPlace(data, getActivity());
+                final Place place = PlacePicker.getPlace(getActivity(), data);
                 String[] locale = getLocale(place.getAddress());
                 final String country = locale[0];
                 final String state = locale[1];

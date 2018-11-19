@@ -2,7 +2,6 @@ package com.timemachine.toci;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -27,13 +26,13 @@ public class AddCrowdToDatabase extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... params) {
-        String paramPlaceId = params[0].replace("'","''");
-        String paramPlaceName = params[1].replace("'", "''");
-        String paramPlaceAddress = params[2].replace("'", "''");
-        String paramLatLng = params[3].replace("'", "''");
-        String paramPlaceCountry = params[4].replace("'","''");
-        String paramPlaceState = params[5].replace("'","''");
-        String paramPlaceCity = params[6].replace("'","''");
+        String paramPlaceId = params[0];
+        String paramPlaceName = params[1];
+        String paramPlaceAddress = params[2];
+        String paramLatLng = params[3];
+        String paramPlaceCountry = params[4];
+        String paramPlaceState = params[5];
+        String paramPlaceCity = params[6];
 
         List<NameValuePair> nameValuePairs = new ArrayList<>();
         nameValuePairs.add(new BasicNameValuePair("id", paramPlaceId));
@@ -51,7 +50,6 @@ public class AddCrowdToDatabase extends AsyncTask<String, Void, String> {
 
             HttpResponse response = httpClient.execute(httpPost);
             HttpEntity entity = response.getEntity();
-            Log.d("AddCrowdToDatabase", entity.toString());
 
         } catch (ClientProtocolException e) {
             return "Failed to upload: ClientProtocolException.";

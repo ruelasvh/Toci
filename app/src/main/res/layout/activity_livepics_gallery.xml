@@ -4,8 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_actionbar"
+        style="@style/ToolBarStyleDark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/abc_action_bar_default_height_material" />
+
     <!--android:animateLayoutChanges="true">-->
     <com.viewpagerindicator.TitlePageIndicator
         android:visibility="gone"
@@ -110,17 +118,6 @@
             app:fabSize="mini" />
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_call_crowd"
-        app:backgroundTint="@color/azure"
-        app:fabSize="mini"
-        android:visibility="invisible"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_action_call"
-        android:layout_marginBottom="88dp"
-        android:layout_marginRight="24dp"
-        android:layout_gravity="right|bottom" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_ride_crowd"

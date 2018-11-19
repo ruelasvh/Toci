@@ -66,11 +66,11 @@ public class HomeMaterialActivity extends AppCompatActivity
         }
 
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
+        mToolbar = findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(mToolbar);
 
         // Bottom navigation
-        mBottomNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        mBottomNav = findViewById(R.id.bottom_navigation);
         disableShiftMode(mBottomNav);
         mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -199,5 +199,7 @@ public class HomeMaterialActivity extends AppCompatActivity
      * @param position
      */
     public void onFragmentInteraction(int position) {
+        MenuItem selectedItem = mBottomNav.getMenu().getItem(position);
+        selectFragment(selectedItem);
     }
 }

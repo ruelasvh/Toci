@@ -157,11 +157,6 @@ public class ShowCrowdsListFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        // Set Fragment's title in parent activity
-//        if (context instanceof HomeMaterialActivity) {
-//            ((HomeMaterialActivity) context).onSectionAttached(SECTION_TITLE);
-//        }
-
         try {
             mListener = (OnFragmentInteractionListener) context;
         } catch (ClassCastException e){

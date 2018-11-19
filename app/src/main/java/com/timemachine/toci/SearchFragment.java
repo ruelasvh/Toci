@@ -2,20 +2,16 @@ package com.timemachine.toci;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.DataSetObserver;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -55,7 +51,6 @@ public class SearchFragment extends Fragment {
     private CitiesSuggestionAdapter citySuggestAdapter;
     private String searchCity;
     private ImageView mainButton;
-    private List<String> citiesList;
 
     /**
      * This interface must be implemented by activities that contain this
@@ -91,10 +86,6 @@ public class SearchFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Get passed parameters
-        if (getArguments() != null) {
-            citiesList = getArguments().getStringArrayList(ARG_CITIES_LIST);
-        }
         // To check online/offline
         network = new Network(getContext());
     }
@@ -103,8 +94,8 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_search, container, false);
-        mainEditText = (AutoCompleteTextView) rootView.findViewById(R.id.enter_city);
-        mainButton = (ImageView) rootView.findViewById(R.id.main_btn);
+        mainEditText = rootView.findViewById(R.id.enter_city);
+        mainButton = rootView.findViewById(R.id.main_btn);
 
         // Get list of cities then build AutoCompleteTextView
         new GetCities(getContext()) {
@@ -250,7 +241,6 @@ public class SearchFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            // TODO: Fix Launch AddNewCrowdFragment
             int addCrowdFragPosition = 2;
             mListener.onFragmentInteraction(addCrowdFragPosition);
         }

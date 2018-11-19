@@ -17,7 +17,14 @@
     </style>
 
     <style name="ToolBarStyle" parent="">
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="android:background">@color/PrimaryColor</item>
+        <item name="popupTheme">@style/Theme.AppCompat.NoActionBar</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+    </style>
+
+    <style name="ToolBarStyleDark" parent="">
+        <item name="android:background">@color/black_transparent</item>
+        <item name="popupTheme">@style/Theme.AppCompat.NoActionBar</item>
         <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
 
@@ -42,14 +49,8 @@
     <!-- Non-material theme -->
 
     <!-- the theme applied to the application or activity for v<v21 -->
-    <style name="AppThemeTransparentActionBar" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:actionBarStyle">@style/TransparentActionBar</item>
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="colorPrimary">@android:color/transparent</item>
-
-        <!-- Support library compatibility -->
-        <item name="actionBarStyle">@style/TransparentActionBar</item>
-        <item name="windowActionBarOverlay">true</item>
+    <style name="AppThemeTransparentActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimaryDark">@android:color/black</item>
     </style>
 
 
@@ -84,41 +85,6 @@
         <item name="android:background">@color/white</item>
 
         <item name="background">@color/white</item>
-    </style>
-
-    <style name="ImageTitleBottom">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">50dp</item>
-        <item name="android:layout_alignParentBottom">true</item>
-        <item name="android:background">#99000000</item>
-        <item name="android:gravity">center</item>
-        <item name="android:maxLines">2</item>
-        <item name="android:textColor">#fff</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">18dp</item>
-        <item name="android:typeface">sans</item>
-    </style>
-
-    <style name="ImageTitleTop">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:gravity">center</item>
-        <item name="android:maxLines">2</item>
-        <item name="android:textColor">#fff</item>
-        <item name="android:textSize">16dp</item>
-        <item name="android:typeface">sans</item>
-    </style>
-
-    <style name="main_style_inner_ratingbar">
-        <item name="android:indeterminateOnly">false</item>
-        <item name="android:progressDrawable">@drawable/ratingbar_extras_small_holo_dark</item>
-        <item name="android:indeterminateDrawable">@drawable/ratingbar_extras_small_holo_dark</item>
-        <item name="android:minHeight">12dip</item>
-        <item name="android:maxHeight">12dip</item>
-        <item name="android:thumb">@null</item>
-        <item name="android:isIndicator">true</item>
     </style>
 
     <style name="AppThemeMain.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
