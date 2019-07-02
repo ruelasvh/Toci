@@ -56,9 +56,10 @@ public class SettingsFragment extends Fragment {
         mContext = getActivity().getApplicationContext();
         mAppPrefs = new AppPrefs(mContext);
         // About us bottom sheet fragment
-        bottomSheetDialogAboutUs = SettingsBottomSheetFragment.newInstance(R.string.about_title, R.string.about_us_content_html);
-        bottomSheetDialogPrivacyPolicy = SettingsBottomSheetFragment.newInstance(R.string.pp_title, R.string.pp_content_html);
-        bottomSheetDialogTermsAndContitions = SettingsBottomSheetFragment.newInstance(R.string.terms_and_conditions_title, R.string.terms_and_conditions_html);
+
+        bottomSheetDialogAboutUs = SettingsBottomSheetFragment.newInstance(R.string.about_title, null);
+        bottomSheetDialogPrivacyPolicy = SettingsBottomSheetFragment.newInstance(R.string.pp_title, "privacy");
+        bottomSheetDialogTermsAndContitions = SettingsBottomSheetFragment.newInstance(R.string.terms_and_conditions_title, "terms");
     }
 
     @Override

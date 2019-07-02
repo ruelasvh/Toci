@@ -32,4 +32,6 @@ public class Config {
     public static final String IMAGE_DIRECTORY_NAME = "Android File Upload";
     // Report image
     public static final String REPORT_IMAGE_URL = SERVER_ROOT +  "AndroidFileUpload/reportimage.php";
+    // Get legal
+    public static final String GET_LEGAL = SERVER_ROOT + "legal.php";
 }

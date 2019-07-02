@@ -46,4 +46,12 @@
 
     </ScrollView>
 
+    <ProgressBar
+        android:id="@+id/settings_bottom_sheet_spinner"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>
