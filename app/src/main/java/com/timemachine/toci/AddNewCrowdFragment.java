@@ -197,6 +197,7 @@ public class AddNewCrowdFragment extends Fragment
                 final String country = locale[0];
                 final String state = locale[1];
                 final String city = locale[2];
+                final String phone = place.getPhoneNumber().toString();
                 // After selecting place insert to database immediately
                 new AddCrowdToDatabase(){
                     @Override
@@ -228,7 +229,7 @@ public class AddNewCrowdFragment extends Fragment
                         place.getName().toString(),
                         place.getAddress().toString(),
                         cleanLatLng(place.getLatLng().toString()),
-                        country, state, city
+                        country, state, city, phone
                 );
 
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {

@@ -1,20 +1,19 @@
 package com.timemachine.toci;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.format.DateUtils;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -53,6 +52,7 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> implements
 
     private Location mLastLocation;
     private Location currentLocation;
+    private FusedLocationProviderClient mFusedLocationClient;
 
     private Context context;
 
@@ -71,6 +71,7 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> implements
     protected void onPreExecute() {
         // Create instance of GoogleApiClient
         buildGoogleLocationApi(context);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
     }
 
     @Override
@@ -142,8 +143,16 @@ public class GetCrowds extends AsyncTask<String, Void, LiveCrowd[]> implements
     @Override
     public void onConnected(Bundle connectionHint) {
         if ( ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION ) == PackageManager.PERMISSION_GRANTED ) {
-            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                    mGoogleApiClient);
+            mFusedLocationClient.getLastLocation()
+                    .addOnSuccessListener((Activity) context, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                mLastLocation = location;
+                            }
+                        }
+                    });
         }
     }
 

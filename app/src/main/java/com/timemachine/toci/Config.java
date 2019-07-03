@@ -23,7 +23,7 @@ public class Config {
     // User authentication url
     public static final String USER_AUTHENTICATION_URL = SERVER_ROOT + "authentication.php";
     // Add crowd to database url
-    public static final String ADD_CROWD_TO_DATABASE_URL = SERVER_ROOT + "AndroidFileUpload/upload2database.php";
+    public static final String ADD_CROWD_TO_DATABASE_URL = SERVER_ROOT + "AndroidFileUpload/uploadToDatabase.php";
     // Delete crowd from database url
     public static final String REMOVE_CROWD_TO_DATABASE_URL = SERVER_ROOT + "AndroidFileUpload/removeFromDatabase.php";
     // Check city for crowds url

@@ -33,6 +33,7 @@ public class AddCrowdToDatabase extends AsyncTask<String, Void, String> {
         String paramPlaceCountry = params[4];
         String paramPlaceState = params[5];
         String paramPlaceCity = params[6];
+        String paramPlacePhone = params[7];
 
         List<NameValuePair> nameValuePairs = new ArrayList<>();
         nameValuePairs.add(new BasicNameValuePair("id", paramPlaceId));
@@ -42,6 +43,7 @@ public class AddCrowdToDatabase extends AsyncTask<String, Void, String> {
         nameValuePairs.add(new BasicNameValuePair("country", paramPlaceCountry));
         nameValuePairs.add(new BasicNameValuePair("state", paramPlaceState));
         nameValuePairs.add(new BasicNameValuePair("city", paramPlaceCity));
+        nameValuePairs.add(new BasicNameValuePair("phone", paramPlacePhone));
 
         try {
             HttpClient httpClient = new DefaultHttpClient();
