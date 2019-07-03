@@ -257,10 +257,10 @@ public class SearchFragment extends Fragment {
         sequence.setConfig(config);
 
         sequence.addSequenceItem(mainEditText,
-                "To search for RealCrowds near you, type the city you're interested in.", "GOT IT");
+                "To search for crowds near you, type the city you're interested in.", "GOT IT");
 
         sequence.addSequenceItem(mainButton,
-                "Then tap here to show what's happening!", "GOT IT");
+                "Then tap here to see what's happening!", "GOT IT");
 
         sequence.start();
     }
