@@ -4,8 +4,8 @@ package com.timemachine.toci;
  * Created by victorhugo on 1/28/15.
  */
 public class Config {
-//    public static final String SERVER_ROOT = "http://104.152.64.96/AppCrowdZeeker/";
-    public static final String SERVER_ROOT = "http://thetimemachinelabs.com/AppCrowdZeeker/";
+//    public static final String SERVER_ROOT = "http://104.152.64.96/AppCrowdWyse/";
+    public static final String SERVER_ROOT = "http://thetimemachinelabs.com/AppCrowdWyse/";
     // Image upload
     public static final String FILE_UPLOAD_URL = SERVER_ROOT + "AndroidFileUpload/fileUpload.php";
     // Fetch crowds by city
@@ -28,8 +28,6 @@ public class Config {
     public static final String REMOVE_CROWD_TO_DATABASE_URL = SERVER_ROOT + "AndroidFileUpload/removeFromDatabase.php";
     // Check city for crowds url
     public static final String CHECK_CITY_FOR_CROWDS_URL = SERVER_ROOT + "checkcity.php";
-    // Directory name to store capture images and videos
-    public static final String IMAGE_DIRECTORY_NAME = "Android File Upload";
     // Report image
     public static final String REPORT_IMAGE_URL = SERVER_ROOT +  "AndroidFileUpload/reportimage.php";
     // Get legal

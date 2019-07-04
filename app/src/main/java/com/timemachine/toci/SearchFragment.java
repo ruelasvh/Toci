@@ -43,8 +43,7 @@ public class SearchFragment extends Fragment {
      * fragment.
      */
     private static final String ARG_CITIES_LIST = "citiesListParam";
-    private static final String SECTION_TITLE = "SearchFragment";
-    private static final String SHOWCASE_ID = "custom example";
+    private static final String SHOWCASE_ID = "CrowdwyseDemo";
     private OnFragmentInteractionListener mListener;
     private Network network; // For checking if network is online
     private AutoCompleteTextView mainEditText;
